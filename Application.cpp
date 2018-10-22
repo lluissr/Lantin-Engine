@@ -5,6 +5,7 @@
 #include "ModuleTextures.h"
 #include "ModuleInput.h"
 #include "ModuleRenderExercise.h"
+#include "ModuleEditor.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ Application::Application()
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(input = new ModuleInput());
     modules.push_back(exercise = new ModuleRenderExercise());
+	modules.push_back(editor = new ModuleEditor());
 }
 
 Application::~Application()
