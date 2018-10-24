@@ -24,21 +24,21 @@ ModuleEditor::~ModuleEditor()
 bool ModuleEditor::Init()
 {
 
-	glewInit();
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-																//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-																//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+	//glewInit();
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	//															//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
+	//															//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
-	ImGui_ImplOpenGL3_Init(glsl_version);
+	//ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
+	//ImGui_ImplOpenGL3_Init(glsl_version);
 
-	// Setup style
-	ImGui::StyleColorsDark();
+	//// Setup style
+	//ImGui::StyleColorsDark();
 
 	return true;
 }

@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./glew-2.1.0/include;./SDL/include;MathGeoLib/include;C:\Users\lluissr5\Desktop\Engine\IMGUI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./glew-2.1.0/include;./SDL/include;MathGeoLib/include;.\IMGUI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
