@@ -29,18 +29,23 @@ bool ModuleInput::Init()
 	return ret;
 }
 
+update_status ModuleInput::PreUpdate()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+		if (event.type == SDL_QUIT)
+			return UPDATE_STOP;
+	}
 
+	return UPDATE_CONTINUE;
+}
 
 // Called every draw update
 update_status ModuleInput::Update()
 {
 	SDL_PumpEvents();
-
-	/*SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		ImGui_ImplSDL2_ProcessEvent(&event);
-	}*/
 
 	keyboard = SDL_GetKeyboardState(NULL);
 

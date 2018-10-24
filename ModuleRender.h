@@ -20,5 +20,4 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 
 	void* context;
-	bool show = true;
 };
