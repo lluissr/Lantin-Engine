@@ -4,6 +4,15 @@
 
 typedef unsigned __int8 Uint8;
 
+enum KeyState
+{
+	KEY_IDLE = 0,
+	KEY_DOWN,
+	KEY_REPEAT,
+	KEY_UP
+};
+
+
 class ModuleInput : public Module
 {
 public:
@@ -16,6 +25,11 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	KeyState GetKey(int id) const
+	{
+		return keyboard[id];
+	}
+
 private:
-	const Uint8 *keyboard = NULL;
+	KeyState* keyboard;
 };

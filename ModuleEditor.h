@@ -14,7 +14,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-
+	bool show = false;
 	const char* glsl_version = "#version 130";
 
 };

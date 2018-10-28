@@ -7,11 +7,16 @@
 #include "SDL/include/SDL.h"
 
 ModuleInput::ModuleInput()
-{}
+{
+	keyboard = new KeyState[300];
+	memset(keyboard, KEY_IDLE, sizeof(KeyState) * 300);
+}
 
 // Destructor
 ModuleInput::~ModuleInput()
-{}
+{
+	//RELEASE_ARRAY(keyboard);
+}
 
 // Called before render is available
 bool ModuleInput::Init()
@@ -39,15 +44,35 @@ update_status ModuleInput::PreUpdate()
 			return UPDATE_STOP;
 	}
 
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
+
+	for (int i = 0; i < 300; ++i)
+	{
+		if (keys[i] == 1)
+		{
+			if (keyboard[i] == KEY_IDLE)
+				keyboard[i] = KEY_DOWN;
+			else
+				keyboard[i] = KEY_REPEAT;
+		}
+		else
+		{
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+				keyboard[i] = KEY_UP;
+			else
+				keyboard[i] = KEY_IDLE;
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleInput::Update()
 {
-	SDL_PumpEvents();
+	//SDL_PumpEvents();
 
-	keyboard = SDL_GetKeyboardState(NULL);
+	//const Uint8* keys = SDL_GetKeyboardState(NULL);
 
 	return UPDATE_CONTINUE;
 }

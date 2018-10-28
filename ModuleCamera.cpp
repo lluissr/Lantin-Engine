@@ -2,20 +2,14 @@
 
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleProgram.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
 #include "MathGeoLib.h"
 
 ModuleCamera::ModuleCamera()
-{
-}
-
-ModuleCamera::~ModuleCamera()
-{
-}
-
-bool ModuleCamera::Init()
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = float3::zero;
@@ -25,12 +19,68 @@ bool ModuleCamera::Init()
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
+	SetAspectRatio(1.3f);
+}
+
+ModuleCamera::~ModuleCamera()
+{
+}
+
+bool ModuleCamera::Init()
+{
 	
+
 	return true;
 }
 
+update_status ModuleCamera::PreUpdate()
+{
+	return UPDATE_CONTINUE;
+}
+
+
 update_status ModuleCamera::Update()
 {
+
+	RefenceGround();
+
+	float3 movement(float3::zero);
+	float3 forward(frustum.front);
+	float3 right(frustum.WorldRight());
+
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+	{
+		++movement.y;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+	{
+		--movement.y;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		movement += forward;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		movement -= forward;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+	{
+		movement -= right;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		movement += right;
+	}
+
+
+	if (movement.Equals(float3::zero) == false)
+	{
+		frustum.Translate(movement * (10.0f));
+	}
+
+
+
 	float vertex_buffer_data[] = {
 	-1.0f, -1.0f, 0.0f,
 	1.0f, -1.0f, 0.0f,
@@ -77,6 +127,7 @@ update_status ModuleCamera::Update()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(
@@ -87,6 +138,8 @@ update_status ModuleCamera::Update()
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
+
+	glUseProgram(App->program->program);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
@@ -106,3 +159,66 @@ bool ModuleCamera::CleanUp()
 	return true;
 }
 
+
+void ModuleCamera::SetAspectRatio(float aspect_ratio)
+{
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
+}
+
+
+math::float4x4 ModuleCamera::GetViewMatrix()
+{
+	static float4x4 m;
+
+	m = frustum.ViewMatrix();
+	m.Transpose();
+
+	return m;
+}
+
+math::float4x4 ModuleCamera::GetProjectionMatrix()
+{
+	static float4x4 m;
+
+	m = frustum.ProjectionMatrix();
+	m.Transpose();
+
+	return m;
+}
+
+void ModuleCamera::SetFOV(float fov)
+{
+	float aspect_ratio = frustum.AspectRatio();
+
+	frustum.verticalFov = math::pi * fov;
+	SetAspectRatio(aspect_ratio);
+}
+
+
+void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
+{
+	if (nearDist > 0.0f && nearDist < frustum.farPlaneDistance)
+	{
+		frustum.nearPlaneDistance = nearDist;
+	}
+
+	if (farDist > 0.0f && farDist > frustum.nearPlaneDistance)
+	{
+		frustum.farPlaneDistance = farDist;
+	}
+}
+
+void ModuleCamera::RefenceGround()
+{
+	glLineWidth(1.0f);
+	float d = 200.0f;
+	glBegin(GL_LINES);
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
+	glEnd();
+}
