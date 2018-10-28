@@ -67,6 +67,15 @@ update_status ModuleCamera::PreUpdate()
 	{
 		Move(RIGHT);
 	}
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+	{
+		speed = 1.0f;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
+	{
+		speed = 0.5f;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -165,8 +174,6 @@ void ModuleCamera::Move(Directions dir)
 		break;
 	}
 }
-
-
 
 void ModuleCamera::SetAspectRatio(float aspect_ratio)
 {
