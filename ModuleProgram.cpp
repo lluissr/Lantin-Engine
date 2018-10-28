@@ -31,18 +31,18 @@ bool ModuleProgram::Init()
 	}
 
 	//fragment
-	char* data = nullptr;
+	char* dataFragment = nullptr;
 	FILE* file = nullptr;
-	int size;
+	int sizeFragment;
 	fopen_s(&file, "../default.fs", "rb");
 	if (file)
 	{
 		fseek(file, 0, SEEK_END);
-		size = ftell(file);
+		sizeFragment = ftell(file);
 		rewind(file);
-		data = (char*)malloc(size + 1);
-		fread(data, 1, size, file);
-		data[size] = 0;
+		dataFragment = (char*)malloc(sizeFragment + 1);
+		fread(dataFragment, 1, sizeFragment, file);
+		dataFragment[sizeFragment] = 0;
 		fclose(file);
 	}
 
@@ -52,38 +52,38 @@ bool ModuleProgram::Init()
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	glShaderSource(vertexShader, 1, &dataVertex, &sizeVertex);
-	glShaderSource(fragmentShader, 1, &data, &size);
-
 	glCompileShader(vertexShader);
+	
+	glShaderSource(fragmentShader, 1, &dataFragment, &sizeFragment);
 	glCompileShader(fragmentShader);
 
 	//------------------ TODO: Check if compile is correct
-	GLint compiledVertex;
-	GLint compiledFragment;
+	//GLint compiledVertex;
+	//GLint compiledFragment;
 
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledVertex);
-	if (!compiledVertex)
-	{
-		GLint blen = 0;
-		GLsizei slen = 0;
+	//glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledVertex);
+	//if (!compiledVertex)
+	//{
+	//	GLint blen = 0;
+	//	GLsizei slen = 0;
 
-		glGetShaderiv(compiledVertex, GL_INFO_LOG_LENGTH, &blen);
-		if (blen > 1)
-		{
-			GLchar* compiler_log = (GLchar*)malloc(blen);
-			glGetInfoLogARB(compiledVertex, blen, &slen, compiler_log);
-			//cout << "compiler_log:\n", compiler_log);
-			free(compiler_log);
-		}
-	}
+	//	glGetShaderiv(compiledVertex, GL_INFO_LOG_LENGTH, &blen);
+	//	if (blen > 1)
+	//	{
+	//		GLchar* compiler_log = (GLchar*)malloc(blen);
+	//		glGetInfoLogARB(compiledVertex, blen, &slen, compiler_log);
+	//		//cout << "compiler_log:\n", compiler_log);
+	//		free(compiler_log);
+	//	}
+	//}
 
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledFragment);
-	if (!compiledFragment)
-	{
+	//glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledFragment);
+	//if (!compiledFragment)
+	//{
 
-	}
-	glDeleteShader(compiledVertex);
-	glDeleteShader(compiledFragment);
+	//}
+	//glDeleteShader(compiledVertex);
+	//glDeleteShader(compiledFragment);
 	//-------------------------------------
 
 	//Program
@@ -92,20 +92,20 @@ bool ModuleProgram::Init()
 	glAttachShader(program, fragmentShader);
 	glLinkProgram(program);
 
-	//------------------ TODO: Check if linked is correct
-	GLint linked;
-	glGetProgramiv(program, GL_LINK_STATUS, &linked);
-	if (!linked)
-	{
-		//glGetProgramInfoLog(program,linked)
-	}
-	glDeleteShader(linked);
-	//-------------------------------------
+	////------------------ TODO: Check if linked is correct
+	//GLint linked;
+	//char infoLog[512];
+	//glGetProgramiv(program, GL_LINK_STATUS, &linked);
+	//if (!linked) {
+	//	glGetProgramInfoLog(program, 512, NULL, infoLog);
+	//}
+	//glDeleteShader(linked);
+	////-------------------------------------
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	return true;
+	return program;
 }
 
 update_status ModuleProgram::PreUpdate()
