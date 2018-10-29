@@ -3,6 +3,7 @@
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleTextures.h"
 #include "ModuleProgram.h"
 
 #include "GL/glew.h"
@@ -29,6 +30,8 @@ bool ModuleCamera::Init()
 	frustum.verticalFov = math::pi / 4.0f;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
 
+	texture = App->textures->Load("../Images/Lenna.png");
+
 	float vertex_buffer_data[] = {
 	-1.0f, -1.0f, 0.0f,
 	1.0f, -1.0f, 0.0f,
@@ -37,6 +40,14 @@ bool ModuleCamera::Init()
 	1.0f, -1.0f, 0.0f,
 	1.0f,  1.0f, 0.0f,
 	-1.0f, 1.0f, 0.0f,
+
+	0.0f, 0.0f, 
+	1.0f, 0.0f, 
+	0.0f, 1.0f,
+
+	1.0f, 0.0f,
+	1.0f, 1.0f,
+	0.0f, 1.0f,
 	};
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -98,6 +109,16 @@ update_status ModuleCamera::Update()
 		(void*)0            // array buffer offset
 	);
 
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(
+		1,
+		2, 
+		GL_FLOAT, 
+		GL_FALSE,
+		0,
+		(void*)(sizeof(float) * 3 * 6) // buffer offset
+	);
+
 	glUseProgram(App->program->program);
 
 	RefenceGround();
@@ -112,9 +133,14 @@ update_status ModuleCamera::Update()
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &LookAt(target, eye, up)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &frustum.ProjectionMatrix()[0][0]);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(App->program->program, "texture0"), 0);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return UPDATE_CONTINUE;

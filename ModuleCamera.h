@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "MathGeoLib.h"
-
+#include "GL/glew.h"
 
 enum Directions {
 	UP,
@@ -45,6 +45,7 @@ public:
 	
 private:
 	
+	GLuint texture;
 	unsigned vbo = 0;
 	void RefenceGround();
 	void ReferenceAxis();
