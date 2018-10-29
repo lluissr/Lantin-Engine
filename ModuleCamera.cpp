@@ -32,7 +32,11 @@ bool ModuleCamera::Init()
 	float vertex_buffer_data[] = {
 	-1.0f, -1.0f, 0.0f,
 	1.0f, -1.0f, 0.0f,
-	0.0f,  1.0f, 0.0f,
+	-1.0f,  1.0f, 0.0f,
+
+	1.0f, -1.0f, 0.0f,
+	1.0f,  1.0f, 0.0f,
+	-1.0f, 1.0f, 0.0f,
 	};
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -108,7 +112,7 @@ update_status ModuleCamera::Update()
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &LookAt(target, eye, up)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &frustum.ProjectionMatrix()[0][0]);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
