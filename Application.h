@@ -12,6 +12,7 @@ class ModuleRenderExercise;
 class ModuleEditor;
 class ModuleCamera;
 class ModuleProgram;
+class ModuleModelLoader;
 
 class Application
 {
@@ -32,6 +33,7 @@ public:
 	ModuleCamera* camera = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
+	ModuleModelLoader* modelLoader = nullptr;
 
 private:
 

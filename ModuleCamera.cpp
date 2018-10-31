@@ -49,6 +49,9 @@ bool ModuleCamera::Init()
 	1.0f, 1.0f,
 	0.0f, 1.0f,
 	};
+
+	
+
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);

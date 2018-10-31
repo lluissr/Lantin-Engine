@@ -16,7 +16,4 @@ public:
 	bool CleanUp();
 
 	GLuint Load(const char* path);
-
-private:
-	std::list<SDL_Texture*> textures;
 };
