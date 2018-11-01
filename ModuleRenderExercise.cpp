@@ -74,12 +74,6 @@ update_status ModuleRenderExercise::Update()
 
 	glUseProgram(App->program->program);
 
-	RefenceGround();
-	ReferenceAxis();
-
-	float color[4] = { 0.0f, 0.5f, 0.5f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->program, "newColor"), 1, color);
-
 	math::float4x4 model(math::float4x4::identity);
 
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &model[0][0]);
@@ -91,6 +85,8 @@ update_status ModuleRenderExercise::Update()
 	glUniform1i(glGetUniformLocation(App->program->program, "texture0"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -108,62 +104,3 @@ bool ModuleRenderExercise::CleanUp()
 
 	return true;
 }
-
-void ModuleRenderExercise::RefenceGround()
-{
-	glLineWidth(1.0f);
-	float d = 200.0f;
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->program, "newColor"), 1, color);
-	glBegin(GL_LINES);
-	for (float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
-	glEnd();
-}
-
-void ModuleRenderExercise::ReferenceAxis()
-{
-	glLineWidth(2.0f);
-
-	// red X
-	float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->program, "newColor"), 1, red);
-
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
-	glEnd();
-
-	// green Y
-	float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->program, "newColor"), 1, green);
-
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
-	glEnd();
-
-	// blue Z
-	float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->program, "newColor"), 1, blue);
-
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
-	glEnd();
-
-	glLineWidth(1.0f);
-}
-

@@ -14,19 +14,8 @@ ModuleProgram::~ModuleProgram()
 bool ModuleProgram::Init()
 {
 
-	char* dataVertex = ReadShader("../Default.vs");
-	char* dataFragment = ReadShader("../default.fs");
-
-	GLuint vertexShader, fragmentShader;
-
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(vertexShader, 1, &dataVertex, NULL);
-	glCompileShader(vertexShader);
-
-	glShaderSource(fragmentShader, 1, &dataFragment, NULL);
-	glCompileShader(fragmentShader);
+	program = CreateProgram("../Default.vs", "../default.fs");
+	axisProgram = CreateProgram("../defaultColor.vs", "../defaultColor.fs");
 
 	//------------------ TODO: Check if compile is correct
 	//GLint compiledVertex;
@@ -57,12 +46,6 @@ bool ModuleProgram::Init()
 	//glDeleteShader(compiledFragment);
 	//-------------------------------------
 
-	//Program
-	program = glCreateProgram();
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-	glLinkProgram(program);
-
 	////------------------ TODO: Check if linked is correct
 	//GLint linked;
 	//char infoLog[512];
@@ -73,10 +56,7 @@ bool ModuleProgram::Init()
 	//glDeleteShader(linked);
 	////-------------------------------------
 
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	return program;
+	return true;
 }
 
 update_status ModuleProgram::PreUpdate()
@@ -93,7 +73,35 @@ update_status ModuleProgram::Update()
 bool ModuleProgram::CleanUp()
 {
 	glDeleteProgram(program);
+	glDeleteProgram(axisProgram);
 	return true;
+}
+
+GLuint ModuleProgram::CreateProgram(const char* vertexShaderPath, const char* fragmentShaderPath) const {
+	
+	char* dataVertex = ReadShader(vertexShaderPath);
+	char* dataFragment = ReadShader(fragmentShaderPath);
+
+	GLuint vertexShader, fragmentShader;
+
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(vertexShader, 1, &dataVertex, NULL);
+	glCompileShader(vertexShader);
+
+	glShaderSource(fragmentShader, 1, &dataFragment, NULL);
+	glCompileShader(fragmentShader);
+
+	GLuint program = glCreateProgram();
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+	glLinkProgram(program);
+	
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	return program;
 }
 
 char* ModuleProgram::ReadShader(const char* path) const

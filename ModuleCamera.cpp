@@ -1,9 +1,7 @@
 #include "Application.h"
 
 #include "ModuleCamera.h"
-#include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleTextures.h"
 #include "ModuleProgram.h"
 
 #include "GL/glew.h"
@@ -74,8 +72,14 @@ update_status ModuleCamera::PreUpdate()
 
 update_status ModuleCamera::Update()
 {
-
-	
+	math::float4x4 model(math::float4x4::identity);
+	glUseProgram(App->program->axisProgram);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->target, App->camera->eye, App->camera->up)[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
+	RefenceGround();
+	ReferenceAxis();
+	glDrawArrays(GL_LINES, 0, 1);
 
 	return UPDATE_CONTINUE;
 }
@@ -161,5 +165,65 @@ void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 		frustum.farPlaneDistance = farDist;
 	}
 }
+
+
+void ModuleCamera::RefenceGround()
+{
+	glLineWidth(1.0f);
+	float d = 200.0f;
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glUniform4fv(glGetUniformLocation(App->program->axisProgram, "newColor"), 1, color);
+	glBegin(GL_LINES);
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
+	glEnd();
+}
+
+void ModuleCamera::ReferenceAxis()
+{
+	glLineWidth(2.0f);
+
+	// red X
+	float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	glUniform4fv(glGetUniformLocation(App->program->axisProgram, "newColor"), 1, red);
+
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
+	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
+	glEnd();
+
+	// green Y
+	float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+	glUniform4fv(glGetUniformLocation(App->program->axisProgram, "newColor"), 1, green);
+
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
+	glEnd();
+
+	// blue Z
+	float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
+	glUniform4fv(glGetUniformLocation(App->program->axisProgram, "newColor"), 1, blue);
+
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+	glEnd();
+
+	glLineWidth(1.0f);
+}
+
 
 

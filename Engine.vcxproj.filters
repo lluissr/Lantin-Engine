@@ -379,5 +379,11 @@
     <None Include="Default.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="defaultColor.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="defaultColor.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

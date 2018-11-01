@@ -40,7 +40,8 @@ public:
 	math::float3 upLU;
 
 	float speed = 0.5f;
-		
+	void RefenceGround();
+	void ReferenceAxis();
 
 };
 

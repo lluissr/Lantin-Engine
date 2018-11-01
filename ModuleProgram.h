@@ -17,8 +17,10 @@ public:
 	bool            CleanUp();
 
 	char* ReadShader(const char* path) const;
+	GLuint CreateProgram(const char* vertexShader, const char* fragmentShader) const ;
 	
 	GLuint program;
+	GLuint axisProgram;
 };
 
 #endif

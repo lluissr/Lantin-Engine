@@ -19,9 +19,6 @@ public:
 private:
 	GLuint texture;
 	unsigned vbo = 0;
-	void RefenceGround();
-	void ReferenceAxis();
-
 };
 
 #endif
