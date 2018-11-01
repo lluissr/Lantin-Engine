@@ -39,8 +39,6 @@ bool ModuleRenderExercise::Init()
 	0.0f, 1.0f,
 	};
 
-
-
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
@@ -86,11 +84,11 @@ update_status ModuleRenderExercise::Update()
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
-
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
 
 	return UPDATE_CONTINUE;
 }
@@ -101,6 +99,8 @@ bool ModuleRenderExercise::CleanUp()
 	{
 		glDeleteBuffers(1, &vbo);
 	}
+
+	App->textures->Unload(texture);
 
 	return true;
 }

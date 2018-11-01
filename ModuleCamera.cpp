@@ -80,6 +80,7 @@ update_status ModuleCamera::Update()
 	RefenceGround();
 	ReferenceAxis();
 	glDrawArrays(GL_LINES, 0, 1);
+	glUseProgram(0);
 
 	return UPDATE_CONTINUE;
 }

@@ -88,3 +88,12 @@ GLuint ModuleTextures::Load(const char* path)
 
 	return texture;
 }
+
+void ModuleTextures::Unload(unsigned id)
+{
+	if (id != 0)
+	{
+		glDeleteTextures(1, &id);
+	}
+}
+

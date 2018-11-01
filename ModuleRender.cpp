@@ -1,7 +1,10 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
+#include "ModuleProgram.h"
+#include "ModuleModelLoader.h"
 #include "ModuleWindow.h"
+#include "ModuleCamera.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -44,7 +47,7 @@ bool ModuleRender::Init()
 	glClearDepth(1.0f);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 
-    int width, height;
+	int width, height;
 	SDL_GetWindowSize(App->window->window, &width, &height);
 
 	return true;
@@ -64,8 +67,46 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+	{
+		RenderMesh(App->modelLoader->meshes[i]);
+	}
 
 	return UPDATE_CONTINUE;
+}
+
+
+void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh)
+{
+	ModuleModelLoader::Material& material = App->modelLoader->materials[mesh.material];
+	unsigned program = App->program->program;
+
+	glUseProgram(program);
+
+	math::float4x4 model(math::float4x4::identity);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->target, App->camera->eye, App->camera->up)[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
+
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, material.texture0);
+	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.numVertices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
 }
 
 update_status ModuleRender::PostUpdate()
@@ -74,7 +115,7 @@ update_status ModuleRender::PostUpdate()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_GL_SwapWindow(App->window->window);
-	
+
 	ImGui::UpdatePlatformWindows();
 
 	return UPDATE_CONTINUE;
@@ -92,6 +133,6 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::WindowResized(unsigned width, unsigned height)
 {
-    glViewport(0, 0, width, height); 
+	glViewport(0, 0, width, height);
 }
 

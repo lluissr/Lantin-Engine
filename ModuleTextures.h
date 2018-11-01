@@ -16,4 +16,5 @@ public:
 	bool CleanUp();
 
 	GLuint Load(const char* path);
+	void Unload(unsigned id);
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "ModuleModelLoader.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -18,6 +19,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
+	void RenderMesh(const ModuleModelLoader::Mesh& mesh);
 
 	void* context;
 };
