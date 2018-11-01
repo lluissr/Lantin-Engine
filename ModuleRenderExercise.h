@@ -2,6 +2,8 @@
 #define __ModuleRenderExercise_h__
 
 #include "Module.h"
+#include "MathGeoLib.h"
+#include "GL/glew.h"
 
 class ModuleRenderExercise : public Module
 {
@@ -13,9 +15,13 @@ public:
 	update_status   Update  ();
 	bool            CleanUp ();
 
+
 private:
-    unsigned vbo        = 0;
+	GLuint texture;
+	unsigned vbo = 0;
+	void RefenceGround();
+	void ReferenceAxis();
 
 };
 
-#endif /* __ModuleRenderExercise_h__ */
+#endif

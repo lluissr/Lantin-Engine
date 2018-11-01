@@ -25,8 +25,6 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 	void SetAspectRatio(float aspect_ratio);
-	math::float4x4 GetProjectionMatrix();
-	math::float4x4	GetViewMatrix();
 	void SetFOV(float fov);
 	void SetPlaneDistances(float nearDist, float farDist);
 	math::float4x4 LookAt(math::float3& target, math::float3& eye, math::float3& up);
@@ -42,13 +40,8 @@ public:
 	math::float3 upLU;
 
 	float speed = 0.5f;
-	
-private:
-	
-	GLuint texture;
-	unsigned vbo = 0;
-	void RefenceGround();
-	void ReferenceAxis();
+		
+
 };
 
 #endif /* __ModuleCamera_h__ */

@@ -34,6 +34,7 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
+	ModuleRenderExercise* exercise = nullptr;
 
 private:
 

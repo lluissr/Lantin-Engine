@@ -16,6 +16,8 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
+	char* ReadShader(const char* path) const;
+	
 	GLuint program;
 };
 

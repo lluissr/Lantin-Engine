@@ -14,47 +14,18 @@ ModuleProgram::~ModuleProgram()
 bool ModuleProgram::Init()
 {
 
-	//vertex
-	char* dataVertex = nullptr;
-	FILE* filevertex = nullptr;
-	int sizeVertex;
-	fopen_s(&filevertex, "../Default.vs", "rb");
-	if (filevertex)
-	{
-		fseek(filevertex, 0, SEEK_END);
-		sizeVertex = ftell(filevertex);
-		rewind(filevertex);
-		dataVertex = (char*)malloc(sizeVertex + 1);
-		fread(dataVertex, 1, sizeVertex, filevertex);
-		dataVertex[sizeVertex] = 0;
-		fclose(filevertex);
-	}
-
-	//fragment
-	char* dataFragment = nullptr;
-	FILE* file = nullptr;
-	int sizeFragment;
-	fopen_s(&file, "../default.fs", "rb");
-	if (file)
-	{
-		fseek(file, 0, SEEK_END);
-		sizeFragment = ftell(file);
-		rewind(file);
-		dataFragment = (char*)malloc(sizeFragment + 1);
-		fread(dataFragment, 1, sizeFragment, file);
-		dataFragment[sizeFragment] = 0;
-		fclose(file);
-	}
+	char* dataVertex = ReadShader("../Default.vs");
+	char* dataFragment = ReadShader("../default.fs");
 
 	GLuint vertexShader, fragmentShader;
 
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(vertexShader, 1, &dataVertex, &sizeVertex);
+	glShaderSource(vertexShader, 1, &dataVertex, NULL);
 	glCompileShader(vertexShader);
-	
-	glShaderSource(fragmentShader, 1, &dataFragment, &sizeFragment);
+
+	glShaderSource(fragmentShader, 1, &dataFragment, NULL);
 	glCompileShader(fragmentShader);
 
 	//------------------ TODO: Check if compile is correct
@@ -123,4 +94,24 @@ bool ModuleProgram::CleanUp()
 {
 	glDeleteProgram(program);
 	return true;
+}
+
+char* ModuleProgram::ReadShader(const char* path) const
+{
+	char* dataVertex = nullptr;
+	FILE* file = nullptr;
+	int sizeFragment;
+	fopen_s(&file, path, "rb");
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		sizeFragment = ftell(file);
+		rewind(file);
+		dataVertex = (char*)malloc(sizeFragment + 1);
+		fread(dataVertex, 1, sizeFragment, file);
+		dataVertex[sizeFragment] = 0;
+		fclose(file);
+	}
+
+	return dataVertex;
 }
