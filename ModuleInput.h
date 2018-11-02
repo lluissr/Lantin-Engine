@@ -1,8 +1,20 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Point.h"
 
 typedef unsigned __int8 Uint8;
+
+#define NUM_MOUSE_BUTTONS 5
+
+enum EventWindow
+{
+	WE_QUIT = 0,
+	WE_HIDE = 1,
+	WE_SHOW = 2,
+	WE_COUNT
+};
+
 
 enum KeyState
 {
@@ -32,4 +44,8 @@ public:
 
 private:
 	KeyState* keyboard;
+	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
+	bool		windowEvents[WE_COUNT];
+	iPoint mouse_motion;
+	iPoint mouse;
 };

@@ -59,11 +59,29 @@ update_status ModuleCamera::PreUpdate()
 	}
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
 	{
-		speed = 1.0f;
+		mSpeed = 1.0f;
+		rSpeed = 2.0f;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
 	{
-		speed = 0.5f;
+		mSpeed = 0.5f;
+		rSpeed = 1.0f;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) 
+	{
+		Rotate(UP);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) 
+	{
+		Rotate(DOWN);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) 
+	{
+		Rotate(LEFT);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) 
+	{
+		Rotate(RIGHT);
 	}
 
 	return UPDATE_CONTINUE;
@@ -75,7 +93,7 @@ update_status ModuleCamera::Update()
 	math::float4x4 model(math::float4x4::identity);
 	glUseProgram(App->program->axisProgram);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->target, App->camera->eye, App->camera->up)[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->axisProgram, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 	RefenceGround();
 	ReferenceAxis();
@@ -91,19 +109,19 @@ bool ModuleCamera::CleanUp()
 }
 
 
-math::float4x4 ModuleCamera::LookAt(math::float3& target, math::float3& eye, math::float3& up)
+math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
 {
 	math::float4x4 matrix;
 
-	forward = math::float3(target - eye);
-	forward.Normalize();
-	side = math::float3(forward.Cross(up));
+	cameraFront.Normalize();
+	math::float3 side(cameraFront.Cross(cameraUp)); 
 	side.Normalize();
-	upLU = math::float3(side.Cross(forward));
+	math::float3 up(side.Cross(cameraFront));
+
 	matrix[0][0] = side.x; matrix[0][1] = side.y; matrix[0][2] = side.z;
-	matrix[1][0] = upLU.x; matrix[1][1] = upLU.y; matrix[1][2] = upLU.z;
-	matrix[2][0] = -forward.x; matrix[2][1] = -forward.y; matrix[2][2] = -forward.z;
-	matrix[0][3] = -side.Dot(eye); matrix[1][3] = -upLU.Dot(eye); matrix[2][3] = forward.Dot(eye);
+	matrix[1][0] = up.x; matrix[1][1] = up.y; matrix[1][2] = up.z;
+	matrix[2][0] = -cameraFront.x; matrix[2][1] = -cameraFront.y; matrix[2][2] = -cameraFront.z;
+	matrix[0][3] = -side.Dot(cameraPosition); matrix[1][3] = -up.Dot(cameraPosition); matrix[2][3] = cameraFront.Dot(cameraPosition);
 	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
 	return matrix;
 }
@@ -113,31 +131,53 @@ void ModuleCamera::Move(Directions dir)
 {
 	switch (dir) {
 	case UP:
-		eye += math::float3(0.0f, 1.0f, 0.0f) * speed;
-		target += math::float3(0.0f, 1.0f, 0.0f) * speed;
+		cameraPosition += cameraUp.Normalized() * mSpeed;
 		break;
 	case DOWN:
-		eye -= math::float3(0.0f, 1.0f, 0.0f) * speed;
-		target -= math::float3(0.0f, 1.0f, 0.0f) * speed;
+		cameraPosition -= cameraUp.Normalized() * mSpeed;
 		break;
 	case FORWARD:
-		eye += forward * speed;
-		target += forward * speed;
+		cameraPosition += cameraFront.Normalized() * mSpeed;
 		break;
 	case BACKWARD:
-		eye -= forward * speed;
-		target -= forward * speed;
+		cameraPosition -= cameraFront.Normalized() * mSpeed;
 		break;
 	case LEFT:
-		eye -= side * speed;
-		target -= side * speed;
+		cameraPosition += cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
 	case RIGHT:
-		eye += side * speed;
-		target += side * speed;
+		cameraPosition -= cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
 	}
 }
+
+
+void ModuleCamera::Rotate(Directions dir) {
+
+	switch (dir) {
+	case UP:
+		pitch += rSpeed;
+		break;
+	case DOWN:
+		pitch -= rSpeed;
+		break;
+	case LEFT:
+		yaw -= rSpeed;
+		break;
+	case RIGHT:
+		yaw += rSpeed;
+		break;
+	}
+
+	pitch = math::Clamp(pitch, -89.0f, 89.0f);
+
+	math::float3 front;
+	front.x = SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+	front.y = SDL_sinf(math::DegToRad(pitch));
+	front.z = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+	cameraFront = front.Normalized();
+}
+
 
 void ModuleCamera::SetAspectRatio(float aspect_ratio)
 {

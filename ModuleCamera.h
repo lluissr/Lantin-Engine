@@ -27,19 +27,21 @@ public:
 	void SetAspectRatio(float aspect_ratio);
 	void SetFOV(float fov);
 	void SetPlaneDistances(float nearDist, float farDist);
-	math::float4x4 LookAt(math::float3& target, math::float3& eye, math::float3& up);
+	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void Move(Directions dir);
-
+	void Rotate(Directions dir);
 
 	Frustum frustum;
-	math::float3& target = math::float3(0.0f, 0.0f, 0.0f);
-	math::float3& eye = math::float3(0.0f, 2.0f, 5.0f);
-	math::float3& up = math::float3(0.0f, 1.0f, 0.0f);
-	math::float3 forward;
-	math::float3 side;
-	math::float3 upLU;
+	math::float3& cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
+	math::float3& cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+	math::float3& cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 
-	float speed = 0.5f;
+	float mSpeed = 0.5f;
+	float rSpeed = 1.0f;
+
+	float pitch = 0;
+	float yaw = 0;
+
 	void RefenceGround();
 	void ReferenceAxis();
 

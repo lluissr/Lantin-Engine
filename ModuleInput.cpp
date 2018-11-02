@@ -10,6 +10,7 @@ ModuleInput::ModuleInput()
 {
 	keyboard = new KeyState[300];
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * 300);
+	memset(mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
 
 // Destructor
@@ -63,6 +64,64 @@ update_status ModuleInput::PreUpdate()
 				keyboard[i] = KEY_IDLE;
 		}
 	}
+
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	{
+		if (mouse_buttons[i] == KEY_DOWN)
+			mouse_buttons[i] = KEY_REPEAT;
+
+		if (mouse_buttons[i] == KEY_UP)
+			mouse_buttons[i] = KEY_IDLE;
+	}
+
+	while (SDL_PollEvent(&event) != 0)
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			windowEvents[WE_QUIT] = true;
+			break;
+
+		case SDL_WINDOWEVENT:
+			switch (event.window.event)
+			{
+				//case SDL_WINDOWEVENT_LEAVE:
+			case SDL_WINDOWEVENT_HIDDEN:
+			case SDL_WINDOWEVENT_MINIMIZED:
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				windowEvents[WE_HIDE] = true;
+				break;
+
+				//case SDL_WINDOWEVENT_ENTER:
+			case SDL_WINDOWEVENT_SHOWN:
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			case SDL_WINDOWEVENT_RESTORED:
+				windowEvents[WE_SHOW] = true;
+				break;
+			}
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			mouse_buttons[event.button.button - 1] = KEY_DOWN;
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			mouse_buttons[event.button.button - 1] = KEY_UP;
+			break;
+
+		case SDL_MOUSEMOTION:
+			mouse_motion.x = event.motion.xrel / 2;
+			mouse_motion.y = event.motion.yrel / 2;
+			mouse.x = event.motion.x / 2;
+			mouse.y = event.motion.y / 2;
+			break;
+		}
+
+	}
+
+	if (windowEvents[EventWindow::WE_QUIT] == true || GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+		return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
 }
