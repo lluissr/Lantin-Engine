@@ -42,10 +42,19 @@ public:
 		return keyboard[id];
 	}
 
+
+	KeyState GetMouseButtonDown(int id) const
+	{
+		return mouse_buttons[id - 1];
+	}
+
+	const iPoint& GetMouseMotion() const;
+	const iPoint& GetMousePosition() const;
+
 private:
 	KeyState* keyboard;
-	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	bool		windowEvents[WE_COUNT];
+	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
+	bool windowEvents[WE_COUNT];
 	iPoint mouse_motion;
 	iPoint mouse;
 };

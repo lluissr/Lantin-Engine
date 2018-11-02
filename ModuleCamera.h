@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "MathGeoLib.h"
+#include "Point.h"
 #include "GL/glew.h"
 
 enum Directions {
@@ -30,6 +31,7 @@ public:
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void Move(Directions dir);
 	void Rotate(Directions dir);
+	void MouseUpdate(const iPoint& mousePosition);
 
 	Frustum frustum;
 	math::float3& cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
@@ -41,6 +43,10 @@ public:
 
 	float pitch = 0;
 	float yaw = 0;
+
+	bool firstMouse = true;
+	int lastX = 0;
+	int lastY = 0;
 
 	void RefenceGround();
 	void ReferenceAxis();

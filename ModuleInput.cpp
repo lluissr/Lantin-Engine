@@ -38,12 +38,9 @@ bool ModuleInput::Init()
 update_status ModuleInput::PreUpdate()
 {
 	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		ImGui_ImplSDL2_ProcessEvent(&event);
-		if (event.type == SDL_QUIT)
-			return UPDATE_STOP;
-	}
+
+	mouse_motion = { 0, 0 };
+	memset(windowEvents, false, WE_COUNT * sizeof(bool));
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -76,6 +73,8 @@ update_status ModuleInput::PreUpdate()
 
 	while (SDL_PollEvent(&event) != 0)
 	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+
 		switch (event.type)
 		{
 		case SDL_QUIT:
@@ -142,4 +141,14 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+const iPoint& ModuleInput::GetMousePosition() const
+{
+	return mouse;
+}
+
+const iPoint& ModuleInput::GetMouseMotion() const
+{
+	return mouse_motion;
 }

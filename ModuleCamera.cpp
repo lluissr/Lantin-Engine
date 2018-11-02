@@ -84,6 +84,11 @@ update_status ModuleCamera::PreUpdate()
 		Rotate(RIGHT);
 	}
 
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
+		MouseUpdate(App->input->GetMousePosition());
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -168,6 +173,35 @@ void ModuleCamera::Rotate(Directions dir) {
 		yaw += rSpeed;
 		break;
 	}
+
+	pitch = math::Clamp(pitch, -89.0f, 89.0f);
+
+	math::float3 front;
+	front.x = SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+	front.y = SDL_sinf(math::DegToRad(pitch));
+	front.z = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+	cameraFront = front.Normalized();
+}
+
+
+void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
+{
+	if (firstMouse) {
+		lastX = mousePosition.x;
+		lastY = mousePosition.y;
+		firstMouse = false;
+	}
+
+	float xoffset = mousePosition.x - lastX;
+	float yoffset = lastY - mousePosition.y;
+	lastX = mousePosition.x;
+	lastY = mousePosition.y;
+
+	xoffset *= 0.5f;
+	yoffset *= 0.5f;
+
+	yaw += xoffset;
+	pitch += yoffset;
 
 	pitch = math::Clamp(pitch, -89.0f, 89.0f);
 
