@@ -21,6 +21,8 @@ public:
 
 	ImGuiIO io;
 	bool show = false;
+	bool showAbout = false;
+	bool showHardware = false;
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
 	//std::vector<float> ms_log;

@@ -4,13 +4,14 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
+#include "ModuleInput.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "SDL.h"
 #include <GL/glew.h> 
 
-
+using namespace std;
 
 ModuleEditor::ModuleEditor()
 {
@@ -67,23 +68,106 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::CollapsingHeader("Camera"))
 		{
-			float nearPlane = App->camera->frustum.nearPlaneDistance;
-			float farPlane = App->camera->frustum.farPlaneDistance;
-			//float aspectratio = App->camera->frustum.AspectRatio.;
-			float front[3] = { App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z };
-			float up[3] = { App->camera->frustum.up.x, App->camera->frustum.up.y, App->camera->frustum.up.z };
-			float position[3] = { App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z };
+			float front[3] = { App->camera->cameraFront.x, App->camera->cameraFront.y, App->camera->cameraFront.z };
+			float up[3] = { App->camera->cameraUp.x, App->camera->cameraUp.y, App->camera->cameraUp.z };
+			float position[3] = { App->camera->cameraPosition.x, App->camera->cameraPosition.y, App->camera->cameraPosition.z };
+			float mouse[2] = { App->input->GetMousePosition().x, App->input->GetMousePosition().y };
 
 			ImGui::InputFloat3("Front", front);
 			ImGui::InputFloat3("Up", up);
 			ImGui::InputFloat3("Position", position);
-			ImGui::InputFloat("Near Plane", &nearPlane);
-			ImGui::InputFloat("Far Plane", &farPlane);
-			//ImGui::InputFloat("Aspect Ratio", &aspectratio);
-
+			ImGui::InputFloat("Movement Speed", &App->camera->mSpeed);
+			ImGui::InputFloat("Rotation Speed", &App->camera->rSpeed);
+			ImGui::InputFloat("Pitch", &App->camera->pitch);
+			ImGui::InputFloat("Yaw", &App->camera->yaw);
+			ImGui::InputFloat("Near Plane", &App->camera->frustum.nearPlaneDistance);
+			ImGui::InputFloat("Far Plane", &App->camera->frustum.farPlaneDistance);
+			ImGui::InputFloat2("Mouse position", mouse);
 		}
-		
 
+		if (ImGui::CollapsingHeader("Render"))
+		{
+		
+		}
+
+		if (ImGui::CollapsingHeader("Window"))
+		{
+			
+		}
+
+		if (ImGui::CollapsingHeader("Textures"))
+		{
+		
+		}
+
+		ImGui::End();
+	}
+
+	if (showAbout)
+	{
+		ImGui::Begin("About");
+
+		ImGui::Text("Name:        Lantin Engine");
+		ImGui::Text("Description: Engine developed in UPC");
+		ImGui::Text("Author:      Lluis Sanchez Roig");
+		ImGui::Separator();
+		ImGui::Text("Software");
+		if (ImGui::MenuItem("SDL 2.0.9"))
+		{
+			ShellExecute(NULL, "open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("OpenGL 4"))
+		{
+			ShellExecute(NULL, "open", "https://www.opengl.org/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("glew 2.1.0") )
+		{
+			ShellExecute(NULL, "open", "https://github.com/nigels-com/glew", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("Assimp 3.3.1"))
+		{
+			ShellExecute(NULL, "open", "https://github.com/assimp/assimp", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("DevIL 1.8.0"))
+		{
+			ShellExecute(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("ImGui - docking branch"))
+		{
+			ShellExecute(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::MenuItem("MathGeoLib 1.5"))
+		{
+			ShellExecute(NULL, "open", "https://github.com/juj/MathGeoLib", NULL, NULL, SW_SHOWNORMAL);
+		}
+
+		ImGui::Separator();
+		ImGui::Text("MIT License");
+	
+		ImGui::End();
+	}
+
+	if (showHardware)
+	{
+		ImGui::Begin("Hardware");
+		std::ostringstream stringStream;
+		stringStream << "CPUs: " << std::to_string(SDL_GetCPUCount()) << " (Cache: " << std::to_string(SDL_GetCPUCacheLineSize()) << "kb)";
+		ImGui::Text(stringStream.str().c_str());
+		stringStream.str("");
+		stringStream << "System RAM: " << std::to_string(SDL_GetSystemRAM()/1000) << "Gb";
+		ImGui::Text(stringStream.str().c_str());
+		stringStream.str("");
+		stringStream << "Caps: ";
+		if (SDL_HasAVX()) { stringStream << "AVX, "; }
+		if (SDL_HasAVX2()) { stringStream << "AVX2, "; }
+		if (SDL_HasRDTSC()) { stringStream << "RDTSC, "; }
+		if (SDL_HasSSE()) { stringStream << "SSE, "; }
+		if (SDL_HasSSE2()) { stringStream << "SSE2, "; }
+		if (SDL_HasSSE3()) { stringStream << "SSE3, "; }
+		if (SDL_HasSSE41()) { stringStream << "SSE41, "; }
+		if (SDL_HasSSE42()) { stringStream << "SSE42, "; }
+		if (SDL_HasMMX()) { stringStream << "MMX, "; }
+		ImGui::Text(stringStream.str().c_str());
 		ImGui::End();
 	}
 
@@ -92,7 +176,17 @@ update_status ModuleEditor::Update()
 //Menu
 	ImGui::BeginMainMenuBar();
 
-	if (ImGui::BeginMenu("Graphics"))
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Exit"))
+		{
+			return UPDATE_STOP;
+		}
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Engine"))
 	{
 		if (ImGui::MenuItem("Configuration"))
 		{
@@ -104,17 +198,18 @@ update_status ModuleEditor::Update()
 
 	if (ImGui::BeginMenu("Help"))
 	{
-		if (ImGui::MenuItem("GuiDemo"))
+		if (ImGui::MenuItem("Repository"))
 		{
+			ShellExecute(NULL, "open", "https://github.com/lluissr/Engine", NULL, NULL, SW_SHOWNORMAL);
 		}
-		if (ImGui::MenuItem("Documentation"))
-			ShellExecute(NULL, "open", "https://github.com/lluissr", NULL, NULL, SW_SHOWNORMAL);
-		if (ImGui::MenuItem("Download latest"))
-			ShellExecute(NULL, "open", "www.google.com", NULL, NULL, SW_SHOWNORMAL);
-		if (ImGui::MenuItem("Report a bug"))
-			ShellExecute(NULL, "open", "www.google.com", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::MenuItem("Hardware"))
+		{
+			showHardware = !showHardware;
+		}
 		if (ImGui::MenuItem("About"))
-			ShellExecute(NULL, "open", "www.google.com", NULL, NULL, SW_SHOWNORMAL);
+		{
+			showAbout = !showAbout;
+		}
 
 		ImGui::EndMenu();
 	}
