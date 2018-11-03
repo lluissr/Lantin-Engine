@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleInput_h__
+#define __ModuleInput_h__
+
 #include "Module.h"
 #include "Globals.h"
 #include "Point.h"
@@ -58,3 +60,5 @@ private:
 	iPoint mouse_motion;
 	iPoint mouse;
 };
+
+#endif

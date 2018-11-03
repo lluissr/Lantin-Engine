@@ -32,6 +32,7 @@ public:
 	void Move(Directions dir);
 	void Rotate(Directions dir);
 	void MouseUpdate(const iPoint& mousePosition);
+	void Zoom(const iPoint& mousePosition);
 
 	Frustum frustum;
 	math::float3& cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
@@ -47,6 +48,8 @@ public:
 	bool firstMouse = true;
 	int lastX = 0;
 	int lastY = 0;
+
+	float fov = 45.0f;
 
 	void RefenceGround();
 	void ReferenceAxis();

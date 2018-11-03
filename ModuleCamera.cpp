@@ -33,61 +33,70 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		Move(UP);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-	{
-		Move(DOWN);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-	{
-		Move(FORWARD);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	{
-		Move(BACKWARD);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
-		Move(LEFT);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
-		Move(RIGHT);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
-	{
-		mSpeed = 1.0f;
-		rSpeed = 2.0f;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
-	{
-		mSpeed = 0.5f;
-		rSpeed = 1.0f;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) 
-	{
-		Rotate(UP);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) 
-	{
-		Rotate(DOWN);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) 
-	{
-		Rotate(LEFT);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) 
-	{
-		Rotate(RIGHT);
-	}
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+		{
+			Move(UP);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+		{
+			Move(DOWN);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			Move(FORWARD);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		{
+			Move(BACKWARD);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			Move(LEFT);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			Move(RIGHT);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+		{
+			mSpeed = mSpeed * 2;
+			rSpeed = rSpeed * 2;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
+		{
+			mSpeed = mSpeed / 2;
+			rSpeed = rSpeed / 2;
+		}
 
+		//No necessari
+		/*if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			Rotate(UP);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			Rotate(DOWN);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			Rotate(LEFT);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			Rotate(RIGHT);
+		}*/
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
 		MouseUpdate(App->input->GetMousePosition());
 	}
+
+	//if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) {
+	//	Zoom(App->input->GetMousePosition());
+	//}
+	//else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) {
+	//	Zoom(App->input->GetMousePosition());
+	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -119,7 +128,7 @@ math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& 
 	math::float4x4 matrix;
 
 	cameraFront.Normalize();
-	math::float3 side(cameraFront.Cross(cameraUp)); 
+	math::float3 side(cameraFront.Cross(cameraUp));
 	side.Normalize();
 	math::float3 up(side.Cross(cameraFront));
 
@@ -210,6 +219,18 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 	front.y = SDL_sinf(math::DegToRad(pitch));
 	front.z = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
 	cameraFront = front.Normalized();
+}
+
+
+void ModuleCamera::Zoom(const iPoint& mousePosition)
+{
+	float yoffset = lastY - mousePosition.y;
+	if (fov >= 1.0f && fov <= 45.0f)
+		fov -= yoffset;
+	if (fov <= 1.0f)
+		fov = 1.0f;
+	if (fov >= 45.0f)
+		fov = 45.0f;
 }
 
 

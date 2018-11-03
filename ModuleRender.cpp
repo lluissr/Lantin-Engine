@@ -5,6 +5,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -114,9 +115,14 @@ update_status ModuleRender::PostUpdate()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+	if (App->editor->io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
+
 	SDL_GL_SwapWindow(App->window->window);
 
-	ImGui::UpdatePlatformWindows();
 
 	return UPDATE_CONTINUE;
 }
