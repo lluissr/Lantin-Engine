@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
+#include <vector>
 
 class ModuleEditor : public Module
 {
@@ -21,6 +22,8 @@ public:
 	ImGuiIO io;
 	bool show = false;
 	const char* glsl_version = "#version 130";
+	std::vector<float> fps_log;
+	//std::vector<float> ms_log;
 
 };
 

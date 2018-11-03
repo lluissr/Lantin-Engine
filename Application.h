@@ -3,6 +3,7 @@
 #include<list>
 #include "Globals.h"
 #include "Module.h"
+#include "SDL.h"
 
 class ModuleRender;
 class ModuleWindow;
@@ -36,9 +37,17 @@ public:
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleRenderExercise* exercise = nullptr;
 
-private:
+	float fps;
 
+private:
 	std::list<Module*> modules;
+
+	Uint32 frametimes[FRAME_VALUES];
+	Uint32 frametimelast;
+	Uint32 framecount;
+
+	void FPSInit();
+	void FPSCalculation();
 
 };
 

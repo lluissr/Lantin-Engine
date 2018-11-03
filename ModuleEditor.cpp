@@ -14,6 +14,7 @@
 
 ModuleEditor::ModuleEditor()
 {
+	fps_log.resize(100);
 }
 
 // Destructor
@@ -44,6 +45,9 @@ bool ModuleEditor::Init()
 
 update_status ModuleEditor::PreUpdate()
 {
+	fps_log.erase(fps_log.begin());
+	fps_log.push_back(App->fps);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -53,6 +57,14 @@ update_status ModuleEditor::Update()
 	if (show)
 	{
 		ImGui::Begin("Configuration");
+
+		if (ImGui::CollapsingHeader("Application"))
+		{
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		}
+
 		if (ImGui::CollapsingHeader("Camera"))
 		{
 			float nearPlane = App->camera->frustum.nearPlaneDistance;
@@ -70,6 +82,8 @@ update_status ModuleEditor::Update()
 			//ImGui::InputFloat("Aspect Ratio", &aspectratio);
 
 		}
+		
+
 		ImGui::End();
 	}
 
