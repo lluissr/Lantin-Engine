@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
+#include "ModuleRenderExercise.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -87,7 +88,33 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::CollapsingHeader("Render"))
 		{
-		
+			const char* items[] = { "Lenna", "Backer House", "T-Rex", "Radioactive Barrel" };
+			if (ImGui::Combo("Models", &item_current, items, IM_ARRAYSIZE(items)))
+			{
+				switch (item_current)
+				{
+				case 0:
+					App->modelLoader->CleanModel();
+					App->exercise->drawLenna = true;
+					break;
+				case 1:
+					App->modelLoader->CleanModel();
+					App->exercise->drawLenna = false;
+					App->modelLoader->ImportModel("BakerHouse.fbx");
+					break;
+				case 2:
+					App->modelLoader->CleanModel();
+					App->exercise->drawLenna = false;
+					App->modelLoader->ImportModel("Trex.fbx");
+					break;
+				case 3:
+					App->modelLoader->CleanModel();
+					App->exercise->drawLenna = false;
+					App->modelLoader->ImportModel("Radioactive_barrel.fbx");
+					break;
+				}
+				
+			}
 		}
 
 		if (ImGui::CollapsingHeader("Window"))

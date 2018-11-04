@@ -19,6 +19,9 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	void ImportModel(const char* path);
+	void CleanModel();
+
 	void GenerateMeshData(const aiMesh* aiMesh);
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 

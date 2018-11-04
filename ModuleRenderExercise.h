@@ -15,7 +15,7 @@ public:
 	update_status   Update  ();
 	bool            CleanUp ();
 
-
+	bool drawLenna = false;
 private:
 	GLuint texture;
 	unsigned vbo = 0;

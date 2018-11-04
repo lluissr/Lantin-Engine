@@ -23,7 +23,14 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	const aiScene* scene = aiImportFile("BakerHouse.fbx", aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
+	ImportModel("BakerHouse.fbx");
+
+	return true;
+}
+
+void ModuleModelLoader::ImportModel(const char* path)
+{
+	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
 
 	if (scene == NULL) {
 		const char* a = aiGetErrorString();
@@ -38,11 +45,16 @@ bool ModuleModelLoader::Init()
 	{
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
+}
+
+bool ModuleModelLoader::CleanUp()
+{
+	CleanModel();
 
 	return true;
 }
 
-bool ModuleModelLoader::CleanUp()
+void ModuleModelLoader::CleanModel()
 {
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
@@ -64,8 +76,6 @@ bool ModuleModelLoader::CleanUp()
 			App->textures->Unload(materials[i].texture0);
 		}
 	}
-
-	return true;
 }
 
 void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)

@@ -49,6 +49,11 @@ bool ModuleRenderExercise::Init()
 
 update_status ModuleRenderExercise::Update()
 {
+	if (!drawLenna)
+	{
+		return UPDATE_CONTINUE;
+	}
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(

@@ -25,6 +25,7 @@ public:
 	bool showHardware = false;
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
+	int item_current = 1;
 	//std::vector<float> ms_log;
 
 };
