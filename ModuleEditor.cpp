@@ -56,9 +56,9 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 
-	if (show)
+	if (showConfiguration)
 	{
-		ImGui::Begin("Configuration");
+		ImGui::Begin("Configuration", &showConfiguration);
 
 		if (ImGui::CollapsingHeader("Application"))
 		{
@@ -113,18 +113,18 @@ update_status ModuleEditor::Update()
 					App->modelLoader->ImportModel("Radioactive_barrel.fbx");
 					break;
 				}
-				
+
 			}
 		}
 
 		if (ImGui::CollapsingHeader("Window"))
 		{
-			
+
 		}
 
 		if (ImGui::CollapsingHeader("Textures"))
 		{
-		
+
 		}
 
 		ImGui::End();
@@ -132,7 +132,7 @@ update_status ModuleEditor::Update()
 
 	if (showAbout)
 	{
-		ImGui::Begin("About");
+		ImGui::Begin("About", &showAbout);
 
 		ImGui::Text("Name:        Lantin Engine");
 		ImGui::Text("Description: Engine developed in UPC");
@@ -147,7 +147,7 @@ update_status ModuleEditor::Update()
 		{
 			ShellExecute(NULL, "open", "https://www.opengl.org/", NULL, NULL, SW_SHOWNORMAL);
 		}
-		if (ImGui::MenuItem("glew 2.1.0") )
+		if (ImGui::MenuItem("glew 2.1.0"))
 		{
 			ShellExecute(NULL, "open", "https://github.com/nigels-com/glew", NULL, NULL, SW_SHOWNORMAL);
 		}
@@ -170,18 +170,18 @@ update_status ModuleEditor::Update()
 
 		ImGui::Separator();
 		ImGui::Text("MIT License");
-	
+
 		ImGui::End();
 	}
 
 	if (showHardware)
 	{
-		ImGui::Begin("Hardware");
+		ImGui::Begin("Hardware", &showHardware);
 		std::ostringstream stringStream;
 		stringStream << "CPUs: " << std::to_string(SDL_GetCPUCount()) << " (Cache: " << std::to_string(SDL_GetCPUCacheLineSize()) << "kb)";
 		ImGui::Text(stringStream.str().c_str());
 		stringStream.str("");
-		stringStream << "System RAM: " << std::to_string(SDL_GetSystemRAM()/1000) << "Gb";
+		stringStream << "System RAM: " << std::to_string(SDL_GetSystemRAM() / 1000) << "Gb";
 		ImGui::Text(stringStream.str().c_str());
 		stringStream.str("");
 		stringStream << "Caps: ";
@@ -198,9 +198,28 @@ update_status ModuleEditor::Update()
 		ImGui::End();
 	}
 
+	if (showConsole)
+	{
+		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Console", &showConsole);
+		if (ImGui::Button("Clear")) Clear();
+		ImGui::SameLine();
+		bool copy = ImGui::Button("Copy");
+		ImGui::Separator();
+		ImGui::BeginChild("scrolling");
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
+		if (copy) ImGui::LogToClipboard();
+		ImGui::TextUnformatted(Buf.begin());
+		if (ScrollToBottom)
+			ImGui::SetScrollHere(1.0f);
+		ScrollToBottom = false;
+		ImGui::PopStyleVar();
+		ImGui::EndChild();
+		ImGui::End();
+	}
 
 
-//Menu
+	//Menu
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
@@ -217,7 +236,11 @@ update_status ModuleEditor::Update()
 	{
 		if (ImGui::MenuItem("Configuration"))
 		{
-			show = !show;
+			showConfiguration = !showConfiguration;
+		}
+		if (ImGui::MenuItem("Console"))
+		{
+			showConsole = !showConsole;
 		}
 
 		ImGui::EndMenu();
@@ -253,10 +276,23 @@ update_status ModuleEditor::PostUpdate()
 
 bool ModuleEditor::CleanUp()
 {
-
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
 	return true;
+}
+
+void ModuleEditor::AddLog(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Buf.appendfv(fmt, args);
+	va_end(args);
+	ScrollToBottom = true;
+}
+
+void ModuleEditor::Clear() 
+{
+	Buf.clear(); 
 }

@@ -19,15 +19,21 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	void AddLog(const char* fmt, ...);
+	void Clear();
+
 	ImGuiIO io;
-	bool show = false;
+	bool showConfiguration = false;
 	bool showAbout = false;
 	bool showHardware = false;
+	bool showConsole = true;
+
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
 	int item_current = 1;
-	//std::vector<float> ms_log;
-
+	
+	ImGuiTextBuffer Buf;
+	bool ScrollToBottom;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
+#include "ModuleEditor.h"
 #include "GL/glew.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -34,13 +35,25 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 	if (scene == NULL) {
 		const char* a = aiGetErrorString();
+		App->editor->AddLog("Error: ");
+		App->editor->AddLog(a);
+		App->editor->AddLog("\n");
+		return;
+	}
+	else 
+	{
+		App->editor->AddLog("Fbx loaded: ");
+		App->editor->AddLog(path);
+		App->editor->AddLog("\n");
 	}
 
+	App->editor->AddLog("Start GenerateMeshData\n");
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
 		GenerateMeshData(scene->mMeshes[i]);
 	}
 
+	App->editor->AddLog("Start GenerateMaterialData\n");
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
 		GenerateMaterialData(scene->mMaterials[i]);
@@ -56,6 +69,7 @@ bool ModuleModelLoader::CleanUp()
 
 void ModuleModelLoader::CleanModel()
 {
+	App->editor->AddLog("Cleaning meshes\n");
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
 		if (meshes[i].vbo != 0)
@@ -69,6 +83,7 @@ void ModuleModelLoader::CleanModel()
 		}
 	}
 
+	App->editor->AddLog("Cleaning materials\n");
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
 		if (materials[i].texture0 != 0)
@@ -133,6 +148,9 @@ void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 
 	if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
+		App->editor->AddLog("Loading texture: ");
+		App->editor->AddLog(file.data);
+		App->editor->AddLog("\n");
 		material.texture0 = App->textures->Load(file.data);
 	}
 
