@@ -30,7 +30,7 @@ public:
 
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
-	int item_current = 1;
+	int currentItemSelected = 1;
 	
 	ImGuiTextBuffer Buf;
 	bool ScrollToBottom;

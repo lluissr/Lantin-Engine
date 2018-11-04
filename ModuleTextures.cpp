@@ -52,9 +52,8 @@ GLuint ModuleTextures::Load(const char* path)
 
 	if (success)
 	{
-		ILinfo ImageInfo;
-		iluGetImageInfo(&ImageInfo);
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+		iluGetImageInfo(&lastImageInfo);
+		if (lastImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();
 		}

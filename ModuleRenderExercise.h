@@ -16,8 +16,8 @@ public:
 	bool            CleanUp ();
 
 	bool drawLenna = false;
-private:
 	GLuint texture;
+private:
 	unsigned vbo = 0;
 };
 

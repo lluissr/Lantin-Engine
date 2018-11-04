@@ -58,6 +58,7 @@ update_status ModuleEditor::Update()
 
 	if (showConfiguration)
 	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Configuration", &showConfiguration);
 
 		if (ImGui::CollapsingHeader("Application"))
@@ -89,31 +90,14 @@ update_status ModuleEditor::Update()
 		if (ImGui::CollapsingHeader("Render"))
 		{
 			const char* items[] = { "Lenna", "Backer House", "T-Rex", "Radioactive Barrel" };
-			if (ImGui::Combo("Models", &item_current, items, IM_ARRAYSIZE(items)))
+			if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
 			{
-				switch (item_current)
+				if (App->modelLoader->modelRendered != currentItemSelected)
 				{
-				case 0:
 					App->modelLoader->CleanModel();
-					App->exercise->drawLenna = true;
-					break;
-				case 1:
-					App->modelLoader->CleanModel();
-					App->exercise->drawLenna = false;
-					App->modelLoader->ImportModel("BakerHouse.fbx");
-					break;
-				case 2:
-					App->modelLoader->CleanModel();
-					App->exercise->drawLenna = false;
-					App->modelLoader->ImportModel("Trex.fbx");
-					break;
-				case 3:
-					App->modelLoader->CleanModel();
-					App->exercise->drawLenna = false;
-					App->modelLoader->ImportModel("Radioactive_barrel.fbx");
-					break;
+					App->exercise->drawLenna = currentItemSelected == 0 ? true : false;
+					App->modelLoader->ChooseModelToRender(currentItemSelected);
 				}
-
 			}
 		}
 
@@ -124,7 +108,23 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::CollapsingHeader("Textures"))
 		{
-
+			if (currentItemSelected == 0)
+			{
+				ImGui::Image((ImTextureID)App->exercise->texture, ImVec2(200, 200));
+			}
+			else
+			{
+				for (size_t i = 0; i < App->modelLoader->materials.size(); i++)
+				{
+					if (App->modelLoader->materials[i].texture0 != 0)
+					{
+						ImGui::Image((ImTextureID)App->modelLoader->materials[i].texture0, ImVec2(200, 200));
+						std::ostringstream stringStream;
+						stringStream << "Dimensions: " << std::to_string(App->modelLoader->materials[i].width) << "x" << std::to_string(App->modelLoader->materials[i].height);
+						ImGui::Text(stringStream.str().c_str());
+					}
+				}
+			}
 		}
 
 		ImGui::End();
@@ -200,6 +200,7 @@ update_status ModuleEditor::Update()
 
 	if (showConsole)
 	{
+		//ImGui::SetNextWindowPos(ImVec2(0,0));
 		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Console", &showConsole);
 		if (ImGui::Button("Clear")) Clear();
@@ -292,7 +293,7 @@ void ModuleEditor::AddLog(const char* fmt, ...)
 	ScrollToBottom = true;
 }
 
-void ModuleEditor::Clear() 
+void ModuleEditor::Clear()
 {
-	Buf.clear(); 
+	Buf.clear();
 }

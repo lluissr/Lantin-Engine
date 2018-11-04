@@ -69,6 +69,7 @@ update_status ModuleCamera::PreUpdate()
 			mSpeed = mSpeed / 2;
 			rSpeed = rSpeed / 2;
 		}
+		
 
 		//No necessari
 		/*if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -97,6 +98,13 @@ update_status ModuleCamera::PreUpdate()
 	//else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) {
 	//	Zoom(App->input->GetMousePosition());
 	//}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
+		cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+		cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -261,9 +261,6 @@
     <ClInclude Include="MathGeoLib\include\Geometry\GeomType.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\include\Geometry\HitInfo.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -361,6 +358,9 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
       <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>

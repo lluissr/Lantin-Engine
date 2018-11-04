@@ -19,6 +19,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	void ChooseModelToRender(int num);
 	void ImportModel(const char* path);
 	void CleanModel();
 
@@ -38,10 +39,14 @@ public:
 	struct Material
 	{
 		unsigned texture0 = 0;
+		unsigned width = 0;
+		unsigned height = 0;
 	};
 
 	std::vector<Mesh> meshes;
 	std::vector<Material> materials;
+
+	int modelRendered = -1;
 };
 
 #endif

@@ -24,9 +24,35 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	ImportModel("BakerHouse.fbx");
+	ChooseModelToRender(1);
 
 	return true;
+}
+
+void ModuleModelLoader::ChooseModelToRender(int num)
+{
+	if (num == modelRendered) { return; }
+
+	char* path = "";
+	switch (num)
+	{
+	case 1:
+		path = "BakerHouse.fbx";
+		break;
+	case 2:
+		path = "Trex.fbx";
+		break;
+	case 3:
+		path = "Radioactive_barrel.fbx";
+		break;
+	default:
+		modelRendered = -1;
+		return;
+	}
+
+	modelRendered = num;
+
+	ImportModel(path);
 }
 
 void ModuleModelLoader::ImportModel(const char* path)
@@ -35,14 +61,14 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 	if (scene == NULL) {
 		const char* a = aiGetErrorString();
-		App->editor->AddLog("Error: ");
+		App->editor->AddLog("Importing error: ");
 		App->editor->AddLog(a);
 		App->editor->AddLog("\n");
 		return;
 	}
 	else 
 	{
-		App->editor->AddLog("Fbx loaded: ");
+		App->editor->AddLog("Fbx imported: ");
 		App->editor->AddLog(path);
 		App->editor->AddLog("\n");
 	}
@@ -82,6 +108,7 @@ void ModuleModelLoader::CleanModel()
 			glDeleteBuffers(1, &meshes[i].ibo);
 		}
 	}
+	meshes.clear();
 
 	App->editor->AddLog("Cleaning materials\n");
 	for (unsigned i = 0; i < materials.size(); ++i)
@@ -91,6 +118,7 @@ void ModuleModelLoader::CleanModel()
 			App->textures->Unload(materials[i].texture0);
 		}
 	}
+	materials.clear();
 }
 
 void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
@@ -152,6 +180,8 @@ void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 		App->editor->AddLog(file.data);
 		App->editor->AddLog("\n");
 		material.texture0 = App->textures->Load(file.data);
+		material.width = App->textures->lastImageInfo.Width;
+		material.height = App->textures->lastImageInfo.Height;
 	}
 
 	materials.push_back(material);
