@@ -14,6 +14,7 @@ class ModuleEditor;
 class ModuleCamera;
 class ModuleProgram;
 class ModuleModelLoader;
+class Timer;
 
 class Application
 {
@@ -36,7 +37,7 @@ public:
 	ModuleProgram* program = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleRenderExercise* exercise = nullptr;
-
+	Timer* t = nullptr;
 	float fps;
 
 private:

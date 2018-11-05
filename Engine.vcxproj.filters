@@ -363,6 +363,9 @@
     <ClInclude Include="Globals.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">

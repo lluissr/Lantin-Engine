@@ -9,11 +9,14 @@
 #include "ModuleProgram.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRenderExercise.h"
+#include "Timer.h"
 
 using namespace std;
 
 Application::Application()
 {
+	t = new Timer();
+	
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(renderer = new ModuleRender());
@@ -26,7 +29,7 @@ Application::Application()
 	modules.push_back(exercise = new ModuleRenderExercise());
 
 	FPSInit();
-
+	
 }
 
 Application::~Application()
@@ -39,11 +42,14 @@ Application::~Application()
 
 bool Application::Init()
 {
+	t->StartPerformance();
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
 
+	Uint64 time = t->StopPerformance();
+	LOG("Time %d", time);
 	return ret;
 }
 
