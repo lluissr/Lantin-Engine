@@ -73,7 +73,7 @@ update_status ModuleEditor::Update()
 			float front[3] = { App->camera->cameraFront.x, App->camera->cameraFront.y, App->camera->cameraFront.z };
 			float up[3] = { App->camera->cameraUp.x, App->camera->cameraUp.y, App->camera->cameraUp.z };
 			float position[3] = { App->camera->cameraPosition.x, App->camera->cameraPosition.y, App->camera->cameraPosition.z };
-			float mouse[2] = { App->input->GetMousePosition().x, App->input->GetMousePosition().y };
+			float mouse[2] = { (float)App->input->GetMousePosition().x, (float)App->input->GetMousePosition().y };
 
 			ImGui::InputFloat3("Front", front);
 			ImGui::InputFloat3("Up", up);

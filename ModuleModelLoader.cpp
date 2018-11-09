@@ -57,6 +57,8 @@ void ModuleModelLoader::ChooseModelToRender(int num)
 
 void ModuleModelLoader::ImportModel(const char* path)
 {
+	assert(path != NULL);
+
 	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
 
 	if (scene == NULL) {
@@ -66,7 +68,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 		App->editor->AddLog("\n");
 		return;
 	}
-	else 
+	else
 	{
 		App->editor->AddLog("Fbx imported: ");
 		App->editor->AddLog(path);
@@ -123,6 +125,8 @@ void ModuleModelLoader::CleanModel()
 
 void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 {
+	assert(aiMesh != NULL);
+
 	Mesh mesh;
 
 	glGenBuffers(1, &mesh.vbo);
@@ -168,6 +172,8 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 
 void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 {
+	assert(aiMaterial != NULL);
+
 	Material material;
 
 	aiString file;
@@ -185,4 +191,24 @@ void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 	}
 
 	materials.push_back(material);
+}
+
+void ModuleModelLoader::ReplaceMaterial(const char* path)
+{
+	assert(path != NULL);
+
+	Material material;
+	material.texture0 = App->textures->Load(path);
+	material.width = App->textures->lastImageInfo.Width;
+	material.height = App->textures->lastImageInfo.Height;
+
+	if (materials.size() == 0)
+	{
+		materials.push_back(material);
+	}
+	else
+	{
+		App->textures->Unload(materials[0].texture0);
+		materials[0] = material;
+	}
 }

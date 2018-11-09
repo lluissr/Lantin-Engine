@@ -3,6 +3,7 @@
 #include "GL/glew.h"
 #include "SDL.h"
 
+
 ModuleProgram::ModuleProgram()
 {
 }
@@ -79,6 +80,9 @@ bool ModuleProgram::CleanUp()
 
 GLuint ModuleProgram::CreateProgram(const char* vertexShaderPath, const char* fragmentShaderPath) const {
 	
+	assert(vertexShaderPath != NULL);
+	assert(fragmentShaderPath != NULL);
+
 	char* dataVertex = ReadShader(vertexShaderPath);
 	char* dataFragment = ReadShader(fragmentShaderPath);
 
@@ -106,6 +110,8 @@ GLuint ModuleProgram::CreateProgram(const char* vertexShaderPath, const char* fr
 
 char* ModuleProgram::ReadShader(const char* path) const
 {
+	assert(path != NULL);
+
 	char* dataVertex = nullptr;
 	FILE* file = nullptr;
 	int sizeFragment;

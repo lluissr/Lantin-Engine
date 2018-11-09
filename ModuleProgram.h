@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "GL/glew.h"
 #include "SDL.h"
+#include <assert.h>
 
 class ModuleProgram : public Module
 {

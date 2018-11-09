@@ -25,6 +25,7 @@ public:
 
 	void GenerateMeshData(const aiMesh* aiMesh);
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
+	void ReplaceMaterial(const char* path);
 
 
 	struct Mesh

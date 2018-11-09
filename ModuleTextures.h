@@ -8,6 +8,7 @@
 #include "DevIL/include/IL/il.h"
 #include "DevIL/include/IL/ilu.h"
 #include "DevIL/include/IL/ilut.h"
+#include <assert.h>
 
 struct SDL_Texture;
 

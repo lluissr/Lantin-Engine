@@ -209,8 +209,8 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 		firstMouse = false;
 	}
 
-	float xoffset = mousePosition.x - lastX;
-	float yoffset = lastY - mousePosition.y;
+	float xoffset = (float)mousePosition.x - (float)lastX;
+	float yoffset = (float)lastY - (float)mousePosition.y;
 	lastX = mousePosition.x;
 	lastY = mousePosition.y;
 
@@ -232,7 +232,7 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 
 void ModuleCamera::Zoom(const iPoint& mousePosition)
 {
-	float yoffset = lastY - mousePosition.y;
+	float yoffset = (float)lastY - (float)mousePosition.y;
 	if (fov >= 1.0f && fov <= 45.0f)
 		fov -= yoffset;
 	if (fov <= 1.0f)

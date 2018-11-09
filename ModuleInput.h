@@ -54,11 +54,14 @@ public:
 	const iPoint& GetMousePosition() const;
 
 private:
+	void HandleDropFile(const char* path);
+
 	KeyState* keyboard;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
 	bool windowEvents[WE_COUNT];
 	iPoint mouse_motion;
 	iPoint mouse;
+	
 };
 
 #endif

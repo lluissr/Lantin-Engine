@@ -9,17 +9,15 @@
 #include "SDL/include/SDL.h"
 
 
+
 ModuleTextures::ModuleTextures()
 {
 }
 
-// Destructor
 ModuleTextures::~ModuleTextures()
 {
-	
 }
 
-// Called before render is available
 bool ModuleTextures::Init()
 {
 	//ilutRenderer(ILUT_OPENGL);
@@ -31,15 +29,15 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-// Called before quitting
 bool ModuleTextures::CleanUp()
 {
 	return true;
 }
 
-// Load new texture from file path
 GLuint ModuleTextures::Load(const char* path)
 {
+	assert(path != NULL);
+
 	GLuint texture;
 
 	ILuint image;

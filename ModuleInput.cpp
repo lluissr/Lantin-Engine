@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleModelLoader.h"
+#include "ModuleEditor.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -115,6 +117,9 @@ update_status ModuleInput::PreUpdate()
 			mouse.x = event.motion.x / 2;
 			mouse.y = event.motion.y / 2;
 			break;
+		case SDL_DROPFILE:
+			HandleDropFile(event.drop.file);
+			break;
 		}
 
 	}
@@ -125,17 +130,11 @@ update_status ModuleInput::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-// Called every draw update
 update_status ModuleInput::Update()
 {
-	//SDL_PumpEvents();
-
-	//const Uint8* keys = SDL_GetKeyboardState(NULL);
-
 	return UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleInput::CleanUp()
 {
 	LOG("Quitting SDL input event subsystem");
@@ -151,4 +150,21 @@ const iPoint& ModuleInput::GetMousePosition() const
 const iPoint& ModuleInput::GetMouseMotion() const
 {
 	return mouse_motion;
+}
+
+void ModuleInput::HandleDropFile(const char* path)
+{
+	assert(path != NULL);
+
+	std::string str(path);
+	std::string ext(str.substr(str.length() - 3));
+	if (ext == "fbx")
+	{
+		App->modelLoader->CleanModel();
+		App->modelLoader->ImportModel(path);
+	}
+	else if (ext == "png" || ext == "jpg")
+	{
+		App->modelLoader->ReplaceMaterial(path);
+	}
 }
