@@ -69,35 +69,20 @@ update_status ModuleCamera::PreUpdate()
 			mSpeed = mSpeed / 2;
 			rSpeed = rSpeed / 2;
 		}
-		
 
-		//No necessari
-		/*if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		{
-			Rotate(UP);
-		}
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		{
-			Rotate(DOWN);
-		}
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		{
-			Rotate(LEFT);
-		}
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		{
-			Rotate(RIGHT);
-		}*/
-
-		MouseUpdate(App->input->GetMousePosition());
+		MouseUpdate();
 	}
 
-	//if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) {
-	//	Zoom(App->input->GetMousePosition());
-	//}
-	//else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) {
-	//	Zoom(App->input->GetMousePosition());
-	//}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) 
+	{
+		fovX -= 1;
+		SetHorizontalFOV(fovX);
+	}
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) 
+	{
+		fovX += 1;
+		SetHorizontalFOV(fovX);
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
@@ -106,9 +91,19 @@ update_status ModuleCamera::PreUpdate()
 		cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
+	{
+		Orbit();
+	}
+
+
 	return UPDATE_CONTINUE;
 }
 
+void ModuleCamera::Orbit()
+{
+	
+}
 
 update_status ModuleCamera::Update()
 {
@@ -174,35 +169,10 @@ void ModuleCamera::Move(Directions dir)
 }
 
 
-void ModuleCamera::Rotate(Directions dir) {
-
-	switch (dir) {
-	case UP:
-		pitch += rSpeed;
-		break;
-	case DOWN:
-		pitch -= rSpeed;
-		break;
-	case LEFT:
-		yaw -= rSpeed;
-		break;
-	case RIGHT:
-		yaw += rSpeed;
-		break;
-	}
-
-	pitch = math::Clamp(pitch, -89.0f, 89.0f);
-
-	math::float3 front;
-	front.x = SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
-	front.y = SDL_sinf(math::DegToRad(pitch));
-	front.z = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
-	cameraFront = front.Normalized();
-}
-
-
-void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
+void ModuleCamera::MouseUpdate()
 {
+	iPoint mousePosition = App->input->GetMousePosition();
+
 	if (firstMouse) {
 		lastX = mousePosition.x;
 		lastY = mousePosition.y;
@@ -223,9 +193,10 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 	pitch = math::Clamp(pitch, -89.0f, 89.0f);
 
 	math::float3 front;
-	front.x = SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+
+	front.x = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
 	front.y = SDL_sinf(math::DegToRad(pitch));
-	front.z = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
+	front.z = -SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
 	cameraFront = front.Normalized();
 }
 

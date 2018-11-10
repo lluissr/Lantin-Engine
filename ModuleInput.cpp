@@ -123,6 +123,16 @@ update_status ModuleInput::PreUpdate()
 			mouse.x = event.motion.x / 2;
 			mouse.y = event.motion.y / 2;
 			break;
+		case SDL_MOUSEWHEEL:
+			if (event.wheel.y > 0) 
+			{
+				mouse_buttons[4 - 1] = KEY_DOWN;
+			}
+			else 
+			{
+				mouse_buttons[5 - 1] = KEY_DOWN;
+			}
+			break;
 		case SDL_DROPFILE:
 			HandleDropFile(event.drop.file);
 			break;
