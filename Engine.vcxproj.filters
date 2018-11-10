@@ -100,9 +100,6 @@
     <ClCompile Include="MathGeoLib\include\Geometry\LineSegment.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="MathGeoLib\include\Math\MathFunc.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -149,6 +146,9 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="ModuleModelLoader.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>

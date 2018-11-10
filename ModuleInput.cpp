@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleModelLoader.h"
 #include "ModuleEditor.h"
+#include "ModuleCamera.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -100,6 +101,11 @@ update_status ModuleInput::PreUpdate()
 			case SDL_WINDOWEVENT_RESTORED:
 				windowEvents[WE_SHOW] = true;
 				break;
+
+			case SDL_WINDOWEVENT_RESIZED:
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+				App->camera->WindowResized(event.window.data1, event.window.data2);
+				break;
 			}
 			break;
 
@@ -166,5 +172,9 @@ void ModuleInput::HandleDropFile(const char* path)
 	else if (ext == "png" || ext == "jpg")
 	{
 		App->modelLoader->ReplaceMaterial(path);
+	}
+	else
+	{
+		App->editor->AddLog("Incorrect file extension: %s\n", ext.c_str());
 	}
 }

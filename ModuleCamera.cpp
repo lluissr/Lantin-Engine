@@ -26,7 +26,7 @@ bool ModuleCamera::Init()
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 
 	return true;
 }
@@ -233,29 +233,13 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 void ModuleCamera::Zoom(const iPoint& mousePosition)
 {
 	float yoffset = (float)lastY - (float)mousePosition.y;
-	if (fov >= 1.0f && fov <= 45.0f)
+	/*if (fov >= 1.0f && fov <= 45.0f)
 		fov -= yoffset;
 	if (fov <= 1.0f)
 		fov = 1.0f;
 	if (fov >= 45.0f)
-		fov = 45.0f;
+		fov = 45.0f;*/
 }
-
-
-void ModuleCamera::SetAspectRatio(float aspect_ratio)
-{
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
-}
-
-
-void ModuleCamera::SetFOV(float fov)
-{
-	float aspect_ratio = frustum.AspectRatio();
-
-	frustum.verticalFov = math::pi * fov;
-	SetAspectRatio(aspect_ratio);
-}
-
 
 void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 {
@@ -268,6 +252,28 @@ void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 	{
 		frustum.farPlaneDistance = farDist;
 	}
+}
+
+
+void ModuleCamera::WindowResized(unsigned width, unsigned height)
+{
+	glViewport(0, 0, width, height);
+	screenWidth = width;
+	screenHeight = height;
+	SetHorizontalFOV(fovX);
+	SetVerticalFOV(fovY);
+}
+
+
+void ModuleCamera::SetHorizontalFOV(float fovX) {
+	frustum.horizontalFov = math::DegToRad(fovX);
+	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5f) * ((float)screenHeight / (float)screenWidth));
+}
+
+
+void ModuleCamera::SetVerticalFOV(float fovY) {
+	frustum.verticalFov = math::DegToRad(fovY);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }
 
 

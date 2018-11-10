@@ -136,9 +136,3 @@ bool ModuleRender::CleanUp()
 
 	return true;
 }
-
-void ModuleRender::WindowResized(unsigned width, unsigned height)
-{
-	glViewport(0, 0, width, height);
-}
-

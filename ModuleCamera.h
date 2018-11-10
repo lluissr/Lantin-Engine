@@ -25,14 +25,20 @@ public:
 	update_status   PreUpdate();
 	update_status   Update();
 	bool            CleanUp();
-	void SetAspectRatio(float aspect_ratio);
-	void SetFOV(float fov);
+
 	void SetPlaneDistances(float nearDist, float farDist);
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void Move(Directions dir);
 	void Rotate(Directions dir);
 	void MouseUpdate(const iPoint& mousePosition);
 	void Zoom(const iPoint& mousePosition);
+	void WindowResized(unsigned width, unsigned height);
+	void SetVerticalFOV(float fovY);
+	void SetHorizontalFOV(float fovX);
+
+	void RefenceGround();
+	void ReferenceAxis();
+
 
 	Frustum frustum;
 	math::float3& cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
@@ -49,10 +55,11 @@ public:
 	int lastX = 0;
 	int lastY = 0;
 
-	float fov = 45.0f;
+	float fovY = 45.0f;
+	float fovX = 45.0f;
 
-	void RefenceGround();
-	void ReferenceAxis();
+	int screenWidth = SCREEN_WIDTH;
+	int screenHeight = SCREEN_HEIGHT;
 
 };
 
