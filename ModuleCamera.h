@@ -30,7 +30,6 @@ public:
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void Move(Directions dir);
 	void MouseUpdate();
-	void Zoom(const iPoint& mousePosition);
 	void WindowResized(unsigned width, unsigned height);
 	void SetVerticalFOV(float fovY);
 	void SetHorizontalFOV(float fovX);

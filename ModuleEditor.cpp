@@ -58,7 +58,8 @@ update_status ModuleEditor::Update()
 
 	if (showConfiguration)
 	{
-		ImGui::SetNextWindowSize(ImVec2(400, 400), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
+		ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
 		ImGui::Begin("Configuration", &showConfiguration);
 
 		if (ImGui::CollapsingHeader("Application"))
@@ -87,6 +88,7 @@ update_status ModuleEditor::Update()
 			ImGui::InputFloat2("Mouse position", mouse);
 		}
 
+		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Render"))
 		{
 			const char* items[] = { "Lenna", "Backer House", "T-Rex", "Radioactive Barrel" };
@@ -103,9 +105,11 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::CollapsingHeader("Window"))
 		{
-
+			int window[2] = { App->camera->screenWidth, App->camera->screenHeight };
+			ImGui::InputInt2("Size", window, ImGuiInputTextFlags_ReadOnly);
 		}
 
+		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Textures"))
 		{
 			if (currentItemSelected == 0)
@@ -200,8 +204,8 @@ update_status ModuleEditor::Update()
 
 	if (showConsole)
 	{
-		//ImGui::SetNextWindowPos(ImVec2(0,0));
-		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(0, (float)App->camera->screenHeight - 200.0f));
+		ImGui::SetNextWindowSize(ImVec2((float)App->camera->screenWidth, 200.0f));
 		ImGui::Begin("Console", &showConsole);
 		if (ImGui::Button("Clear")) Clear();
 		ImGui::SameLine();

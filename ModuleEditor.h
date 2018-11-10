@@ -23,7 +23,7 @@ public:
 	void Clear();
 
 	ImGuiIO io;
-	bool showConfiguration = false;
+	bool showConfiguration = true;
 	bool showAbout = false;
 	bool showHardware = false;
 	bool showConsole = true;

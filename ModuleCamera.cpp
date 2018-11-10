@@ -200,18 +200,6 @@ void ModuleCamera::MouseUpdate()
 	cameraFront = front.Normalized();
 }
 
-
-void ModuleCamera::Zoom(const iPoint& mousePosition)
-{
-	float yoffset = (float)lastY - (float)mousePosition.y;
-	/*if (fov >= 1.0f && fov <= 45.0f)
-		fov -= yoffset;
-	if (fov <= 1.0f)
-		fov = 1.0f;
-	if (fov >= 45.0f)
-		fov = 45.0f;*/
-}
-
 void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 {
 	if (nearDist > 0.0f && nearDist < frustum.farPlaneDistance)
