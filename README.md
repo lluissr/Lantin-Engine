@@ -7,7 +7,7 @@ Github [Lantin Engine](https://github.com/lluissr/Lantin-Engine/)
 ##  Controls:
 
 * Right click to rotate the camera.
-* Right click + �WASD� to move the camera.
+* Right click + WASD to move the camera.
 * Mouse wheel to zoom in/out.
 * F to focus the camera around the geometry.
 * SHIFT + Movement to duplicate the movement speed.

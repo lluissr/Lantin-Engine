@@ -174,12 +174,12 @@ void ModuleInput::HandleDropFile(const char* path) const
 
 	std::string str(path);
 	std::string ext(str.substr(str.length() - 3));
-	if (ext == "fbx")
+	if (ext == "fbx" || ext == "FBX")
 	{
 		App->modelLoader->CleanModel();
 		App->modelLoader->ImportModel(path);
 	}
-	else if (ext == "png" || ext == "jpg")
+	else if (ext == "png" || ext == "jpg" || ext == "dds")
 	{
 		App->modelLoader->ReplaceMaterial(path);
 	}
