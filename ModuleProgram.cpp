@@ -15,8 +15,8 @@ ModuleProgram::~ModuleProgram()
 bool ModuleProgram::Init()
 {
 
-	program = CreateProgram("../Default.vs", "../default.fs");
-	axisProgram = CreateProgram("../defaultColor.vs", "../defaultColor.fs");
+	program = CreateProgram("Default.vs", "default.fs");
+	axisProgram = CreateProgram("defaultColor.vs", "defaultColor.fs");
 
 	return true;
 }

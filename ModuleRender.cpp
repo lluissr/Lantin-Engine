@@ -52,7 +52,7 @@ bool ModuleRender::Init()
 	int width, height;
 	SDL_GetWindowSize(App->window->window, &width, &height);
 
-	checkersTexture = App->textures->Load("../Textures/checker.jpg");
+	checkersTexture = App->textures->Load("./Textures/checker.jpg");
 
 	return true;
 }

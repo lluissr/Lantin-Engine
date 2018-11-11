@@ -56,7 +56,7 @@ GLuint ModuleTextures::Load(const char* path)
 			cont.push_back(token);
 		}
 		std::ostringstream stringStream;
-		stringStream << "../Textures/" << cont[cont.size() - 1];
+		stringStream << "./Textures/" << cont[cont.size() - 1];
 		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
 		success = ilLoadImage(stringStream.str().c_str());
 		if (!success)
