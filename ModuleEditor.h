@@ -27,7 +27,8 @@ public:
 	void addMemory(float memory);
 
 	ImGuiIO io;
-	bool showConfiguration = true;
+	bool showConfiguration = false;
+	bool showModel = true;
 	bool showAbout = false;
 	bool showHardware = false;
 	bool showConsole = true;

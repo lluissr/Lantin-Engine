@@ -22,5 +22,7 @@ public:
 	void RenderBoundingBox();
 
 	void* context;
-	bool renderBoundingBox = true;
+	bool renderBoundingBox = false;
+	bool useCheckerTexture = false;
+	GLuint checkersTexture;
 };

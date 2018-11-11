@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
+#include "ModuleTextures.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -51,6 +52,8 @@ bool ModuleRender::Init()
 	int width, height;
 	SDL_GetWindowSize(App->window->window, &width, &height);
 
+	checkersTexture = App->textures->Load("../Textures/checker.jpg");
+
 	return true;
 }
 
@@ -95,7 +98,14 @@ void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh)
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material.texture0);
+	if (useCheckerTexture)
+	{
+		glBindTexture(GL_TEXTURE_2D, checkersTexture);
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, material.texture0);
+	}
 	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 
 	glEnableVertexAttribArray(0);

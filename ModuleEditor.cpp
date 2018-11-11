@@ -110,6 +110,8 @@ update_status ModuleEditor::Update()
 		{
 			ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
 
+			ImGui::Checkbox("Checkers texture ", &App->renderer->useCheckerTexture);
+
 			const char* items[] = { "Backer House", "T-Rex", "Radioactive Barrel" };
 			if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
 			{
@@ -127,19 +129,38 @@ update_status ModuleEditor::Update()
 			ImGui::InputInt2("Size", window, ImGuiInputTextFlags_ReadOnly);
 		}
 
-		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
-		if (ImGui::CollapsingHeader("Textures"))
-		{
-			for (size_t i = 0; i < App->modelLoader->materials.size(); i++)
-			{
-				if (App->modelLoader->materials[i].texture0 != 0)
-				{
-					ImGui::Image((ImTextureID)App->modelLoader->materials[i].texture0, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", App->modelLoader->materials[i].width, App->modelLoader->materials[i].height);
-				}
-			}
-		}
 
+		ImGui::End();
+	}
+
+	if (showModel)
+	{
+		ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
+		ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
+		ImGui::Begin("Model information", &showModel);
+		ImGui::Text("Model loaded has %d meshes", App->modelLoader->meshes.size());
+
+		for (size_t i = 0; i < App->modelLoader->meshes.size(); i++)
+		{
+			ImGui::NewLine();
+			ImGui::Text("Mesh name: %s", App->modelLoader->meshes[i].name);
+			if (ImGui::CollapsingHeader("Transformation"))
+			{
+			}
+			if (ImGui::CollapsingHeader("Geometry"))
+			{
+				ImGui::Text("Triangles count: %d", App->modelLoader->meshes[i].numVertices / 3);
+				ImGui::Text("Vertices count: %d", App->modelLoader->meshes[i].numVertices);
+			}
+				if (ImGui::CollapsingHeader("Textures"))
+				{
+					if (App->modelLoader->materials[App->modelLoader->meshes[i].material].texture0 != 0)
+					{
+						ImGui::Image((ImTextureID)App->modelLoader->materials[App->modelLoader->meshes[i].material].texture0, ImVec2(200, 200));
+						ImGui::Text("Dimensions: %dx%d", App->modelLoader->materials[App->modelLoader->meshes[i].material].width, App->modelLoader->materials[App->modelLoader->meshes[i].material].height);
+					}
+				}
+		}
 		ImGui::End();
 	}
 
@@ -231,7 +252,7 @@ update_status ModuleEditor::Update()
 		ImGui::End();
 	}
 
-	
+
 	//Menu
 	ImGui::BeginMainMenuBar();
 
@@ -247,6 +268,10 @@ update_status ModuleEditor::Update()
 
 	if (ImGui::BeginMenu("Engine"))
 	{
+		if (ImGui::MenuItem("Model"))
+		{
+			showModel = !showModel;
+		}
 		if (ImGui::MenuItem("Configuration"))
 		{
 			showConfiguration = !showConfiguration;

@@ -38,6 +38,7 @@ public:
 		unsigned material = 0;
 		unsigned numVertices = 0;
 		unsigned numIndices = 0;
+		const char* name = nullptr;
 	};
 
 	struct Material

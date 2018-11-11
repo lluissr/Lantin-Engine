@@ -181,6 +181,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	mesh.material = aiMesh->mMaterialIndex;
 	mesh.numVertices = aiMesh->mNumVertices;
 	mesh.numIndices = aiMesh->mNumFaces * 3;
+	mesh.name = aiMesh->mName.C_Str();
 
 	meshes.push_back(mesh);
 }
