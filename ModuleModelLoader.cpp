@@ -93,6 +93,46 @@ void ModuleModelLoader::ImportModel(const char* path)
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
 
+
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+
+	aiNode* node = scene->mRootNode;
+	node->mTransformation.Decompose(scaling, rotation, translation);
+	float3 pos = { translation.x, translation.y, translation.z };
+	float3 scale = { scaling.x, scaling.y, scaling.z };
+	Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+	
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].translation = translation;
+		meshes[i].scaling = scaling;
+		meshes[i].rotation = rotation;
+	}
+
+	//std::string name = node->mName.C_Str();
+	//static const char* transformNodes[5] = {
+	//	"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
+	//	"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
+
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	if (name.find(transformNodes[i]) != std::string::npos && node->mNumChildren > 0)
+	//	{
+	//		node = node->mChildren[0];
+
+	//		node->mTransformation.Decompose(scaling, rotation, translation);
+
+	//		pos += { translation.x, translation.y, translation.z };
+	//		scale = { scale.x*scaling.x, scale.y*scaling.y, scale.z*scaling.z };
+	//		rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+	//		name = node->mName.C_Str();
+	//		i = -1;
+	//	}
+	//}
+
 	App->camera->Focus();
 }
 
@@ -183,6 +223,8 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	mesh.numIndices = aiMesh->mNumFaces * 3;
 	mesh.name = aiMesh->mName.C_Str();
 
+
+
 	meshes.push_back(mesh);
 }
 
@@ -223,5 +265,48 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	{
 		App->textures->Unload(materials[0].texture0);
 		materials[0] = material;
+	}
+}
+
+void ModuleModelLoader::DrawImGui()
+{
+	ImGui::Text("Model loaded has %d meshes", meshes.size());
+
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+
+		ImGui::NewLine();
+		ImGui::Text("Mesh name: %s", meshes[i].name);
+
+
+		if (ImGui::TreeNode((void*)(i * 3), "Transformation"))
+		{
+			float pos[3] = { meshes[i].translation.x,meshes[i].translation.y, meshes[i].translation.z };
+			float scaling[3] = { meshes[i].scaling.x,meshes[i].scaling.y, meshes[i].scaling.z };
+			float rotation[3] = { meshes[i].rotation.x,meshes[i].rotation.y, meshes[i].rotation.z };
+			ImGui::Text("Position:");
+			ImGui::InputFloat3("", pos, 5, ImGuiInputTextFlags_ReadOnly);
+			ImGui::Text("Rotation:");
+			ImGui::InputFloat3("", rotation, 5, ImGuiInputTextFlags_ReadOnly);
+			ImGui::Text("Scale:");
+			ImGui::InputFloat3("", scaling, 5, ImGuiInputTextFlags_ReadOnly);
+			ImGui::TreePop();
+
+		}
+		if (ImGui::TreeNode((void*)(i * 3 + 1), "Geometry"))
+		{
+			ImGui::Text("Triangles count: %d", meshes[i].numVertices / 3);
+			ImGui::Text("Vertices count: %d", meshes[i].numVertices);
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode((void*)(i * 3 + 2), "Textures"))
+		{
+			if (materials[meshes[i].material].texture0 != 0)
+			{
+				ImGui::Image((ImTextureID)materials[meshes[i].material].texture0, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", materials[meshes[i].material].width, materials[meshes[i].material].height);
+			}
+			ImGui::TreePop();
+		}
 	}
 }

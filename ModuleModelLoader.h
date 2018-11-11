@@ -27,6 +27,7 @@ public:
 	void GenerateMeshData(const aiMesh* aiMesh);
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 	void ReplaceMaterial(const char* path);
+	void DrawImGui();
 
 	math::float3 minPoint;
 	math::float3 maxPoint;
@@ -39,6 +40,9 @@ public:
 		unsigned numVertices = 0;
 		unsigned numIndices = 0;
 		const char* name = nullptr;
+		aiVector3D translation;
+		aiVector3D scaling;
+		aiQuaternion rotation;
 	};
 
 	struct Material

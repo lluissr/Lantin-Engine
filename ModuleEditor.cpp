@@ -167,7 +167,7 @@ bool ModuleEditor::DrawMenu()
 	{
 		if (ImGui::MenuItem("Repository"))
 		{
-			ShellExecute(NULL, "open", "https://github.com/lluissr/Engine", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecute(NULL, "open", "https://github.com/lluissr/Lantin-Engine", NULL, NULL, SW_SHOWNORMAL);
 		}
 		if (ImGui::MenuItem("Hardware"))
 		{
@@ -237,31 +237,7 @@ void ModuleEditor::DrawModel()
 	ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
 	ImGui::Begin("Model information", &showModel);
-	ImGui::Text("Model loaded has %d meshes", App->modelLoader->meshes.size());
-
-	for (size_t i = 0; i < App->modelLoader->meshes.size(); i++)
-	{
-
-		ImGui::NewLine();
-		ImGui::Text("Mesh name: %s", App->modelLoader->meshes[i].name);
-
-		if (ImGui::CollapsingHeader("Transformation"))
-		{
-		}
-		if (ImGui::CollapsingHeader("Geometry"))
-		{
-			ImGui::Text("Triangles count: %d", App->modelLoader->meshes[i].numVertices / 3);
-			ImGui::Text("Vertices count: %d", App->modelLoader->meshes[i].numVertices);
-		}
-		if (ImGui::CollapsingHeader("Textures"))
-		{
-			if (App->modelLoader->materials[App->modelLoader->meshes[i].material].texture0 != 0)
-			{
-				ImGui::Image((ImTextureID)App->modelLoader->materials[App->modelLoader->meshes[i].material].texture0, ImVec2(200, 200));
-				ImGui::Text("Dimensions: %dx%d", App->modelLoader->materials[App->modelLoader->meshes[i].material].width, App->modelLoader->materials[App->modelLoader->meshes[i].material].height);
-			}
-		}
-	}
+	App->modelLoader->DrawImGui();
 	ImGui::End();
 }
 
@@ -351,7 +327,10 @@ void ModuleEditor::DrawAbout()
 	}
 
 	ImGui::Separator();
-	ImGui::Text("MIT License");
+	if (ImGui::MenuItem("MIT License"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/lluissr/Lantin-Engine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
+	}
 
 	ImGui::End();
 }
