@@ -26,7 +26,6 @@ Application::Application()
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(modelLoader = new ModuleModelLoader());
 	modules.push_back(editor = new ModuleEditor());
-	modules.push_back(exercise = new ModuleRenderExercise());
 
 	FPSInit();
 	
@@ -42,14 +41,11 @@ Application::~Application()
 
 bool Application::Init()
 {
-	t->StartPerformance();
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
 
-	Uint64 time = t->StopPerformance();
-	LOG("Time %d", time);
 	return ret;
 }
 

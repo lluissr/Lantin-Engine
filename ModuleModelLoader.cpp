@@ -25,7 +25,7 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	ChooseModelToRender(1);
+	ChooseModelToRender(0);
 
 	return true;
 }
@@ -37,13 +37,13 @@ void ModuleModelLoader::ChooseModelToRender(int num)
 	char* path = "";
 	switch (num)
 	{
-	case 1:
+	case 0:
 		path = "BakerHouse.fbx";
 		break;
-	case 2:
+	case 1:
 		path = "Trex.fbx";
 		break;
-	case 3:
+	case 2:
 		path = "Radioactive_barrel.fbx";
 		break;
 	default:
@@ -60,20 +60,20 @@ void ModuleModelLoader::ImportModel(const char* path)
 {
 	assert(path != NULL);
 
+	LOG("Try importing model from path: %s", path);
 	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
 
 	if (scene == NULL) 
 	{
 		const char* a = aiGetErrorString();
-		App->editor->AddLog("Importing error: %s\n", a);
+		LOG("Importing error: %s", a);
 		return;
 	}
 	else
 	{
-		App->editor->AddLog("Fbx imported: %s\n", path);
+		LOG("Fbx imported: %s", path);
 	}
 
-	App->editor->AddLog("Start GenerateMeshData\n");
 
 	if (scene->mNumMeshes > 0)
 	{
@@ -81,16 +81,18 @@ void ModuleModelLoader::ImportModel(const char* path)
 		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
 	}
 
+	LOG("Start GenerateMeshData");
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
 		GenerateMeshData(scene->mMeshes[i]);
 	}
 
-	App->editor->AddLog("Start GenerateMaterialData\n");
+	LOG("Start GenerateMaterialData");
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
+
 	App->camera->Focus();
 }
 
@@ -103,7 +105,7 @@ bool ModuleModelLoader::CleanUp()
 
 void ModuleModelLoader::CleanModel()
 {
-	App->editor->AddLog("Cleaning meshes\n");
+	LOG("Cleaning meshes");
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
 		if (meshes[i].vbo != 0)
@@ -118,7 +120,7 @@ void ModuleModelLoader::CleanModel()
 	}
 	meshes.clear();
 
-	App->editor->AddLog("Cleaning materials\n");
+	LOG("Cleaning materials");
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
 		if (materials[i].texture0 != 0)
@@ -195,9 +197,6 @@ void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 
 	if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
-		App->editor->AddLog("Loading texture: ");
-		App->editor->AddLog(file.data);
-		App->editor->AddLog("\n");
 		material.texture0 = App->textures->Load(file.data);
 		material.width = App->textures->lastImageInfo.Width;
 		material.height = App->textures->lastImageInfo.Height;

@@ -36,7 +36,7 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
-	ModuleRenderExercise* exercise = nullptr;
+
 	Timer* t = nullptr;
 	float fps;
 

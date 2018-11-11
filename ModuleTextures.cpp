@@ -8,8 +8,6 @@
 #include "DevIL/include/IL/ilut.h"
 #include "SDL/include/SDL.h"
 
-
-
 ModuleTextures::ModuleTextures()
 {
 }
@@ -38,7 +36,7 @@ GLuint ModuleTextures::Load(const char* path)
 {
 	assert(path != NULL);
 
-	GLuint texture;
+	GLuint texture = 0;
 
 	ILuint image;
 
@@ -46,10 +44,34 @@ GLuint ModuleTextures::Load(const char* path)
 
 	ilBindImage(image);
 
+	LOG("Try loading texture from path: %s", path);
 	bool success = ilLoadImage(path);
+
+	if (!success)
+	{
+		LOG("Fail at loading texture");
+		std::string str(path);
+		std::stringstream ss(str);
+		std::string token;
+		std::vector<std::string> cont;
+		while (std::getline(ss, token, '\\')) {
+			cont.push_back(token);
+		}
+		std::ostringstream stringStream;
+		stringStream << "../Textures/" << cont[cont.size() - 1];
+		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
+		success = ilLoadImage(stringStream.str().c_str());
+		if (!success)
+		{
+			LOG("Fail at loading texture in second try");
+			LOG("3rd tryfor loading texture from path: %s", cont[cont.size() - 1]);
+			success = ilLoadImage(cont[cont.size() - 1].c_str());
+		}
+	}
 
 	if (success)
 	{
+		LOG("Texture loaded correctly");
 		iluGetImageInfo(&lastImageInfo);
 		if (lastImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
@@ -78,7 +100,10 @@ GLuint ModuleTextures::Load(const char* path)
 			ilGetInteger(IL_IMAGE_FORMAT),	// Format of image pixel data
 			GL_UNSIGNED_BYTE,		// Image data type
 			ilGetData());			// The actual image data itself
-
+	}
+	else
+	{
+		LOG("Fail to load texture. Texture not found.")
 	}
 
 	ilDeleteImage(image);

@@ -70,7 +70,7 @@ int main(int argc, char ** argv)
 			LOG("Application CleanUp --------------");
 			if (App->CleanUp() == false)
 			{
-				LOG("Application CleanUp exits with error -----");
+				//LOG("Application CleanUp exits with error -----");
 			}
 			else
 				main_return = EXIT_SUCCESS;
@@ -83,6 +83,6 @@ int main(int argc, char ** argv)
 	}
 
 	delete App;
-	LOG("Bye :)\n");
+	//LOG("Bye :)\n");
 	return main_return;
 }

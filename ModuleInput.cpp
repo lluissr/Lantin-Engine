@@ -185,6 +185,6 @@ void ModuleInput::HandleDropFile(const char* path)
 	}
 	else
 	{
-		App->editor->AddLog("Incorrect file extension: %s\n", ext.c_str());
+		LOG("Incorrect file extension: %s", ext.c_str());
 	}
 }

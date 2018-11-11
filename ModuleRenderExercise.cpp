@@ -19,7 +19,7 @@ ModuleRenderExercise::~ModuleRenderExercise()
 
 bool ModuleRenderExercise::Init()
 {
-	texture = App->textures->Load("../Images/Lenna.png");
+	texture = App->textures->Load("../Textures/Lenna.png");
 
 	float vertex_buffer_data[] = {
 	-1.0f, -1.0f, 0.0f,

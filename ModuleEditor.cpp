@@ -93,13 +93,12 @@ update_status ModuleEditor::Update()
 		{
 			ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
 
-			const char* items[] = { "Lenna", "Backer House", "T-Rex", "Radioactive Barrel" };
+			const char* items[] = { "Backer House", "T-Rex", "Radioactive Barrel" };
 			if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
 			{
 				if (App->modelLoader->modelRendered != currentItemSelected)
 				{
 					App->modelLoader->CleanModel();
-					App->exercise->drawLenna = currentItemSelected == 0 ? true : false;
 					App->modelLoader->ChooseModelToRender(currentItemSelected);
 				}
 			}
@@ -114,21 +113,14 @@ update_status ModuleEditor::Update()
 		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Textures"))
 		{
-			if (currentItemSelected == 0)
+			for (size_t i = 0; i < App->modelLoader->materials.size(); i++)
 			{
-				ImGui::Image((ImTextureID)App->exercise->texture, ImVec2(200, 200));
-			}
-			else
-			{
-				for (size_t i = 0; i < App->modelLoader->materials.size(); i++)
+				if (App->modelLoader->materials[i].texture0 != 0)
 				{
-					if (App->modelLoader->materials[i].texture0 != 0)
-					{
-						ImGui::Image((ImTextureID)App->modelLoader->materials[i].texture0, ImVec2(200, 200));
-						std::ostringstream stringStream;
-						stringStream << "Dimensions: " << std::to_string(App->modelLoader->materials[i].width) << "x" << std::to_string(App->modelLoader->materials[i].height);
-						ImGui::Text(stringStream.str().c_str());
-					}
+					ImGui::Image((ImTextureID)App->modelLoader->materials[i].texture0, ImVec2(200, 200));
+					std::ostringstream stringStream;
+					stringStream << "Dimensions: " << std::to_string(App->modelLoader->materials[i].width) << "x" << std::to_string(App->modelLoader->materials[i].height);
+					ImGui::Text(stringStream.str().c_str());
 				}
 			}
 		}
