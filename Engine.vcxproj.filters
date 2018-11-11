@@ -151,6 +151,9 @@
     <ClCompile Include="log.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>mmgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -366,6 +369,12 @@
     <ClInclude Include="Timer.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="mmgr\nommgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -376,6 +385,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{f4e265a9-4af6-4334-96a2-f945ae8bec86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mmgr">
+      <UniqueIdentifier>{1f022b29-8e7c-4f75-8cc7-fe5d0c69d1f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

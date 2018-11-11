@@ -7,6 +7,9 @@
 #include "imgui_impl_sdl.h"
 #include <vector>
 
+
+#define MEMORY_LOG_SIZE 100
+
 class ModuleEditor : public Module
 {
 public:
@@ -21,6 +24,7 @@ public:
 
 	void AddLog(const char* fmt, ...);
 	void Clear();
+	void addMemory(float memory);
 
 	ImGuiIO io;
 	bool showConfiguration = true;
@@ -30,8 +34,9 @@ public:
 
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
+	std::vector<float> memory_log;
 	int currentItemSelected = 0;
-	
+
 	ImGuiTextBuffer Buf;
 	bool ScrollToBottom;
 };

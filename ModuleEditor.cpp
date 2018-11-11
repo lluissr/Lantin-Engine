@@ -11,12 +11,14 @@
 #include "imgui_impl_opengl3.h"
 #include "SDL.h"
 #include <GL/glew.h> 
+#include "mmgr/mmgr.h"
 
 using namespace std;
 
 ModuleEditor::ModuleEditor()
 {
 	fps_log.resize(100);
+	memory_log.resize(MEMORY_LOG_SIZE);
 }
 
 // Destructor
@@ -67,6 +69,21 @@ update_status ModuleEditor::Update()
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
+			sMStats stats = m_getMemoryStatistics();
+			addMemory((float)stats.totalReportedMemory);
+
+			ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption (Bytes)", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(310, 100));
+
+			ImGui::Text("Total Reported Mem: %u", stats.totalReportedMemory);
+			ImGui::Text("Total Actual Mem: %u", stats.totalActualMemory);
+			ImGui::Text("Peak Reported Mem: %u", stats.peakReportedMemory);
+			ImGui::Text("Peak Actual Mem: %u", stats.peakActualMemory);
+			ImGui::Text("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
+			ImGui::Text("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
+			ImGui::Text("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
+			ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
+			ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
 		}
 
 		if (ImGui::CollapsingHeader("Camera"))
@@ -118,9 +135,7 @@ update_status ModuleEditor::Update()
 				if (App->modelLoader->materials[i].texture0 != 0)
 				{
 					ImGui::Image((ImTextureID)App->modelLoader->materials[i].texture0, ImVec2(200, 200));
-					std::ostringstream stringStream;
-					stringStream << "Dimensions: " << std::to_string(App->modelLoader->materials[i].width) << "x" << std::to_string(App->modelLoader->materials[i].height);
-					ImGui::Text(stringStream.str().c_str());
+					ImGui::Text("Dimensions: %dx%d", App->modelLoader->materials[i].width, App->modelLoader->materials[i].height);
 				}
 			}
 		}
@@ -165,6 +180,10 @@ update_status ModuleEditor::Update()
 		{
 			ShellExecute(NULL, "open", "https://github.com/juj/MathGeoLib", NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (ImGui::MenuItem("mmgr 1.0"))
+		{
+			ShellExecute(NULL, "open", "http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml", NULL, NULL, SW_SHOWNORMAL);
+		}
 
 		ImGui::Separator();
 		ImGui::Text("MIT License");
@@ -175,24 +194,19 @@ update_status ModuleEditor::Update()
 	if (showHardware)
 	{
 		ImGui::Begin("Hardware", &showHardware);
-		std::ostringstream stringStream;
-		stringStream << "CPUs: " << std::to_string(SDL_GetCPUCount()) << " (Cache: " << std::to_string(SDL_GetCPUCacheLineSize()) << "kb)";
-		ImGui::Text(stringStream.str().c_str());
-		stringStream.str("");
-		stringStream << "System RAM: " << std::to_string(SDL_GetSystemRAM() / 1000) << "Gb";
-		ImGui::Text(stringStream.str().c_str());
-		stringStream.str("");
-		stringStream << "Caps: ";
-		if (SDL_HasAVX()) { stringStream << "AVX, "; }
-		if (SDL_HasAVX2()) { stringStream << "AVX2, "; }
-		if (SDL_HasRDTSC()) { stringStream << "RDTSC, "; }
-		if (SDL_HasSSE()) { stringStream << "SSE, "; }
-		if (SDL_HasSSE2()) { stringStream << "SSE2, "; }
-		if (SDL_HasSSE3()) { stringStream << "SSE3, "; }
-		if (SDL_HasSSE41()) { stringStream << "SSE41, "; }
-		if (SDL_HasSSE42()) { stringStream << "SSE42, "; }
-		if (SDL_HasMMX()) { stringStream << "MMX, "; }
-		ImGui::Text(stringStream.str().c_str());
+		ImGui::Text("CPUs: %d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+		ImGui::Text("System RAM: %dGb", SDL_GetSystemRAM() / 1000);
+		std::string caps = "Caps: ";
+		if (SDL_HasAVX()) { caps += "AVX, "; }
+		if (SDL_HasAVX2()) { caps += "AVX2, "; }
+		if (SDL_HasRDTSC()) { caps += "RDTSC, "; }
+		if (SDL_HasSSE()) { caps += "SSE, "; }
+		if (SDL_HasSSE2()) { caps += "SSE2, "; }
+		if (SDL_HasSSE3()) { caps += "SSE3, "; }
+		if (SDL_HasSSE41()) { caps += "SSE41, "; }
+		if (SDL_HasSSE42()) { caps += "SSE42, "; }
+		if (SDL_HasMMX()) { caps += "MMX, "; }
+		ImGui::Text(caps.c_str());
 		ImGui::End();
 	}
 
@@ -217,7 +231,7 @@ update_status ModuleEditor::Update()
 		ImGui::End();
 	}
 
-
+	
 	//Menu
 	ImGui::BeginMainMenuBar();
 
@@ -294,4 +308,14 @@ void ModuleEditor::AddLog(const char* fmt, ...)
 void ModuleEditor::Clear()
 {
 	Buf.clear();
+}
+
+void ModuleEditor::addMemory(float memory)
+{
+	for (unsigned int i = 0; i < MEMORY_LOG_SIZE - 1; ++i)
+	{
+		memory_log[i] = memory_log[i + 1];
+	}
+
+	memory_log[MEMORY_LOG_SIZE - 1] = memory;
 }
