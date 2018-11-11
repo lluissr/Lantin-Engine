@@ -20,7 +20,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void ChooseModelToRender(int num);
+	void ChooseModelToRender(const int num);
 	void ImportModel(const char* path);
 	void CleanModel();
 
@@ -28,8 +28,8 @@ public:
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 	void ReplaceMaterial(const char* path);
 
-		math::float3 minPoint;
-		math::float3 maxPoint;
+	math::float3 minPoint;
+	math::float3 maxPoint;
 
 	struct Mesh
 	{

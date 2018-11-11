@@ -168,7 +168,7 @@ const iPoint& ModuleInput::GetMouseMotion() const
 	return mouse_motion;
 }
 
-void ModuleInput::HandleDropFile(const char* path)
+void ModuleInput::HandleDropFile(const char* path) const
 {
 	assert(path != NULL);
 

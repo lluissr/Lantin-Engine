@@ -30,7 +30,7 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::ChooseModelToRender(int num)
+void ModuleModelLoader::ChooseModelToRender(const int num)
 {
 	if (num == modelRendered) { return; }
 

@@ -19,7 +19,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void RenderMesh(const ModuleModelLoader::Mesh& mesh);
-	void RenderBoundingBox();
+	void RenderBoundingBox() const;
 	void DrawImGui();
 
 	void* context;

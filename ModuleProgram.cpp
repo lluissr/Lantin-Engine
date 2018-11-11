@@ -18,45 +18,6 @@ bool ModuleProgram::Init()
 	program = CreateProgram("../Default.vs", "../default.fs");
 	axisProgram = CreateProgram("../defaultColor.vs", "../defaultColor.fs");
 
-	//------------------ TODO: Check if compile is correct
-	//GLint compiledVertex;
-	//GLint compiledFragment;
-
-	//glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledVertex);
-	//if (!compiledVertex)
-	//{
-	//	GLint blen = 0;
-	//	GLsizei slen = 0;
-
-	//	glGetShaderiv(compiledVertex, GL_INFO_LOG_LENGTH, &blen);
-	//	if (blen > 1)
-	//	{
-	//		GLchar* compiler_log = (GLchar*)malloc(blen);
-	//		glGetInfoLogARB(compiledVertex, blen, &slen, compiler_log);
-	//		//cout << "compiler_log:\n", compiler_log);
-	//		free(compiler_log);
-	//	}
-	//}
-
-	//glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiledFragment);
-	//if (!compiledFragment)
-	//{
-
-	//}
-	//glDeleteShader(compiledVertex);
-	//glDeleteShader(compiledFragment);
-	//-------------------------------------
-
-	////------------------ TODO: Check if linked is correct
-	//GLint linked;
-	//char infoLog[512];
-	//glGetProgramiv(program, GL_LINK_STATUS, &linked);
-	//if (!linked) {
-	//	glGetProgramInfoLog(program, 512, NULL, infoLog);
-	//}
-	//glDeleteShader(linked);
-	////-------------------------------------
-
 	return true;
 }
 
@@ -79,7 +40,7 @@ bool ModuleProgram::CleanUp()
 }
 
 GLuint ModuleProgram::CreateProgram(const char* vertexShaderPath, const char* fragmentShaderPath) const {
-	
+
 	assert(vertexShaderPath != NULL);
 	assert(fragmentShaderPath != NULL);
 
@@ -101,7 +62,7 @@ GLuint ModuleProgram::CreateProgram(const char* vertexShaderPath, const char* fr
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
 	glLinkProgram(program);
-	
+
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 

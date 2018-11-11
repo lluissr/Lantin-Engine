@@ -26,19 +26,19 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
-	void SetPlaneDistances(float nearDist, float farDist);
-	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
-	void Move(Directions dir);
+	void SetPlaneDistances(const float nearDist, const float farDist);
+	math::float4x4 LookAt(const math::float3& cameraPosition, math::float3& cameraFront, const math::float3& cameraUp);
+	void Move(const Directions dir);
 	void MouseUpdate();
-	void WindowResized(unsigned width, unsigned height);
-	void SetVerticalFOV(float fovY);
-	void SetHorizontalFOV(float fovX);
+	void WindowResized(const unsigned width, const unsigned height);
+	void SetVerticalFOV(const float fovY);
+	void SetHorizontalFOV(const float fovX);
 	void Orbit();
 	void Focus();
 
 	void DrawImGui();
-	void RefenceGround();
-	void ReferenceAxis();
+	void RefenceGround() const;
+	void ReferenceAxis() const;
 
 
 	Frustum frustum;

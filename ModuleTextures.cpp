@@ -18,11 +18,9 @@ ModuleTextures::~ModuleTextures()
 
 bool ModuleTextures::Init()
 {
-	//ilutRenderer(ILUT_OPENGL);
 	ilInit();
 	iluInit();
 	ilutInit();
-	//ilutRenderer(ILUT_OPENGL);
 
 	return true;
 }
@@ -111,7 +109,7 @@ GLuint ModuleTextures::Load(const char* path)
 	return texture;
 }
 
-void ModuleTextures::Unload(unsigned id)
+void ModuleTextures::Unload(const unsigned id) const
 {
 	if (id != 0)
 	{

@@ -158,7 +158,7 @@ bool ModuleCamera::CleanUp()
 }
 
 
-math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
+math::float4x4 ModuleCamera::LookAt(const math::float3& cameraPosition, math::float3& cameraFront, const math::float3& cameraUp)
 {
 	math::float4x4 matrix;
 
@@ -176,7 +176,7 @@ math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& 
 }
 
 
-void ModuleCamera::Move(Directions dir)
+void ModuleCamera::Move(const Directions dir)
 {
 	switch (dir) {
 	case UP:
@@ -232,7 +232,7 @@ void ModuleCamera::MouseUpdate()
 	frustum.front = cameraFront = front.Normalized();
 }
 
-void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
+void ModuleCamera::SetPlaneDistances(const float nearDist, const float farDist)
 {
 	if (nearDist > 0.0f && nearDist < frustum.farPlaneDistance)
 	{
@@ -246,7 +246,7 @@ void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 }
 
 
-void ModuleCamera::WindowResized(unsigned width, unsigned height)
+void ModuleCamera::WindowResized(const unsigned width, const unsigned height)
 {
 	glViewport(0, 0, width, height);
 	screenWidth = width;
@@ -256,13 +256,13 @@ void ModuleCamera::WindowResized(unsigned width, unsigned height)
 }
 
 
-void ModuleCamera::SetHorizontalFOV(float fovX) {
+void ModuleCamera::SetHorizontalFOV(const float fovX) {
 	frustum.horizontalFov = math::DegToRad(fovX);
 	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5f) * ((float)screenHeight / (float)screenWidth));
 }
 
 
-void ModuleCamera::SetVerticalFOV(float fovY) {
+void ModuleCamera::SetVerticalFOV(const float fovY) {
 	frustum.verticalFov = math::DegToRad(fovY);
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }
@@ -288,7 +288,7 @@ void ModuleCamera::DrawImGui()
 	}
 }
 
-void ModuleCamera::RefenceGround()
+void ModuleCamera::RefenceGround() const 
 {
 	glLineWidth(1.0f);
 	float d = 200.0f;
@@ -305,7 +305,7 @@ void ModuleCamera::RefenceGround()
 	glEnd();
 }
 
-void ModuleCamera::ReferenceAxis()
+void ModuleCamera::ReferenceAxis() const 
 {
 	glLineWidth(2.0f);
 
