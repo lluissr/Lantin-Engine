@@ -19,6 +19,8 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void RenderMesh(const ModuleModelLoader::Mesh& mesh);
+	void RenderBoundingBox();
 
 	void* context;
+	bool renderBoundingBox = true;
 };

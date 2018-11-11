@@ -6,6 +6,7 @@
 #include <assimp/mesh.h>
 #include <assimp/material.h>
 #include "GL/glew.h"
+#include "MathGeoLib.h"
 #include <vector>
 
 
@@ -27,6 +28,8 @@ public:
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 	void ReplaceMaterial(const char* path);
 
+		math::float3 minPoint;
+		math::float3 maxPoint;
 
 	struct Mesh
 	{

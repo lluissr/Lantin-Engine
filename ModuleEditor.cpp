@@ -91,6 +91,8 @@ update_status ModuleEditor::Update()
 		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Render"))
 		{
+			ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
+
 			const char* items[] = { "Lenna", "Backer House", "T-Rex", "Radioactive Barrel" };
 			if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
 			{

@@ -76,6 +76,13 @@ void ModuleModelLoader::ImportModel(const char* path)
 	}
 
 	App->editor->AddLog("Start GenerateMeshData\n");
+
+	if (scene->mNumMeshes > 0)
+	{
+		minPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
+		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
+	}
+
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
 		GenerateMeshData(scene->mMeshes[i]);
@@ -136,9 +143,16 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * aiMesh->mNumVertices, aiMesh->mVertices);
 
 	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * aiMesh->mNumVertices, sizeof(float) * 2 * aiMesh->mNumVertices, GL_MAP_WRITE_BIT);
+	
 	for (unsigned i = 0; i < aiMesh->mNumVertices; ++i)
 	{
 		texture_coords[i] = math::float2(aiMesh->mTextureCoords[0][i].x, aiMesh->mTextureCoords[0][i].y);
+		if (aiMesh->mVertices[i].x < minPoint.x) { minPoint.x = aiMesh->mVertices[i].x; }
+		if (aiMesh->mVertices[i].y < minPoint.y) { minPoint.y = aiMesh->mVertices[i].y; }
+		if (aiMesh->mVertices[i].z < minPoint.z) { minPoint.z = aiMesh->mVertices[i].z; }
+		if (aiMesh->mVertices[i].x > maxPoint.x) { maxPoint.x = aiMesh->mVertices[i].x; }
+		if (aiMesh->mVertices[i].y > maxPoint.y) { maxPoint.y = aiMesh->mVertices[i].y; }
+		if (aiMesh->mVertices[i].z > maxPoint.z) { maxPoint.z = aiMesh->mVertices[i].z; }
 	}
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
