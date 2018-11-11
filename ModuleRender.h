@@ -20,9 +20,11 @@ public:
 	bool CleanUp();
 	void RenderMesh(const ModuleModelLoader::Mesh& mesh);
 	void RenderBoundingBox();
+	void DrawImGui();
 
 	void* context;
 	bool renderBoundingBox = false;
 	bool useCheckerTexture = false;
 	GLuint checkersTexture;
+	int currentItemSelected = 0;
 };

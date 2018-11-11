@@ -19,8 +19,15 @@ public:
 	bool Init();
 	update_status PreUpdate();
 	update_status Update();
+	void DrawModel();
+	void DrawConfiguration();
 	update_status PostUpdate();
 	bool CleanUp();
+
+	bool DrawMenu();
+	void DrawConsole();
+	void DrawHardware();
+	void DrawAbout();
 
 	void AddLog(const char* fmt, ...);
 	void Clear();
@@ -36,7 +43,7 @@ public:
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
 	std::vector<float> memory_log;
-	int currentItemSelected = 0;
+
 
 	ImGuiTextBuffer Buf;
 	bool ScrollToBottom;

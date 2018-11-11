@@ -36,6 +36,7 @@ public:
 	void Orbit();
 	void Focus();
 
+	void DrawImGui();
 	void RefenceGround();
 	void ReferenceAxis();
 

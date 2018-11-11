@@ -260,3 +260,24 @@ bool ModuleRender::CleanUp()
 
 	return true;
 }
+
+void ModuleRender::DrawImGui()
+{
+	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
+	if (ImGui::CollapsingHeader("Render"))
+	{
+		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
+
+		ImGui::Checkbox("Checkers texture ", &App->renderer->useCheckerTexture);
+
+		const char* items[] = { "Backer House", "T-Rex", "Radioactive Barrel" };
+		if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
+		{
+			if (App->modelLoader->modelRendered != currentItemSelected)
+			{
+				App->modelLoader->CleanModel();
+				App->modelLoader->ChooseModelToRender(currentItemSelected);
+			}
+		}
+	}
+}
