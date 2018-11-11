@@ -3,6 +3,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleEditor.h"
+#include "ModuleCamera.h"
 #include "GL/glew.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -61,18 +62,15 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
 
-	if (scene == NULL) {
+	if (scene == NULL) 
+	{
 		const char* a = aiGetErrorString();
-		App->editor->AddLog("Importing error: ");
-		App->editor->AddLog(a);
-		App->editor->AddLog("\n");
+		App->editor->AddLog("Importing error: %s\n", a);
 		return;
 	}
 	else
 	{
-		App->editor->AddLog("Fbx imported: ");
-		App->editor->AddLog(path);
-		App->editor->AddLog("\n");
+		App->editor->AddLog("Fbx imported: %s\n", path);
 	}
 
 	App->editor->AddLog("Start GenerateMeshData\n");
@@ -93,6 +91,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 	{
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
+	App->camera->Focus();
 }
 
 bool ModuleModelLoader::CleanUp()

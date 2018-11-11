@@ -114,7 +114,6 @@ void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh)
 	glUseProgram(0);
 }
 
-
 void ModuleRender::RenderBoundingBox()
 {
 	math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);

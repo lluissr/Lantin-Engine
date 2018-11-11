@@ -3,6 +3,7 @@
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
 #include "ModuleProgram.h"
+#include "ModuleModelLoader.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -20,7 +21,7 @@ ModuleCamera::~ModuleCamera()
 bool ModuleCamera::Init()
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
+	frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
@@ -72,6 +73,11 @@ update_status ModuleCamera::PreUpdate()
 
 		MouseUpdate();
 	}
+	
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
+	{
+		firstMouse = true;
+	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) 
 	{
@@ -86,9 +92,7 @@ update_status ModuleCamera::PreUpdate()
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
-		cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
-		cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-		cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+		Focus();		
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
@@ -103,6 +107,30 @@ update_status ModuleCamera::PreUpdate()
 void ModuleCamera::Orbit()
 {
 	
+}
+
+void ModuleCamera::Focus()
+{
+	math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);
+	math::float3 center = boundingBox.FaceCenterPoint(5);
+
+	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
+	frustum.pos = cameraPosition = math::float3(center.x, center.y, 0.0f);
+	frustum.front = cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+	frustum.up = cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+	frustum.verticalFov = math::pi / 4.0f;
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
+	fovY = 45.0f;
+	fovX = 45.0f;
+	pitch = 0;
+	yaw = 0;
+	firstMouse = true;
+
+	//Add distance still we can see all the bounding box
+	while (!App->camera->frustum.Contains(boundingBox))
+	{
+		App->camera->cameraPosition.z = App->camera->frustum.pos.z += 10;
+	}
 }
 
 update_status ModuleCamera::Update()
@@ -148,22 +176,22 @@ void ModuleCamera::Move(Directions dir)
 {
 	switch (dir) {
 	case UP:
-		cameraPosition += cameraUp.Normalized() * mSpeed;
+		frustum.pos = cameraPosition += cameraUp.Normalized() * mSpeed;
 		break;
 	case DOWN:
-		cameraPosition -= cameraUp.Normalized() * mSpeed;
+		frustum.pos = cameraPosition -= cameraUp.Normalized() * mSpeed;
 		break;
 	case FORWARD:
-		cameraPosition += cameraFront.Normalized() * mSpeed;
+		frustum.pos = cameraPosition += cameraFront.Normalized() * mSpeed;
 		break;
 	case BACKWARD:
-		cameraPosition -= cameraFront.Normalized() * mSpeed;
+		frustum.pos = cameraPosition -= cameraFront.Normalized() * mSpeed;
 		break;
 	case LEFT:
-		cameraPosition += cameraUp.Cross(cameraFront).Normalized() * mSpeed;
+		frustum.pos = cameraPosition += cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
 	case RIGHT:
-		cameraPosition -= cameraUp.Cross(cameraFront).Normalized() * mSpeed;
+		frustum.pos = cameraPosition -= cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
 	}
 }
@@ -197,7 +225,7 @@ void ModuleCamera::MouseUpdate()
 	front.x = SDL_sinf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
 	front.y = SDL_sinf(math::DegToRad(pitch));
 	front.z = -SDL_cosf(math::DegToRad(yaw)) * SDL_cosf(math::DegToRad(pitch));
-	cameraFront = front.Normalized();
+	frustum.front = cameraFront = front.Normalized();
 }
 
 void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)

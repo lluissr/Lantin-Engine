@@ -34,6 +34,7 @@ public:
 	void SetVerticalFOV(float fovY);
 	void SetHorizontalFOV(float fovX);
 	void Orbit();
+	void Focus();
 
 	void RefenceGround();
 	void ReferenceAxis();
