@@ -375,6 +375,12 @@
     <ClInclude Include="mmgr\mmgr.h">
       <Filter>mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -388,6 +394,9 @@
     </Filter>
     <Filter Include="mmgr">
       <UniqueIdentifier>{1f022b29-8e7c-4f75-8cc7-fe5d0c69d1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{2d092a6d-3de5-45d5-9500-b8cce7a645ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
