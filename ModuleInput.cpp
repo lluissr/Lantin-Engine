@@ -19,7 +19,7 @@ ModuleInput::ModuleInput()
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	//RELEASE_ARRAY(keyboard);
+	delete[] keyboard;
 }
 
 // Called before render is available

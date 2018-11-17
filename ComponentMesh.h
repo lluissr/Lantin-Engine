@@ -2,10 +2,11 @@
 #define __ComponentMesh_h__
 
 #include "Component.h"
-struct Mesh;
+class Mesh;
 
 class ComponentMesh : public Component
 {
+public:
 	ComponentMesh(GameObject* parent, ComponentType type);
 	~ComponentMesh();
 

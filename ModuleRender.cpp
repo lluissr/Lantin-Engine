@@ -71,9 +71,14 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+	//for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+	//{
+	//	RenderMesh(*App->modelLoader->meshes[i]);
+	//}
+
+	for (GameObject* gameObject : App->modelLoader->parentGameObject->gameObjects)
 	{
-		RenderMesh(App->modelLoader->meshes[i]);
+		RenderMesh(*gameObject->mesh->mesh);
 	}
 
 	if (renderBoundingBox)

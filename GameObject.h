@@ -2,21 +2,29 @@
 #define __GameObject_h__
 
 #include "Component.h"
-#include <vector>
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+#include <list>
 
 class GameObject
 {
 public:
 	GameObject();
+	GameObject(GameObject* parent);
 	~GameObject();
 
 	void Update();
 	Component* CreateComponente(ComponentType type);
 
-	char* name;
-	std::vector<Component*> components;
+	const char* name = nullptr;
+	std::list<Component*> components;
 	GameObject* parent = nullptr;
-	std::vector<GameObject*> gameObjects;
+	std::list<GameObject*> gameObjects;
+	bool active = true;
+	bool isStatic = false;
+
+	ComponentMesh* mesh = nullptr;
+	ComponentMaterial* material = nullptr;
 };
 
 #endif

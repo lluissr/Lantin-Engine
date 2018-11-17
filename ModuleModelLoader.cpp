@@ -10,6 +10,7 @@
 #include <assimp/scene.h>
 #include "MathGeoLib.h"
 #include "SDL/include/SDL.h"
+#include "ComponentMesh.h"
 
 
 ModuleModelLoader::ModuleModelLoader()
@@ -81,6 +82,13 @@ void ModuleModelLoader::ImportModel(const char* path)
 		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
 	}
 
+	if (parentGameObject != NULL)
+	{
+		delete parentGameObject;
+	}
+
+	parentGameObject = new GameObject();
+
 	LOG("Start GenerateMeshData");
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
@@ -106,9 +114,9 @@ void ModuleModelLoader::ImportModel(const char* path)
 	
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].translation = translation;
-		meshes[i].scaling = scaling;
-		meshes[i].rotation = rotation;
+		meshes[i]->translation = translation;
+		meshes[i]->scaling = scaling;
+		meshes[i]->rotation = rotation;
 	}
 
 	//std::string name = node->mName.C_Str();
@@ -140,6 +148,8 @@ bool ModuleModelLoader::CleanUp()
 {
 	CleanModel();
 
+	delete parentGameObject;
+
 	return true;
 }
 
@@ -148,14 +158,14 @@ void ModuleModelLoader::CleanModel()
 	LOG("Cleaning meshes");
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
-		if (meshes[i].vbo != 0)
+		if (meshes[i]->vbo != 0)
 		{
-			glDeleteBuffers(1, &meshes[i].vbo);
+			glDeleteBuffers(1, &meshes[i]->vbo);
 		}
 
-		if (meshes[i].ibo != 0)
+		if (meshes[i]->ibo != 0)
 		{
-			glDeleteBuffers(1, &meshes[i].ibo);
+			glDeleteBuffers(1, &meshes[i]->ibo);
 		}
 	}
 	meshes.clear();
@@ -175,10 +185,11 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 {
 	assert(aiMesh != NULL);
 
-	Mesh mesh;
+	Mesh* mesh = new Mesh();
+	GameObject* gameObject = new GameObject(parentGameObject);
 
-	glGenBuffers(1, &mesh.vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glGenBuffers(1, &mesh->vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
 
 	glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*aiMesh->mNumVertices, nullptr, GL_STATIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * aiMesh->mNumVertices, aiMesh->mVertices);
@@ -199,8 +210,8 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &mesh.ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glGenBuffers(1, &mesh->ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*aiMesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
 
@@ -218,12 +229,15 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	mesh.material = aiMesh->mMaterialIndex;
-	mesh.numVertices = aiMesh->mNumVertices;
-	mesh.numIndices = aiMesh->mNumFaces * 3;
-	mesh.name = aiMesh->mName.C_Str();
+	mesh->material = aiMesh->mMaterialIndex;
+	mesh->numVertices = aiMesh->mNumVertices;
+	mesh->numIndices = aiMesh->mNumFaces * 3;
+	mesh->name = aiMesh->mName.C_Str();
 
-
+	ComponentMesh* component = (ComponentMesh*)gameObject->CreateComponente(ComponentType::MESH);
+	component->mesh = mesh;
+	gameObject->name = aiMesh->mName.C_Str();
+	parentGameObject->gameObjects.push_back(gameObject);
 
 	meshes.push_back(mesh);
 }
@@ -276,14 +290,14 @@ void ModuleModelLoader::DrawImGui()
 	{
 
 		ImGui::NewLine();
-		ImGui::Text("Mesh name: %s", meshes[i].name);
+		ImGui::Text("Mesh name: %s", meshes[i]->name);
 
 
 		if (ImGui::TreeNode((void*)(i * 3), "Transformation"))
 		{
-			float pos[3] = { meshes[i].translation.x,meshes[i].translation.y, meshes[i].translation.z };
-			float scaling[3] = { meshes[i].scaling.x,meshes[i].scaling.y, meshes[i].scaling.z };
-			float rotation[3] = { meshes[i].rotation.x,meshes[i].rotation.y, meshes[i].rotation.z };
+			float pos[3] = { meshes[i]->translation.x,meshes[i]->translation.y, meshes[i]->translation.z };
+			float scaling[3] = { meshes[i]->scaling.x,meshes[i]->scaling.y, meshes[i]->scaling.z };
+			float rotation[3] = { meshes[i]->rotation.x,meshes[i]->rotation.y, meshes[i]->rotation.z };
 			ImGui::Text("Position:");
 			ImGui::InputFloat3("", pos, 5, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Text("Rotation:");
@@ -295,16 +309,16 @@ void ModuleModelLoader::DrawImGui()
 		}
 		if (ImGui::TreeNode((void*)(i * 3 + 1), "Geometry"))
 		{
-			ImGui::Text("Triangles count: %d", meshes[i].numVertices / 3);
-			ImGui::Text("Vertices count: %d", meshes[i].numVertices);
+			ImGui::Text("Triangles count: %d", meshes[i]->numVertices / 3);
+			ImGui::Text("Vertices count: %d", meshes[i]->numVertices);
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode((void*)(i * 3 + 2), "Textures"))
 		{
-			if (materials[meshes[i].material].texture0 != 0)
+			if (materials[meshes[i]->material].texture0 != 0)
 			{
-				ImGui::Image((ImTextureID)materials[meshes[i].material].texture0, ImVec2(200, 200));
-				ImGui::Text("Dimensions: %dx%d", materials[meshes[i].material].width, materials[meshes[i].material].height);
+				ImGui::Image((ImTextureID)materials[meshes[i]->material].texture0, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", materials[meshes[i]->material].width, materials[meshes[i]->material].height);
 			}
 			ImGui::TreePop();
 		}

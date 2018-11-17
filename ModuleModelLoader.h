@@ -8,10 +8,12 @@
 #include "GL/glew.h"
 #include "MathGeoLib.h"
 #include <vector>
+#include "GameObject.h"
 
 
-struct Mesh
+class Mesh
 {
+public:
 	unsigned vbo = 0;
 	unsigned ibo = 0;
 	unsigned material = 0;
@@ -52,10 +54,12 @@ public:
 	math::float3 maxPoint;
 
 
-	std::vector<Mesh> meshes;
+	std::vector<Mesh*> meshes;
 	std::vector<Material> materials;
 
 	int modelRendered = -1;
+
+	GameObject* parentGameObject = nullptr;
 };
 
 #endif
