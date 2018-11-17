@@ -10,6 +10,25 @@
 #include <vector>
 
 
+struct Mesh
+{
+	unsigned vbo = 0;
+	unsigned ibo = 0;
+	unsigned material = 0;
+	unsigned numVertices = 0;
+	unsigned numIndices = 0;
+	const char* name = nullptr;
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+};
+
+struct Material
+{
+	unsigned texture0 = 0;
+	unsigned width = 0;
+	unsigned height = 0;
+};
 
 class ModuleModelLoader : public Module
 {
@@ -32,25 +51,6 @@ public:
 	math::float3 minPoint;
 	math::float3 maxPoint;
 
-	struct Mesh
-	{
-		unsigned vbo = 0;
-		unsigned ibo = 0;
-		unsigned material = 0;
-		unsigned numVertices = 0;
-		unsigned numIndices = 0;
-		const char* name = nullptr;
-		aiVector3D translation;
-		aiVector3D scaling;
-		aiQuaternion rotation;
-	};
-
-	struct Material
-	{
-		unsigned texture0 = 0;
-		unsigned width = 0;
-		unsigned height = 0;
-	};
 
 	std::vector<Mesh> meshes;
 	std::vector<Material> materials;

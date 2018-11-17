@@ -1,21 +1,33 @@
 #ifndef __Component_h__
 #define __Component_h__
 
-#include "GameObject.h"
+class GameObject;
 
-enum ComponentType
+enum class ComponentType
 {
-	MESH, MATERIAL, SOUND, SCRIPT, LIGHT
+	EMPTY, MESH, MATERIAL, SOUND, SCRIPT, LIGHT
 };
 
 class Component
 {
-	bool active;
-	GameObject* myGameObject = nullptr;
-	ComponentType type;
+public:
+	Component(GameObject* gameObject, ComponentType type) : myGameObject(gameObject), type(type) {}
+	virtual ~Component() {}
 
-	virtual void Enable() = 0;
-	virtual void Update() = 0;
-	virtual void Disable() = 0;
+	bool active = true;
+	GameObject* myGameObject = nullptr;
+	ComponentType type = ComponentType::EMPTY;
+
+	virtual void Enable()
+	{
+		active = true;
+	};
+	virtual void Update()
+	{
+	};
+	virtual void Disable()
+	{
+		active = false;
+	};
 };
 #endif

@@ -85,9 +85,9 @@ update_status ModuleRender::Update()
 }
 
 
-void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh)
+void ModuleRender::RenderMesh(const Mesh& mesh)
 {
-	ModuleModelLoader::Material& material = App->modelLoader->materials[mesh.material];
+	Material& material = App->modelLoader->materials[mesh.material];
 	unsigned program = App->program->program;
 
 	glUseProgram(program);

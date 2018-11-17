@@ -1,5 +1,5 @@
-#ifndef __Gdamed_h__
-#define __Gdamed_h__
+#ifndef __GameObject_h__
+#define __GameObject_h__
 
 #include "Component.h"
 #include <vector>
@@ -7,8 +7,11 @@
 class GameObject
 {
 public:
+	GameObject();
+	~GameObject();
+
 	void Update();
-	Component* CreateComponente();
+	Component* CreateComponente(ComponentType type);
 
 	char* name;
 	std::vector<Component*> components;

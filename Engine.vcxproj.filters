@@ -154,6 +154,18 @@
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>mmgr</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -381,6 +393,10 @@
     <ClInclude Include="Component.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
