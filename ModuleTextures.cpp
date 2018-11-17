@@ -109,7 +109,7 @@ GLuint ModuleTextures::Load(const char* path)
 	return texture;
 }
 
-void ModuleTextures::Unload(const unsigned id) const
+void ModuleTextures::Unload(unsigned id) const
 {
 	if (id != 0)
 	{

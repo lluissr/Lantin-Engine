@@ -20,7 +20,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void ChooseModelToRender(const int num);
+	void ChooseModelToRender(int num);
 	void ImportModel(const char* path);
 	void CleanModel();
 

@@ -30,7 +30,7 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::ChooseModelToRender(const int num)
+void ModuleModelLoader::ChooseModelToRender(int num)
 {
 	if (num == modelRendered) { return; }
 
@@ -100,9 +100,9 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 	aiNode* node = scene->mRootNode;
 	node->mTransformation.Decompose(scaling, rotation, translation);
-	float3 pos = { translation.x, translation.y, translation.z };
-	float3 scale = { scaling.x, scaling.y, scaling.z };
-	Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+	math::float3 pos = { translation.x, translation.y, translation.z };
+	math::float3 scale = { scaling.x, scaling.y, scaling.z };
+	math::Quat rot = math::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	
 	for (size_t i = 0; i < meshes.size(); i++)
 	{

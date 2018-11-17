@@ -22,7 +22,7 @@ public:
 	bool CleanUp();
 
 	GLuint Load(const char* path);
-	void Unload(const unsigned id) const;
+	void Unload(unsigned id) const;
 
 	ILinfo lastImageInfo;
 };

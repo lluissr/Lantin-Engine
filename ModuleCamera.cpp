@@ -41,27 +41,27 @@ update_status ModuleCamera::PreUpdate()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
 		{
-			Move(UP);
+			Move(Directions::UP);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 		{
-			Move(DOWN);
+			Move(Directions::DOWN);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		{
-			Move(FORWARD);
+			Move(Directions::FORWARD);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		{
-			Move(BACKWARD);
+			Move(Directions::BACKWARD);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
-			Move(LEFT);
+			Move(Directions::LEFT);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
-			Move(RIGHT);
+			Move(Directions::RIGHT);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
 		{
@@ -158,7 +158,7 @@ bool ModuleCamera::CleanUp()
 }
 
 
-math::float4x4 ModuleCamera::LookAt(const math::float3& cameraPosition, math::float3& cameraFront, const math::float3& cameraUp)
+math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
 {
 	math::float4x4 matrix;
 
@@ -176,25 +176,25 @@ math::float4x4 ModuleCamera::LookAt(const math::float3& cameraPosition, math::fl
 }
 
 
-void ModuleCamera::Move(const Directions dir)
+void ModuleCamera::Move(Directions dir)
 {
 	switch (dir) {
-	case UP:
+	case Directions::UP:
 		frustum.pos = cameraPosition += cameraUp.Normalized() * mSpeed;
 		break;
-	case DOWN:
+	case Directions::DOWN:
 		frustum.pos = cameraPosition -= cameraUp.Normalized() * mSpeed;
 		break;
-	case FORWARD:
+	case Directions::FORWARD:
 		frustum.pos = cameraPosition += cameraFront.Normalized() * mSpeed;
 		break;
-	case BACKWARD:
+	case Directions::BACKWARD:
 		frustum.pos = cameraPosition -= cameraFront.Normalized() * mSpeed;
 		break;
-	case LEFT:
+	case Directions::LEFT:
 		frustum.pos = cameraPosition += cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
-	case RIGHT:
+	case Directions::RIGHT:
 		frustum.pos = cameraPosition -= cameraUp.Cross(cameraFront).Normalized() * mSpeed;
 		break;
 	}
@@ -232,7 +232,7 @@ void ModuleCamera::MouseUpdate()
 	frustum.front = cameraFront = front.Normalized();
 }
 
-void ModuleCamera::SetPlaneDistances(const float nearDist, const float farDist)
+void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 {
 	if (nearDist > 0.0f && nearDist < frustum.farPlaneDistance)
 	{
@@ -246,7 +246,7 @@ void ModuleCamera::SetPlaneDistances(const float nearDist, const float farDist)
 }
 
 
-void ModuleCamera::WindowResized(const unsigned width, const unsigned height)
+void ModuleCamera::WindowResized(unsigned width, unsigned height)
 {
 	glViewport(0, 0, width, height);
 	screenWidth = width;
@@ -256,13 +256,13 @@ void ModuleCamera::WindowResized(const unsigned width, const unsigned height)
 }
 
 
-void ModuleCamera::SetHorizontalFOV(const float fovX) {
+void ModuleCamera::SetHorizontalFOV(float fovX) {
 	frustum.horizontalFov = math::DegToRad(fovX);
 	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5f) * ((float)screenHeight / (float)screenWidth));
 }
 
 
-void ModuleCamera::SetVerticalFOV(const float fovY) {
+void ModuleCamera::SetVerticalFOV(float fovY) {
 	frustum.verticalFov = math::DegToRad(fovY);
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }

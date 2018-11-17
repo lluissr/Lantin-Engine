@@ -24,6 +24,8 @@ public:
 
 	void* context;
 	bool renderBoundingBox = false;
+
+private:
 	bool useCheckerTexture = false;
 	GLuint checkersTexture;
 	int currentItemSelected = 0;
