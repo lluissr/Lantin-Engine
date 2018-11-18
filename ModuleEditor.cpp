@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -237,7 +238,7 @@ void ModuleEditor::DrawModel()
 	ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
 	ImGui::Begin("Model information", &showModel);
-	App->modelLoader->DrawImGui();
+	App->scene->DrawImGui();
 	ImGui::End();
 }
 

@@ -48,7 +48,6 @@ public:
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 	GameObject* CreateGameObjects(const aiScene * scene, aiNode* node);
 	void ReplaceMaterial(const char* path);
-	void DrawImGui();
 
 	math::float3 minPoint;
 	math::float3 maxPoint;

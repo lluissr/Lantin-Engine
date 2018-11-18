@@ -17,8 +17,13 @@ public:
 
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
+	void DrawImGui();
+
+	void DrawModelImGui(GameObject* gameObject);
 
 	GameObject* root = nullptr;
+	int menuCount = 0;
+
 };
 
 #endif

@@ -159,7 +159,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 		go = new GameObject();
 		go->name = node->mName.C_Str();;
 
-		for (int i = 0; i < node->mNumMeshes; i++)
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			GameObject* child = go;
 			child->position = pos;
@@ -187,7 +187,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 			go->scale = scale;
 			go->rotation = rot;
 		}
-		for (int i = 0; i < node->mNumChildren; i++)
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
 			GameObject* child = CreateGameObjects(scene, node->mChildren[i]);
 			if (child != nullptr)
@@ -303,46 +303,4 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	}
 }
 
-void ModuleModelLoader::DrawImGui()
-{
-	/*ImGui::Text("Model loaded has %d meshes", App->scene->root->gameObjects.size());
-	int count = 0;
-	for (GameObject* go : App->scene->root->gameObjects)
-	{
 
-		ImGui::NewLine();
-		ImGui::Text("Mesh name: %s", go->name);
-
-
-		if (ImGui::TreeNode((void*)(count * 3), "Transformation"))
-		{
-			float pos[3] = { go->mesh->mesh->translation.x, go->mesh->mesh->translation.y,  go->mesh->mesh->translation.z };
-			float scaling[3] = { go->mesh->mesh->scaling.x, go->mesh->mesh->scaling.y,  go->mesh->mesh->scaling.z };
-			float rotation[3] = { go->mesh->mesh->rotation.x, go->mesh->mesh->rotation.y,  go->mesh->mesh->rotation.z };
-			ImGui::Text("Position:");
-			ImGui::InputFloat3("", pos, 5, ImGuiInputTextFlags_ReadOnly);
-			ImGui::Text("Rotation:");
-			ImGui::InputFloat3("", rotation, 5, ImGuiInputTextFlags_ReadOnly);
-			ImGui::Text("Scale:");
-			ImGui::InputFloat3("", scaling, 5, ImGuiInputTextFlags_ReadOnly);
-			ImGui::TreePop();
-
-		}
-		if (ImGui::TreeNode((void*)(count * 3 + 1), "Geometry"))
-		{
-			ImGui::Text("Triangles count: %d", go->mesh->mesh->numVertices / 3);
-			ImGui::Text("Vertices count: %d", go->mesh->mesh->numVertices);
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode((void*)(count * 3 + 2), "Textures"))
-		{
-			if (go->material->material->texture0 != 0)
-			{
-				ImGui::Image((ImTextureID)go->material->material->texture0, ImVec2(200, 200));
-				ImGui::Text("Dimensions: %dx%d", go->material->material->width, go->material->material->height);
-			}
-			ImGui::TreePop();
-		}
-		++count;
-	}*/
-}
