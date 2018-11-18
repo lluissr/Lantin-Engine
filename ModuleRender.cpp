@@ -71,14 +71,9 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	//for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
-	//{
-	//	RenderMesh(*App->modelLoader->meshes[i]);
-	//}
-
 	for (GameObject* gameObject : App->modelLoader->parentGameObject->gameObjects)
 	{
-		RenderMesh(*gameObject->mesh->mesh);
+		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material);
 	}
 
 	if (renderBoundingBox)
@@ -90,9 +85,8 @@ update_status ModuleRender::Update()
 }
 
 
-void ModuleRender::RenderMesh(const Mesh& mesh)
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material)
 {
-	Material& material = App->modelLoader->materials[mesh.material];
 	unsigned program = App->program->program;
 
 	glUseProgram(program);

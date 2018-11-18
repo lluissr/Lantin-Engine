@@ -64,7 +64,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 	LOG("Try importing model from path: %s", path);
 	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
 
-	if (scene == NULL) 
+	if (scene == NULL)
 	{
 		const char* a = aiGetErrorString();
 		LOG("Importing error: %s", a);
@@ -101,6 +101,11 @@ void ModuleModelLoader::ImportModel(const char* path)
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
 
+	for (GameObject* go : parentGameObject->gameObjects)
+	{
+		ComponentMaterial* component = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
+		component->material = materials[go->mesh->mesh->material];
+	}
 
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -111,12 +116,12 @@ void ModuleModelLoader::ImportModel(const char* path)
 	math::float3 pos = { translation.x, translation.y, translation.z };
 	math::float3 scale = { scaling.x, scaling.y, scaling.z };
 	math::Quat rot = math::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-	
-	for (size_t i = 0; i < meshes.size(); i++)
+
+	for (GameObject* go : parentGameObject->gameObjects)
 	{
-		meshes[i]->translation = translation;
-		meshes[i]->scaling = scaling;
-		meshes[i]->rotation = rotation;
+		go->mesh->mesh->translation = translation;
+		go->mesh->mesh->scaling = scaling;
+		go->mesh->mesh->rotation = rotation;
 	}
 
 	//std::string name = node->mName.C_Str();
@@ -155,27 +160,13 @@ bool ModuleModelLoader::CleanUp()
 
 void ModuleModelLoader::CleanModel()
 {
-	LOG("Cleaning meshes");
-	for (unsigned i = 0; i < meshes.size(); ++i)
-	{
-		if (meshes[i]->vbo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i]->vbo);
-		}
-
-		if (meshes[i]->ibo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i]->ibo);
-		}
-	}
-	meshes.clear();
 
 	LOG("Cleaning materials");
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
-		if (materials[i].texture0 != 0)
+		if (materials[i]->texture0 != 0)
 		{
-			App->textures->Unload(materials[i].texture0);
+			App->textures->Unload(materials[i]->texture0);
 		}
 	}
 	materials.clear();
@@ -195,7 +186,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * aiMesh->mNumVertices, aiMesh->mVertices);
 
 	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * aiMesh->mNumVertices, sizeof(float) * 2 * aiMesh->mNumVertices, GL_MAP_WRITE_BIT);
-	
+
 	for (unsigned i = 0; i < aiMesh->mNumVertices; ++i)
 	{
 		texture_coords[i] = math::float2(aiMesh->mTextureCoords[0][i].x, aiMesh->mTextureCoords[0][i].y);
@@ -234,19 +225,17 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	mesh->numIndices = aiMesh->mNumFaces * 3;
 	mesh->name = aiMesh->mName.C_Str();
 
-	ComponentMesh* component = (ComponentMesh*)gameObject->CreateComponente(ComponentType::MESH);
+	ComponentMesh* component = (ComponentMesh*)gameObject->CreateComponent(ComponentType::MESH);
 	component->mesh = mesh;
 	gameObject->name = aiMesh->mName.C_Str();
 	parentGameObject->gameObjects.push_back(gameObject);
-
-	meshes.push_back(mesh);
 }
 
 void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 {
 	assert(aiMaterial != NULL);
 
-	Material material;
+	Material* material = new Material();
 
 	aiString file;
 	aiTextureMapping mapping;
@@ -254,9 +243,9 @@ void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
 
 	if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
-		material.texture0 = App->textures->Load(file.data);
-		material.width = App->textures->lastImageInfo.Width;
-		material.height = App->textures->lastImageInfo.Height;
+		material->texture0 = App->textures->Load(file.data);
+		material->width = App->textures->lastImageInfo.Width;
+		material->height = App->textures->lastImageInfo.Height;
 	}
 
 	materials.push_back(material);
@@ -266,10 +255,10 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 {
 	assert(path != NULL);
 
-	Material material;
-	material.texture0 = App->textures->Load(path);
-	material.width = App->textures->lastImageInfo.Width;
-	material.height = App->textures->lastImageInfo.Height;
+	Material* material = new Material();
+	material->texture0 = App->textures->Load(path);
+	material->width = App->textures->lastImageInfo.Width;
+	material->height = App->textures->lastImageInfo.Height;
 
 	if (materials.size() == 0)
 	{
@@ -277,27 +266,35 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	}
 	else
 	{
-		App->textures->Unload(materials[0].texture0);
+		App->textures->Unload(materials[0]->texture0);
+		unsigned int id = materials[0]->texture0;
+		for (GameObject* go : parentGameObject->gameObjects)
+		{
+			if (go->material->material->texture0 == id)
+				go->material->material = material;
+		}
+
+		delete materials[0];
 		materials[0] = material;
 	}
 }
 
 void ModuleModelLoader::DrawImGui()
 {
-	ImGui::Text("Model loaded has %d meshes", meshes.size());
-
-	for (size_t i = 0; i < meshes.size(); i++)
+	ImGui::Text("Model loaded has %d meshes", parentGameObject->gameObjects.size());
+	int count = 0;
+	for (GameObject* go : parentGameObject->gameObjects)
 	{
 
 		ImGui::NewLine();
-		ImGui::Text("Mesh name: %s", meshes[i]->name);
+		ImGui::Text("Mesh name: %s", go->name);
 
 
-		if (ImGui::TreeNode((void*)(i * 3), "Transformation"))
+		if (ImGui::TreeNode((void*)(count * 3), "Transformation"))
 		{
-			float pos[3] = { meshes[i]->translation.x,meshes[i]->translation.y, meshes[i]->translation.z };
-			float scaling[3] = { meshes[i]->scaling.x,meshes[i]->scaling.y, meshes[i]->scaling.z };
-			float rotation[3] = { meshes[i]->rotation.x,meshes[i]->rotation.y, meshes[i]->rotation.z };
+			float pos[3] = { go->mesh->mesh->translation.x, go->mesh->mesh->translation.y,  go->mesh->mesh->translation.z };
+			float scaling[3] = { go->mesh->mesh->scaling.x, go->mesh->mesh->scaling.y,  go->mesh->mesh->scaling.z };
+			float rotation[3] = { go->mesh->mesh->rotation.x, go->mesh->mesh->rotation.y,  go->mesh->mesh->rotation.z };
 			ImGui::Text("Position:");
 			ImGui::InputFloat3("", pos, 5, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Text("Rotation:");
@@ -307,20 +304,21 @@ void ModuleModelLoader::DrawImGui()
 			ImGui::TreePop();
 
 		}
-		if (ImGui::TreeNode((void*)(i * 3 + 1), "Geometry"))
+		if (ImGui::TreeNode((void*)(count * 3 + 1), "Geometry"))
 		{
-			ImGui::Text("Triangles count: %d", meshes[i]->numVertices / 3);
-			ImGui::Text("Vertices count: %d", meshes[i]->numVertices);
+			ImGui::Text("Triangles count: %d", go->mesh->mesh->numVertices / 3);
+			ImGui::Text("Vertices count: %d", go->mesh->mesh->numVertices);
 			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode((void*)(i * 3 + 2), "Textures"))
+		if (ImGui::TreeNode((void*)(count * 3 + 2), "Textures"))
 		{
-			if (materials[meshes[i]->material].texture0 != 0)
+			if (go->material->material->texture0 != 0)
 			{
-				ImGui::Image((ImTextureID)materials[meshes[i]->material].texture0, ImVec2(200, 200));
-				ImGui::Text("Dimensions: %dx%d", materials[meshes[i]->material].width, materials[meshes[i]->material].height);
+				ImGui::Image((ImTextureID)go->material->material->texture0, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", go->material->material->width, go->material->material->height);
 			}
 			ImGui::TreePop();
 		}
+		++count;
 	}
 }

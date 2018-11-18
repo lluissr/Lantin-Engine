@@ -18,7 +18,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
-	void RenderMesh(const Mesh& mesh);
+	void RenderMesh(const Mesh& mesh, const Material& material);
 	void RenderBoundingBox() const;
 	void DrawImGui();
 

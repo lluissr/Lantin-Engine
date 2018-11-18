@@ -30,7 +30,7 @@ void GameObject::Update()
 {
 }
 
-Component* GameObject::CreateComponente(ComponentType type)
+Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* ret = nullptr;
 

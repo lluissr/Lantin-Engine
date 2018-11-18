@@ -2,7 +2,8 @@
 #define __ComponentMaterial_h__
 
 #include "Component.h"
-struct Material;
+
+class Material;
 
 class ComponentMaterial : public Component
 {

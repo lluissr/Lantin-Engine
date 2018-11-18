@@ -25,8 +25,9 @@ public:
 	aiQuaternion rotation;
 };
 
-struct Material
+class Material
 {
+public:
 	unsigned texture0 = 0;
 	unsigned width = 0;
 	unsigned height = 0;
@@ -54,8 +55,8 @@ public:
 	math::float3 maxPoint;
 
 
-	std::vector<Mesh*> meshes;
-	std::vector<Material> materials;
+	//std::vector<Mesh*> meshes;
+	std::vector<Material*> materials;
 
 	int modelRendered = -1;
 

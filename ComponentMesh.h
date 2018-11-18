@@ -2,6 +2,7 @@
 #define __ComponentMesh_h__
 
 #include "Component.h"
+
 class Mesh;
 
 class ComponentMesh : public Component

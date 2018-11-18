@@ -14,7 +14,7 @@ public:
 	~GameObject();
 
 	void Update();
-	Component* CreateComponente(ComponentType type);
+	Component* CreateComponent(ComponentType type);
 
 	const char* name = nullptr;
 	std::list<Component*> components;
