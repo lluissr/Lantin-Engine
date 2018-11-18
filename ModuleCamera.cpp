@@ -28,7 +28,7 @@ bool ModuleCamera::Init()
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
+	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = math::pi / 4.0f;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 
@@ -131,7 +131,7 @@ void ModuleCamera::Focus()
 {
 	math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);
 	math::float3 center = boundingBox.FaceCenterPoint(5);
-
+	
 	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
 	frustum.pos = cameraPosition = math::float3(center.x, center.y, 0.0f);
 	frustum.front = cameraFront = math::float3(0.0f, 0.0f, -1.0f);

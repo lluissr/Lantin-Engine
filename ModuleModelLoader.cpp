@@ -165,6 +165,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 			child->position = pos;
 			child->scale = scale;
 			child->rotation = rot;
+			child->matrix.Set(float4x4::FromTRS(pos, rot, scale));
 			
 			ComponentMesh* mesh = (ComponentMesh*)child->CreateComponent(ComponentType::MESH);
 			mesh->mesh = meshes[node->mMeshes[i]];

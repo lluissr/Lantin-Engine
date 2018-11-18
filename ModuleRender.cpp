@@ -97,18 +97,17 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 	}
 
 	if (gameObject->mesh != NULL && gameObject->material != NULL) {
-		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material);
+		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->matrix);
 	}
 }
 
-void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material)
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix)
 {
 	unsigned program = App->program->program;
 
 	glUseProgram(program);
 
-	math::float4x4 model(math::float4x4::identity);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
