@@ -10,6 +10,8 @@
 #include <vector>
 #include "GameObject.h"
 
+struct aiScene;
+struct aiNode;
 
 class Mesh
 {
@@ -19,10 +21,6 @@ public:
 	unsigned material = 0;
 	unsigned numVertices = 0;
 	unsigned numIndices = 0;
-	const char* name = nullptr;
-	aiVector3D translation;
-	aiVector3D scaling;
-	aiQuaternion rotation;
 };
 
 class Material
@@ -48,6 +46,7 @@ public:
 
 	void GenerateMeshData(const aiMesh* aiMesh);
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
+	GameObject* CreateGameObjects(const aiScene * scene, aiNode* node);
 	void ReplaceMaterial(const char* path);
 	void DrawImGui();
 
@@ -55,7 +54,7 @@ public:
 	math::float3 maxPoint;
 
 
-	//std::vector<Mesh*> meshes;
+	std::vector<Mesh*> meshes;
 	std::vector<Material*> materials;
 
 	int modelRendered = -1;

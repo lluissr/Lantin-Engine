@@ -97,28 +97,10 @@ void ModuleModelLoader::ImportModel(const char* path)
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
 
-	for (GameObject* go : App->scene->root->gameObjects)
-	{
-		ComponentMaterial* component = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
-		component->material = materials[go->mesh->mesh->material];
-	}
+	GameObject* go = CreateGameObjects(scene, scene->mRootNode);
 
-	aiVector3D translation;
-	aiVector3D scaling;
-	aiQuaternion rotation;
-
-	aiNode* node = scene->mRootNode;
-	node->mTransformation.Decompose(scaling, rotation, translation);
-	math::float3 pos = { translation.x, translation.y, translation.z };
-	math::float3 scale = { scaling.x, scaling.y, scaling.z };
-	math::Quat rot = math::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-	for (GameObject* go : App->scene->root->gameObjects)
-	{
-		go->mesh->mesh->translation = translation;
-		go->mesh->mesh->scaling = scaling;
-		go->mesh->mesh->rotation = rotation;
-	}
+	go->parent = App->scene->root;
+	App->scene->root->gameObjects.push_back(go);
 
 	App->camera->Focus();
 }
@@ -133,6 +115,21 @@ bool ModuleModelLoader::CleanUp()
 void ModuleModelLoader::CleanModel()
 {
 
+	LOG("Cleaning meshes");
+	for (unsigned i = 0; i < meshes.size(); ++i)
+	{
+		if (meshes[i]->vbo != 0)
+		{
+			glDeleteBuffers(1, &meshes[i]->vbo);
+		}
+
+		if (meshes[i]->ibo != 0)
+		{
+			glDeleteBuffers(1, &meshes[i]->ibo);
+		}
+	}
+	meshes.clear();
+
 	LOG("Cleaning materials");
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
@@ -144,12 +141,71 @@ void ModuleModelLoader::CleanModel()
 	materials.clear();
 }
 
+GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* node)
+{
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+
+	node->mTransformation.Decompose(scaling, rotation, translation);
+
+	float3 pos = { translation.x, translation.y, translation.z };
+	float3 scale = { scaling.x, scaling.y, scaling.z };
+	Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+	
+	GameObject* go = nullptr;
+	if (node->mNumMeshes > 0)
+	{
+		go = new GameObject();
+		go->name = node->mName.C_Str();;
+
+		for (int i = 0; i < node->mNumMeshes; i++)
+		{
+			GameObject* child = go;
+			child->position = pos;
+			child->scale = scale;
+			child->rotation = rot;
+			
+			ComponentMesh* mesh = (ComponentMesh*)child->CreateComponent(ComponentType::MESH);
+			mesh->mesh = meshes[node->mMeshes[i]];
+
+			if (materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr)
+			{
+				ComponentMaterial* material = (ComponentMaterial*)child->CreateComponent(ComponentType::MATERIAL);
+				material->material = materials[go->mesh->mesh->material];
+			}
+		}
+	}
+
+	if (node->mNumChildren > 0)
+	{
+		if (go == nullptr)
+		{
+			go = new GameObject();
+			go->name = node->mName.C_Str();
+			go->position = pos;
+			go->scale = scale;
+			go->rotation = rot;
+		}
+		for (int i = 0; i < node->mNumChildren; i++)
+		{
+			GameObject* child = CreateGameObjects(scene, node->mChildren[i]);
+			if (child != nullptr)
+			{
+				child->parent = go;
+				go->gameObjects.push_back(child);
+			}
+		}
+	}
+
+	return go;
+}
+
 void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 {
 	assert(aiMesh != NULL);
 
 	Mesh* mesh = new Mesh();
-	GameObject* gameObject = new GameObject(App->scene->root);
 
 	glGenBuffers(1, &mesh->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
@@ -195,12 +251,8 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	mesh->material = aiMesh->mMaterialIndex;
 	mesh->numVertices = aiMesh->mNumVertices;
 	mesh->numIndices = aiMesh->mNumFaces * 3;
-	mesh->name = aiMesh->mName.C_Str();
 
-	ComponentMesh* component = (ComponentMesh*)gameObject->CreateComponent(ComponentType::MESH);
-	component->mesh = mesh;
-	gameObject->name = aiMesh->mName.C_Str();
-	App->scene->root->gameObjects.push_back(gameObject);
+	meshes.push_back(mesh);
 }
 
 void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
@@ -238,7 +290,7 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	}
 	else
 	{
-		App->textures->Unload(materials[0]->texture0);
+	/*	App->textures->Unload(materials[0]->texture0);
 		unsigned int id = materials[0]->texture0;
 		for (GameObject* go : App->scene->root->gameObjects)
 		{
@@ -247,13 +299,13 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 		}
 
 		delete materials[0];
-		materials[0] = material;
+		materials[0] = material;*/
 	}
 }
 
 void ModuleModelLoader::DrawImGui()
 {
-	ImGui::Text("Model loaded has %d meshes", App->scene->root->gameObjects.size());
+	/*ImGui::Text("Model loaded has %d meshes", App->scene->root->gameObjects.size());
 	int count = 0;
 	for (GameObject* go : App->scene->root->gameObjects)
 	{
@@ -292,5 +344,5 @@ void ModuleModelLoader::DrawImGui()
 			ImGui::TreePop();
 		}
 		++count;
-	}
+	}*/
 }

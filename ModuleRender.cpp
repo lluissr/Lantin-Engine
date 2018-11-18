@@ -72,9 +72,10 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
-		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material);
+		RenderGameObject(gameObject);
 	}
 
 	if (renderBoundingBox)
@@ -85,6 +86,20 @@ update_status ModuleRender::Update()
 	return UPDATE_CONTINUE;
 }
 
+void  ModuleRender::RenderGameObject(GameObject* gameObject)
+{
+	if (gameObject->gameObjects.size() > 0)
+	{
+		for (GameObject* go : gameObject->gameObjects)
+		{
+			RenderGameObject(go);
+		}
+	}
+
+	if (gameObject->mesh != NULL && gameObject->material != NULL) {
+		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material);
+	}
+}
 
 void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material)
 {

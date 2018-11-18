@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "MathGeoLib.h"
 #include <list>
 
 class GameObject
@@ -16,7 +17,7 @@ public:
 	void Update();
 	Component* CreateComponent(ComponentType type);
 
-	const char* name = nullptr;
+	std::string name = "";
 	std::list<Component*> components;
 	GameObject* parent = nullptr;
 	std::list<GameObject*> gameObjects;
@@ -25,6 +26,10 @@ public:
 
 	ComponentMesh* mesh = nullptr;
 	ComponentMaterial* material = nullptr;
+
+	math::float3 position = { 0.0f,0.0f,0.0f };
+	math::float3 scale = { 1.0f,1.0f,1.0f };
+	math::Quat rotation = { 1.0f,0.0f,0.0f,0.0f };
 };
 
 #endif
