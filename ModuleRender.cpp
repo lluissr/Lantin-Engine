@@ -107,11 +107,21 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 
 	glUseProgram(program);
 
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
+	if (App->scene->useIdentityMatrix)
+	{
+		math::float4x4 matrix = math::float4x4::identity;
+		glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &matrix[0][0]);
+	}
+	else
+	{
+		glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
+	}
+
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
 	glActiveTexture(GL_TEXTURE0);
+	
 	if (useCheckerTexture)
 	{
 		glBindTexture(GL_TEXTURE_2D, checkersTexture);
@@ -120,6 +130,7 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	{
 		glBindTexture(GL_TEXTURE_2D, material.texture0);
 	}
+
 	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 
 	glEnableVertexAttribArray(0);

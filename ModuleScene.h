@@ -23,7 +23,7 @@ public:
 
 	GameObject* root = nullptr;
 	int menuCount = 0;
-
+	bool useIdentityMatrix = false;
 };
 
 #endif

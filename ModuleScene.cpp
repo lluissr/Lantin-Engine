@@ -48,6 +48,7 @@ void ModuleScene::CleanRootGameObjects()
 void ModuleScene::DrawImGui()
 {
 	menuCount = 0;
+	ImGui::Checkbox("Use identity matrix", &useIdentityMatrix);
 	for (GameObject* gameObject : root->gameObjects)
 	{
 		ImGui::Text("Model loaded has %d meshes", gameObject->gameObjects.size());
