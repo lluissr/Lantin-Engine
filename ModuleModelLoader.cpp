@@ -3,6 +3,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleEditor.h"
+#include "ModuleScene.h"
 #include "ModuleCamera.h"
 #include "GL/glew.h"
 #include <assimp/cimport.h>
@@ -82,12 +83,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
 	}
 
-	if (parentGameObject != NULL)
-	{
-		delete parentGameObject;
-	}
-
-	parentGameObject = new GameObject();
+	App->scene->CleanRootGameObjects();
 
 	LOG("Start GenerateMeshData");
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
@@ -101,7 +97,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 		GenerateMaterialData(scene->mMaterials[i]);
 	}
 
-	for (GameObject* go : parentGameObject->gameObjects)
+	for (GameObject* go : App->scene->root->gameObjects)
 	{
 		ComponentMaterial* component = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
 		component->material = materials[go->mesh->mesh->material];
@@ -117,34 +113,12 @@ void ModuleModelLoader::ImportModel(const char* path)
 	math::float3 scale = { scaling.x, scaling.y, scaling.z };
 	math::Quat rot = math::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	for (GameObject* go : parentGameObject->gameObjects)
+	for (GameObject* go : App->scene->root->gameObjects)
 	{
 		go->mesh->mesh->translation = translation;
 		go->mesh->mesh->scaling = scaling;
 		go->mesh->mesh->rotation = rotation;
 	}
-
-	//std::string name = node->mName.C_Str();
-	//static const char* transformNodes[5] = {
-	//	"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
-	//	"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
-
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	if (name.find(transformNodes[i]) != std::string::npos && node->mNumChildren > 0)
-	//	{
-	//		node = node->mChildren[0];
-
-	//		node->mTransformation.Decompose(scaling, rotation, translation);
-
-	//		pos += { translation.x, translation.y, translation.z };
-	//		scale = { scale.x*scaling.x, scale.y*scaling.y, scale.z*scaling.z };
-	//		rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-	//		name = node->mName.C_Str();
-	//		i = -1;
-	//	}
-	//}
 
 	App->camera->Focus();
 }
@@ -152,8 +126,6 @@ void ModuleModelLoader::ImportModel(const char* path)
 bool ModuleModelLoader::CleanUp()
 {
 	CleanModel();
-
-	delete parentGameObject;
 
 	return true;
 }
@@ -177,7 +149,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	assert(aiMesh != NULL);
 
 	Mesh* mesh = new Mesh();
-	GameObject* gameObject = new GameObject(parentGameObject);
+	GameObject* gameObject = new GameObject(App->scene->root);
 
 	glGenBuffers(1, &mesh->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
@@ -228,7 +200,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	ComponentMesh* component = (ComponentMesh*)gameObject->CreateComponent(ComponentType::MESH);
 	component->mesh = mesh;
 	gameObject->name = aiMesh->mName.C_Str();
-	parentGameObject->gameObjects.push_back(gameObject);
+	App->scene->root->gameObjects.push_back(gameObject);
 }
 
 void ModuleModelLoader::GenerateMaterialData(const aiMaterial* aiMaterial)
@@ -268,7 +240,7 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	{
 		App->textures->Unload(materials[0]->texture0);
 		unsigned int id = materials[0]->texture0;
-		for (GameObject* go : parentGameObject->gameObjects)
+		for (GameObject* go : App->scene->root->gameObjects)
 		{
 			if (go->material->material->texture0 == id)
 				go->material->material = material;
@@ -281,9 +253,9 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 
 void ModuleModelLoader::DrawImGui()
 {
-	ImGui::Text("Model loaded has %d meshes", parentGameObject->gameObjects.size());
+	ImGui::Text("Model loaded has %d meshes", App->scene->root->gameObjects.size());
 	int count = 0;
-	for (GameObject* go : parentGameObject->gameObjects)
+	for (GameObject* go : App->scene->root->gameObjects)
 	{
 
 		ImGui::NewLine();

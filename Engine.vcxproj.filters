@@ -166,6 +166,9 @@
     <ClCompile Include="ComponentMaterial.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -396,7 +399,12 @@
     <ClInclude Include="ComponentMesh.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">

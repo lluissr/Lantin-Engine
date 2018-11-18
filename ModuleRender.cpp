@@ -7,6 +7,7 @@
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleTextures.h"
+#include "ModuleScene.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -71,7 +72,7 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	for (GameObject* gameObject : App->modelLoader->parentGameObject->gameObjects)
+	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
 		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material);
 	}

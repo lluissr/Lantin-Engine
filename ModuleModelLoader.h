@@ -59,8 +59,6 @@ public:
 	std::vector<Material*> materials;
 
 	int modelRendered = -1;
-
-	GameObject* parentGameObject = nullptr;
 };
 
 #endif
