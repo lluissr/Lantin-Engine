@@ -17,15 +17,16 @@ public:
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
+	void SetIsSelected(bool selected);
 
 	std::string name = "";
 	xg::Guid uuid;
 	std::list<Component*> components;
 	GameObject* parent = nullptr;
 	std::list<GameObject*> gameObjects;
-	bool active = true;
+	bool isActive = true;
 	bool isStatic = false;
-	bool selected = false;
+	bool isSelected = false;
 
 	ComponentMesh* mesh = nullptr;
 	ComponentMaterial* material = nullptr;

@@ -18,6 +18,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init()
 {
 	root = new GameObject();
+	root->name = "Scene Root";
 	return true;
 }
 
@@ -45,144 +46,181 @@ void ModuleScene::CleanRootGameObjects()
 	root->gameObjects.clear();
 }
 
-void ModuleScene::DrawImGui()
+void ModuleScene::SelectGameObject(GameObject* go)
 {
-	menuCount = 0;
-	ImGui::Checkbox("Use identity matrix", &useIdentityMatrix);
-	for (GameObject* gameObject : root->gameObjects)
+	assert(go != NULL);
+
+	if (selectedGO != nullptr)
+		selectedGO->SetIsSelected(false);
+
+	selectedGO = go;
+	if (go != nullptr)
+		go->SetIsSelected(true);
+}
+
+void ModuleScene::DrawGameObjectTreeImGui()
+{
+
+	if (ImGui::TreeNode(root->name.c_str()))
 	{
-		ImGui::NewLine();
-		ImGui::Text("Model loaded has %d meshes", gameObject->gameObjects.size());
-		DrawModelImGui(gameObject);
+		for (GameObject* gameObject : root->gameObjects)
+		{
+			DrawModelImGui(gameObject);
+		}
+		ImGui::TreePop();
 	}
 }
 
 void ModuleScene::DrawModelImGui(GameObject* go)
 {
-	
-		ImGui::NewLine();
-		//ImGui::Text("Mesh name: %s", go->name.c_str());
-
-		if (ImGui::TreeNode(go->name.c_str())) 
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None;
+	if (go->isSelected)
+	{
+		flags = ImGuiTreeNodeFlags_Selected;
+	}
+	if (go->gameObjects.size() == 0)
+	{
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	}
+	if (!go->isActive)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, { 1,0,0,1 });
+	}
+	bool opened = ImGui::TreeNodeEx(go->uuid.str().c_str(), flags, go->name.c_str());
+	if (ImGui::IsItemClicked(0))
+	{
+		SelectGameObject(go);
+	}
+	if (opened)
+	{
+		for (GameObject* gameObject : go->gameObjects)
 		{
-
-			bool changed = false;
-			if (ImGui::TreeNode((void*)(menuCount * 3), "Transformation"))
-			{
-				ImGui::PushItemWidth(75);
-				ImGui::Text("Position:");
-				ImGui::Text("X:");
-				ImGui::SameLine();
-				ImGui::PushID("1");
-				if (ImGui::InputFloat("", &go->position.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Y:");
-				ImGui::SameLine();
-				ImGui::PushID("2");
-				if (ImGui::InputFloat("", &go->position.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Z:");
-				ImGui::SameLine();
-				ImGui::PushID("3");
-				if (ImGui::InputFloat("", &go->position.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::PopID();
-
-				math::float3 rotation = go->rotation.ToEulerXYZ();
-				rotation *= 57.295779513082320876f;
-				ImGui::Text("Rotation:");
-				ImGui::Text("X:");
-				ImGui::SameLine();
-				ImGui::PushID("4");
-				if (ImGui::InputFloat("", &rotation.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Y:");
-				ImGui::SameLine();
-				ImGui::PushID("5");
-				if (ImGui::InputFloat("", &rotation.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Z:");
-				ImGui::SameLine();
-				ImGui::PushID("6");
-				if (ImGui::InputFloat("", &rotation.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::PopID();
-				rotation *= 0.0174532925199432957f;
-				go->rotation = go->rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
-
-				ImGui::Text("Scale:");
-				ImGui::Text("X:");
-				ImGui::SameLine();
-				ImGui::PushID("7");
-				if (ImGui::InputFloat("", &go->scale.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Y:");
-				ImGui::SameLine();
-				ImGui::PushID("8");
-				if (ImGui::InputFloat("", &go->scale.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::SameLine();
-				ImGui::PopID();
-				ImGui::Text("Z:");
-				ImGui::SameLine();
-				ImGui::PushID("9");
-				if (ImGui::InputFloat("", &go->scale.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-					changed = true;
-				ImGui::PopID();
-				ImGui::PopItemWidth();
-				ImGui::TreePop();
-
-				if (changed)
-				{
-					go->matrix.Set(float4x4::FromTRS(go->position, go->rotation, go->scale));
-				}
-
-			}
-
-			if (go->mesh != NULL)
-			{
-				if (ImGui::TreeNode((void*)(menuCount * 3 + 1), "Geometry"))
-				{
-					ImGui::Text("Triangles count: %d", go->mesh->mesh->numVertices / 3);
-					ImGui::Text("Vertices count: %d", go->mesh->mesh->numVertices);
-					ImGui::TreePop();
-				}
-			}
-
-			if (go->material != NULL)
-			{
-				if (ImGui::TreeNode((void*)(menuCount * 3 + 2), "Textures"))
-				{
-					if (go->material->material->texture0 != 0)
-					{
-						ImGui::Image((ImTextureID)go->material->material->texture0, ImVec2(200, 200));
-						ImGui::Text("Dimensions: %dx%d", go->material->material->width, go->material->material->height);
-					}
-					ImGui::TreePop();
-				}
-			}
-
-			++menuCount;
-
-			if (go->gameObjects.size() > 0)
-			{
-				ImGui::NewLine();
-				ImGui::Text("Childs:");
-			}
-			for (GameObject* gameObject : go->gameObjects)
-			{
-				DrawModelImGui(gameObject);
-			}
-			ImGui::TreePop();
+			DrawModelImGui(gameObject);
 		}
+		ImGui::TreePop();
+	}
+	if (!go->isActive)
+	{
+		ImGui::PopStyleColor();
+	}
+}
+
+void ModuleScene::DrawModelImGui()
+{
+	if (selectedGO == nullptr)
+	{
+		return;
+	}
+
+	ImGui::Text("Name: %s", selectedGO->name.c_str());
+	ImGui::Text("Model selected has %d childs.", selectedGO->gameObjects.size());
+	ImGui::NewLine();
+	ImGui::Checkbox("Active", &selectedGO->isActive);
+	ImGui::Checkbox("Static", &selectedGO->isStatic);
+	ImGui::NewLine();
+	bool changed = false;
+	if (ImGui::CollapsingHeader("Transformation"))
+	{
+		ImGui::Checkbox("Use identity matrix", &useIdentityMatrix);
+		ImGui::NewLine();
+		ImGui::PushItemWidth(75);
+		ImGui::Text("Position:");
+		ImGui::Text("X:");
+		ImGui::SameLine();
+		ImGui::PushID("1");
+		if (ImGui::InputFloat("", &selectedGO->position.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:");
+		ImGui::SameLine();
+		ImGui::PushID("2");
+		if (ImGui::InputFloat("", &selectedGO->position.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:");
+		ImGui::SameLine();
+		ImGui::PushID("3");
+		if (ImGui::InputFloat("", &selectedGO->position.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::PopID();
+
+		math::float3 rotation = selectedGO->rotation.ToEulerXYZ();
+		rotation *= 57.295779513082320876f;
+		ImGui::Text("Rotation:");
+		ImGui::Text("X:");
+		ImGui::SameLine();
+		ImGui::PushID("4");
+		if (ImGui::InputFloat("", &rotation.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:");
+		ImGui::SameLine();
+		ImGui::PushID("5");
+		if (ImGui::InputFloat("", &rotation.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:");
+		ImGui::SameLine();
+		ImGui::PushID("6");
+		if (ImGui::InputFloat("", &rotation.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::PopID();
+		rotation *= 0.0174532925199432957f;
+		selectedGO->rotation = selectedGO->rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+
+		ImGui::Text("Scale:");
+		ImGui::Text("X:");
+		ImGui::SameLine();
+		ImGui::PushID("7");
+		if (ImGui::InputFloat("", &selectedGO->scale.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:");
+		ImGui::SameLine();
+		ImGui::PushID("8");
+		if (ImGui::InputFloat("", &selectedGO->scale.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:");
+		ImGui::SameLine();
+		ImGui::PushID("9");
+		if (ImGui::InputFloat("", &selectedGO->scale.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			changed = true;
+		ImGui::PopID();
+		ImGui::PopItemWidth();
+
+		if (changed)
+		{
+			selectedGO->matrix.Set(float4x4::FromTRS(selectedGO->position, selectedGO->rotation, selectedGO->scale));
+		}
+
+	}
+
+	if (selectedGO->mesh != NULL)
+	{
+		if (ImGui::CollapsingHeader("Geometry"))
+		{
+			ImGui::Text("Triangles count: %d", selectedGO->mesh->mesh->numVertices / 3);
+			ImGui::Text("Vertices count: %d", selectedGO->mesh->mesh->numVertices);
+		}
+	}
+
+	if (selectedGO->material != NULL)
+	{
+		if (ImGui::CollapsingHeader("Textures"))
+		{
+			if (selectedGO->material->material->texture0 != 0)
+			{
+				ImGui::Image((ImTextureID)selectedGO->material->material->texture0, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", selectedGO->material->material->width, selectedGO->material->material->height);
+			}
+		}
+	}
+
 }

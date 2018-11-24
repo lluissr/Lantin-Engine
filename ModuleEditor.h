@@ -37,6 +37,7 @@ private:
 	bool ScrollToBottom;
 
 	bool showConfiguration = false;
+	bool showSceneTree = true;
 	bool showModel = true;
 	bool showAbout = false;
 	bool showHardware = false;
@@ -46,6 +47,7 @@ private:
 	void DrawConsole();
 	void DrawHardware();
 	void DrawAbout();
+	void DrawSceneTree();
 	void DrawModel();
 	void DrawConfiguration();
 };

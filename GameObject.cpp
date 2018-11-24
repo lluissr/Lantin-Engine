@@ -51,3 +51,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 	components.push_back(ret);
 	return ret;
 }
+
+void GameObject::SetIsSelected(bool selected)
+{
+	isSelected = selected;
+
+	if (parent != nullptr)
+		parent->SetIsSelected(selected);
+}

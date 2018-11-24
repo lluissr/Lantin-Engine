@@ -17,12 +17,13 @@ public:
 
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
-	void DrawImGui();
-
+	void DrawGameObjectTreeImGui();
+	void DrawModelImGui();
+	void SelectGameObject(GameObject* go);
 	void DrawModelImGui(GameObject* gameObject);
 
 	GameObject* root = nullptr;
-	int menuCount = 0;
+	GameObject* selectedGO = nullptr;
 	bool useIdentityMatrix = false;
 };
 

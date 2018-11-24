@@ -63,11 +63,16 @@ update_status ModuleEditor::Update()
 		DrawConfiguration();
 	}
 
+	if (showSceneTree)
+	{
+		DrawSceneTree();
+	}
+
 	if (showModel)
 	{
 		DrawModel();
 	}
-
+	
 	if (showAbout)
 	{
 		DrawAbout();
@@ -148,7 +153,11 @@ bool ModuleEditor::DrawMenu()
 
 	if (ImGui::BeginMenu("Engine"))
 	{
-		if (ImGui::MenuItem("Model"))
+		if (ImGui::MenuItem("Objects Tree"))
+		{
+			showSceneTree = !showSceneTree;
+		}
+		if (ImGui::MenuItem("Model selected"))
 		{
 			showModel = !showModel;
 		}
@@ -233,15 +242,23 @@ void ModuleEditor::DrawConfiguration()
 }
 
 
+void ModuleEditor::DrawSceneTree()
+{
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 17.0f));
+	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
+	ImGui::Begin("Scene information", &showSceneTree);
+	App->scene->DrawGameObjectTreeImGui();
+	ImGui::End();
+}
+
 void ModuleEditor::DrawModel()
 {
 	ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 350.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
-	ImGui::Begin("Model information", &showModel);
-	App->scene->DrawImGui();
+	ImGui::Begin("Model selected", &showModel);
+	App->scene->DrawModelImGui();
 	ImGui::End();
 }
-
 
 void ModuleEditor::DrawConsole()
 {
