@@ -83,8 +83,6 @@ void ModuleModelLoader::ImportModel(const char* path)
 		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
 	}
 
-	App->scene->CleanRootGameObjects();
-
 	LOG("Start GenerateMeshData");
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
@@ -107,14 +105,6 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 bool ModuleModelLoader::CleanUp()
 {
-	CleanModel();
-
-	return true;
-}
-
-void ModuleModelLoader::CleanModel()
-{
-
 	LOG("Cleaning meshes");
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
@@ -138,6 +128,15 @@ void ModuleModelLoader::CleanModel()
 			App->textures->Unload(materials[i]->texture0);
 		}
 	}
+	materials.clear();
+
+	return true;
+}
+
+void ModuleModelLoader::CleanModel()
+{
+	meshes.clear();
+
 	materials.clear();
 }
 

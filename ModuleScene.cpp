@@ -51,6 +51,7 @@ void ModuleScene::DrawImGui()
 	ImGui::Checkbox("Use identity matrix", &useIdentityMatrix);
 	for (GameObject* gameObject : root->gameObjects)
 	{
+		ImGui::NewLine();
 		ImGui::Text("Model loaded has %d meshes", gameObject->gameObjects.size());
 		DrawModelImGui(gameObject);
 	}
