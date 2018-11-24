@@ -5,12 +5,14 @@
 
 GameObject::GameObject()
 {
+	uuid = xg::newGuid();
 }
 
 
 GameObject::GameObject(GameObject* parent)
 {
 	this->parent = parent;
+	uuid = xg::newGuid();
 }
 
 GameObject::~GameObject()

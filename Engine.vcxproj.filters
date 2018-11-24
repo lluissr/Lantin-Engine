@@ -172,6 +172,9 @@
     <ClCompile Include="ModuleDebugDraw.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\guid.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="par_shapes.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\crossguid\guid.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -436,6 +442,9 @@
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{2d092a6d-3de5-45d5-9500-b8cce7a645ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{447a7ef6-cfde-4c2f-ba14-d966d6a8ab5b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

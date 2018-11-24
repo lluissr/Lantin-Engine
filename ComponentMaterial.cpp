@@ -8,6 +8,7 @@ ComponentMaterial::ComponentMaterial(GameObject* parent, ComponentType type) : C
 
 ComponentMaterial::~ComponentMaterial()
 {
+	material = nullptr;
 }
 
 void ComponentMaterial::Update()

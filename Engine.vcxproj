@@ -158,6 +158,7 @@
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utils\crossguid\guid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
+    <ClCompile Include="Utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.fs" />

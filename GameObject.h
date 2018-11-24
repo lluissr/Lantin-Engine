@@ -6,6 +6,7 @@
 #include "ComponentMaterial.h"
 #include "MathGeoLib.h"
 #include <list>
+#include "Utils/crossguid/guid.hpp"
 
 class GameObject
 {
@@ -18,11 +19,13 @@ public:
 	Component* CreateComponent(ComponentType type);
 
 	std::string name = "";
+	xg::Guid uuid;
 	std::list<Component*> components;
 	GameObject* parent = nullptr;
 	std::list<GameObject*> gameObjects;
 	bool active = true;
 	bool isStatic = false;
+	bool selected = false;
 
 	ComponentMesh* mesh = nullptr;
 	ComponentMaterial* material = nullptr;

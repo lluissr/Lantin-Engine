@@ -117,6 +117,7 @@ bool ModuleModelLoader::CleanUp()
 		{
 			glDeleteBuffers(1, &meshes[i]->ibo);
 		}
+		delete meshes[i];
 	}
 	meshes.clear();
 
@@ -127,6 +128,7 @@ bool ModuleModelLoader::CleanUp()
 		{
 			App->textures->Unload(materials[i]->texture0);
 		}
+		delete materials[i];
 	}
 	materials.clear();
 
