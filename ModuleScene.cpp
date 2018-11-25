@@ -83,7 +83,7 @@ void ModuleScene::DrawModelImGui(GameObject* go)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1,0,0,1 });
 	}
-	bool opened = ImGui::TreeNodeEx(go->uuid.str().c_str(), flags, go->name.c_str());
+	bool opened = ImGui::TreeNodeEx(go->uuid.c_str(), flags, go->name.c_str());
 	if (ImGui::IsItemClicked(0))
 	{
 		SelectGameObject(go);

@@ -221,10 +221,10 @@
     <ClCompile Include="Utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs" />
-    <None Include="Default.vs" />
-    <None Include="defaultColor.fs" />
-    <None Include="defaultColor.vs" />
+    <None Include="Game\default.fs" />
+    <None Include="Game\Default.vs" />
+    <None Include="Game\defaultColor.fs" />
+    <None Include="Game\defaultColor.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -448,16 +448,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs">
+    <None Include="Game\default.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Default.vs">
+    <None Include="Game\Default.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="defaultColor.fs">
+    <None Include="Game\defaultColor.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="defaultColor.vs">
+    <None Include="Game\defaultColor.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

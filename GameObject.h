@@ -20,7 +20,7 @@ public:
 	void SetIsSelected(bool selected);
 
 	std::string name = "";
-	xg::Guid uuid;
+	std::string uuid = "";
 	std::list<Component*> components;
 	GameObject* parent = nullptr;
 	std::list<GameObject*> gameObjects;
