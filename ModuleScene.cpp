@@ -118,7 +118,13 @@ void ModuleScene::DrawModelImGui()
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-		ImGui::Checkbox("Use identity matrix", &useIdentityMatrix);
+		if (ImGui::Button("Apply identity matrix"))
+		{
+			selectedGO->matrix = math::float4x4::identity;
+			selectedGO->position = { 0.0f,0.0f,0.0f };
+			selectedGO->scale = { 1.0f,1.0f,1.0f };
+			selectedGO->rotation = { 0.0f,0.0f,0.0f,1.0f };
+		}
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
 		ImGui::Text("Position:");

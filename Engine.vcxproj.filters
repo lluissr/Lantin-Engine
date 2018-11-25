@@ -148,9 +148,6 @@
     <ClCompile Include="ModuleModelLoader.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>mmgr</Filter>
     </ClCompile>
@@ -173,6 +170,9 @@
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Utils\guid.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -381,15 +381,6 @@
     <ClInclude Include="ModuleModelLoader.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>mmgr</Filter>
     </ClInclude>
@@ -414,16 +405,25 @@
     <ClInclude Include="ModuleDebugDraw.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="debugdraw.h">
-      <Filter>Modules</Filter>
+    <ClInclude Include="Utils\crossguid\guid.hpp">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="debug_draw.hpp">
-      <Filter>Modules</Filter>
+    <ClInclude Include="Timer.h">
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="par_shapes.h">
-      <Filter>Modules</Filter>
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\crossguid\guid.hpp">
+    <ClInclude Include="Point.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="debugdraw.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_draw.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

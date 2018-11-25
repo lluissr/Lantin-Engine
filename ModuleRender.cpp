@@ -33,7 +33,7 @@ bool ModuleRender::Init()
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);	
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	context = SDL_GL_CreateContext(App->window->window);
@@ -121,21 +121,13 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 
 	glUseProgram(program);
 
-	if (App->scene->useIdentityMatrix)
-	{
-		math::float4x4 matrix = math::float4x4::identity;
-		glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &matrix[0][0]);
-	}
-	else
-	{
-		glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	}
 
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
 	glActiveTexture(GL_TEXTURE0);
-	
+
 	if (useCheckerTexture)
 	{
 		glBindTexture(GL_TEXTURE_2D, checkersTexture);
@@ -320,7 +312,7 @@ void ModuleRender::DrawCameraWindow()
 
 	App->camera->WindowResized((unsigned)size.x, (unsigned)size.y);
 
-	ImGui::Image((ImTextureID)App->renderer->renderTexture,	{ size.x, size.y }, { 0,1 }, { 1,0 });
+	ImGui::Image((ImTextureID)App->renderer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 }
 
 void ModuleRender::InitFrameBuffer(int width, int height)

@@ -24,7 +24,6 @@ public:
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;
-	bool useIdentityMatrix = false;
 };
 
 #endif
