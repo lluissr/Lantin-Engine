@@ -87,7 +87,10 @@ update_status ModuleRender::Update()
 
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
-		RenderGameObject(gameObject);
+		if (gameObject->isActive)
+		{
+			RenderGameObject(gameObject);
+		}
 	}
 
 	if (renderBoundingBox)
@@ -102,16 +105,19 @@ update_status ModuleRender::Update()
 
 void  ModuleRender::RenderGameObject(GameObject* gameObject)
 {
-	if (gameObject->gameObjects.size() > 0)
+	if (gameObject->isActive)
 	{
-		for (GameObject* go : gameObject->gameObjects)
+		if (gameObject->gameObjects.size() > 0)
 		{
-			RenderGameObject(go);
+			for (GameObject* go : gameObject->gameObjects)
+			{
+				RenderGameObject(go);
+			}
 		}
-	}
 
-	if (gameObject->mesh != NULL && gameObject->material != NULL) {
-		RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->matrix);
+		if (gameObject->mesh != NULL && gameObject->material != NULL) {
+			RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->matrix);
+		}
 	}
 }
 
