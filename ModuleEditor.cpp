@@ -30,12 +30,12 @@ ModuleEditor::~ModuleEditor()
 bool ModuleEditor::Init()
 {
 
-	IMGUI_CHECKVERSION();
+	//IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	io = ImGui::GetIO(); //(void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -51,51 +51,89 @@ update_status ModuleEditor::PreUpdate()
 {
 	fps_log.erase(fps_log.begin());
 	fps_log.push_back(App->fps);
-
+	   
 	return UPDATE_CONTINUE;
+}
+
+void ModuleEditor::InitImGuiFrame()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	CreateDockSpace();
+}
+void ModuleEditor::EndImGuiFrame()
+{
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleEditor::CreateDockSpace() const
+{
+	ImGui::SetNextWindowPos({ 0, 0 });
+	ImGui::SetNextWindowSize({ (float)App->camera->screenWidth, (float)App->camera->screenHeight });
+	ImGui::SetNextWindowBgAlpha(0.0f);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+	/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;*/
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace", NULL, window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGui::DockSpace(ImGui::GetID("MyDockSpace"), ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 }
 
 update_status ModuleEditor::Update()
 {
 
-	if (showConfiguration)
-	{
-		DrawConfiguration();
-	}
+	//if (showConfiguration)
+	//{
+	//	DrawConfiguration();
+	//}
 
-	if (showSceneTree)
-	{
-		DrawSceneTree();
-	}
+	//if (showSceneTree)
+	//{
+	//	DrawSceneTree();
+	//}
 
-	if (showModel)
-	{
-		DrawModel();
-	}
-	
-	if (showAbout)
-	{
+	//if (showModel)
+	//{
+	//	DrawModel();
+	//}
+	//
+	//if (showAbout)
+	//{
 		DrawAbout();
-	}
+	//}
 
-	if (showHardware)
-	{
-		DrawHardware();
-	}
+	//if (showHardware)
+	//{
+	//	DrawHardware();
+	//}
 
-	if (showConsole)
+	/*if (showConsole)
 	{
 		DrawConsole();
-	}
+	}*/
 
 	//Menu
-	if (DrawMenu()) return UPDATE_STOP;
+	// if (DrawMenu()) return UPDATE_STOP;
+
+	//App->renderer->DrawCameraWindow();
 
 	return UPDATE_CONTINUE;
 }
-
-
-
 
 update_status ModuleEditor::PostUpdate()
 {
@@ -197,7 +235,7 @@ bool ModuleEditor::DrawMenu()
 
 void ModuleEditor::DrawConfiguration()
 {
-	ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
+	//ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
 	ImGui::Begin("Configuration", &showConfiguration);
 
@@ -244,7 +282,7 @@ void ModuleEditor::DrawConfiguration()
 
 void ModuleEditor::DrawSceneTree()
 {
-	ImGui::SetNextWindowPos(ImVec2(0.0f, 17.0f));
+	//ImGui::SetNextWindowPos(ImVec2(0.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
 	ImGui::Begin("Scene information", &showSceneTree);
 	App->scene->DrawGameObjectTreeImGui();
@@ -253,7 +291,7 @@ void ModuleEditor::DrawSceneTree()
 
 void ModuleEditor::DrawModel()
 {
-	ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 350.0f, 17.0f));
+	//ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 350.0f, 17.0f));
 	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
 	ImGui::Begin("Model selected", &showModel);
 	App->scene->DrawModelImGui();
@@ -262,7 +300,7 @@ void ModuleEditor::DrawModel()
 
 void ModuleEditor::DrawConsole()
 {
-	ImGui::SetNextWindowPos(ImVec2(0, (float)App->camera->screenHeight - 200.0f));
+	//ImGui::SetNextWindowPos(ImVec2(0, (float)App->camera->screenHeight - 200.0f));
 	ImGui::SetNextWindowSize(ImVec2((float)App->camera->screenWidth, 200.0f));
 	ImGui::Begin("Console", &showConsole);
 	if (ImGui::Button("Clear")) Clear();

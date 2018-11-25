@@ -8,10 +8,12 @@
 #include "ModuleEditor.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleDebugDraw.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "SDL.h"
+#include "debugdraw.h"
 #include "GL/glew.h"
 
 
@@ -34,7 +36,8 @@ bool ModuleRender::Init()
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);	
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	context = SDL_GL_CreateContext(App->window->window);
 
@@ -52,8 +55,11 @@ bool ModuleRender::Init()
 
 	int width, height;
 	SDL_GetWindowSize(App->window->window, &width, &height);
+	glViewport(0, 0, width, height);
 
 	checkersTexture = App->textures->Load("./Textures/checker.jpg");
+
+	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight);
 
 	return true;
 }
@@ -62,9 +68,7 @@ update_status ModuleRender::PreUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
+	App->editor->InitImGuiFrame();
 
 	return UPDATE_CONTINUE;
 }
@@ -72,6 +76,18 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	dd::xzSquareGrid(-40.0f, 40.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+	float axis_size = 1.0f;
+	dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	App->debugDraw->Draw(fbo, App->camera->screenWidth, App->camera->screenHeight);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
@@ -82,6 +98,8 @@ update_status ModuleRender::Update()
 	{
 		RenderBoundingBox();
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return UPDATE_CONTINUE;
 }
@@ -261,14 +279,14 @@ void ModuleRender::RenderBoundingBox() const
 
 update_status ModuleRender::PostUpdate()
 {
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	App->editor->EndImGuiFrame();
 
-	if (App->editor->io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
+	//if (App->editor->io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	//{
+	//	ImGui::UpdatePlatformWindows();
+	//	ImGui::RenderPlatformWindowsDefault();
+	//}
+
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -281,7 +299,8 @@ bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-	//Destroy window
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
 
 	return true;
 }
@@ -305,4 +324,52 @@ void ModuleRender::DrawImGui()
 			}
 		}
 	}
+}
+
+void ModuleRender::DrawCameraWindow()
+{
+	bool sceneEnabled = true;
+	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImVec2 size = ImGui::GetWindowSize();
+	ImGui::SetCursorPos({ -(App->camera->screenWidth - size.x) / 2,-(App->camera->screenHeight - size.y) / 2 });
+	ImGui::Image((ImTextureID)renderTexture,
+		{ (float)App->camera->screenWidth , (float)App->camera->screenHeight }, { 0,1 }, { 1,0 });
+	ImGui::End();
+}
+
+void ModuleRender::InitFrameBuffer(int width, int height)
+{
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
+
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glGenTextures(1, &renderTexture);
+	glBindTexture(GL_TEXTURE_2D, renderTexture);
+
+	glTexImage2D(
+		GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
+	);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0
+	);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		LOG("Framebuffer mal");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

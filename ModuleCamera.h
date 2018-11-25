@@ -60,9 +60,6 @@ private:
 	void SetHorizontalFOV(float fovX);
 	void Orbit();
 	void SetPlaneDistances(float nearDist, float farDist);
-
-	void RefenceGround() const;
-	void ReferenceAxis() const;
 };
 
 #endif /* __ModuleCamera_h__ */

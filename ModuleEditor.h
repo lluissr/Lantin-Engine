@@ -21,6 +21,8 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+	void InitImGuiFrame();
+	void EndImGuiFrame();
 
 	void AddLog(const char* fmt, ...);
 	void Clear();
@@ -50,6 +52,7 @@ private:
 	void DrawSceneTree();
 	void DrawModel();
 	void DrawConfiguration();
+	void CreateDockSpace() const;
 };
 
 #endif
