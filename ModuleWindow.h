@@ -21,12 +21,17 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void WindowResized(unsigned width, unsigned height);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = NULL;
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface = NULL;
+
+	int screenWidth = SCREEN_WIDTH;
+	int screenHeight = SCREEN_HEIGHT;
 };
 
 #endif // __ModuleWindow_H__

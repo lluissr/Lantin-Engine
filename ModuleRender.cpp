@@ -9,9 +9,6 @@
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
 #include "ModuleDebugDraw.h"
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
 #include "SDL.h"
 #include "debugdraw.h"
 #include "GL/glew.h"
@@ -78,8 +75,7 @@ update_status ModuleRender::Update()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	dd::xzSquareGrid(-40.0f, 40.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-	float axis_size = 1.0f;
+	dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
 	dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -281,15 +277,7 @@ update_status ModuleRender::PostUpdate()
 {
 	App->editor->EndImGuiFrame();
 
-	//if (App->editor->io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	//{
-	//	ImGui::UpdatePlatformWindows();
-	//	ImGui::RenderPlatformWindowsDefault();
-	//}
-
-
 	SDL_GL_SwapWindow(App->window->window);
-
 
 	return UPDATE_CONTINUE;
 }
@@ -328,13 +316,11 @@ void ModuleRender::DrawImGui()
 
 void ModuleRender::DrawCameraWindow()
 {
-	bool sceneEnabled = true;
-	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImVec2 size = ImGui::GetWindowSize();
-	ImGui::SetCursorPos({ -(App->camera->screenWidth - size.x) / 2,-(App->camera->screenHeight - size.y) / 2 });
-	ImGui::Image((ImTextureID)renderTexture,
-		{ (float)App->camera->screenWidth , (float)App->camera->screenHeight }, { 0,1 }, { 1,0 });
-	ImGui::End();
+
+	App->camera->WindowResized((unsigned)size.x, (unsigned)size.y);
+
+	ImGui::Image((ImTextureID)App->renderer->renderTexture,	{ size.x, size.y }, { 0,1 }, { 1,0 });
 }
 
 void ModuleRender::InitFrameBuffer(int width, int height)

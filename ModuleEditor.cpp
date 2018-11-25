@@ -6,9 +6,6 @@
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
 #include "SDL.h"
 #include <GL/glew.h> 
 #include "mmgr/mmgr.h"
@@ -29,18 +26,14 @@ ModuleEditor::~ModuleEditor()
 
 bool ModuleEditor::Init()
 {
-
-	//IMGUI_CHECKVERSION();
+	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); //(void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	// Setup style
 	ImGui::StyleColorsDark();
 
 	return true;
@@ -73,18 +66,15 @@ void ModuleEditor::EndImGuiFrame()
 void ModuleEditor::CreateDockSpace() const
 {
 	ImGui::SetNextWindowPos({ 0, 0 });
-	ImGui::SetNextWindowSize({ (float)App->camera->screenWidth, (float)App->camera->screenHeight });
+	ImGui::SetNextWindowSize({ (float)App->window->screenWidth, (float)App->window->screenHeight });
 	ImGui::SetNextWindowBgAlpha(0.0f);
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-	/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;*/
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBringToFrontOnFocus;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -97,40 +87,43 @@ void ModuleEditor::CreateDockSpace() const
 update_status ModuleEditor::Update()
 {
 
-	//if (showConfiguration)
-	//{
-	//	DrawConfiguration();
-	//}
+	if (showConfiguration)
+	{
+		DrawConfiguration();
+	}
 
-	//if (showSceneTree)
-	//{
-	//	DrawSceneTree();
-	//}
+	if (showSceneTree)
+	{
+		DrawSceneTree();
+	}
 
-	//if (showModel)
-	//{
-	//	DrawModel();
-	//}
-	//
-	//if (showAbout)
-	//{
+	if (showModel)
+	{
+		DrawModel();
+	}
+	
+	if (showAbout)
+	{
 		DrawAbout();
-	//}
+	}
 
-	//if (showHardware)
-	//{
-	//	DrawHardware();
-	//}
+	if (showHardware)
+	{
+		DrawHardware();
+	}
 
-	/*if (showConsole)
+	if (showConsole)
 	{
 		DrawConsole();
-	}*/
+	}
+
+	if (showScene)
+	{
+		DrawScene();
+	}
 
 	//Menu
-	// if (DrawMenu()) return UPDATE_STOP;
-
-	//App->renderer->DrawCameraWindow();
+	 if (DrawMenu()) return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
 }
@@ -175,6 +168,13 @@ void ModuleEditor::addMemory(float memory)
 }
 
 
+void ModuleEditor::DrawScene()
+{
+	ImGui::Begin("Scene", &showScene, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	App->renderer->DrawCameraWindow();
+	ImGui::End();
+}
+
 bool ModuleEditor::DrawMenu()
 {
 	ImGui::BeginMainMenuBar();
@@ -191,6 +191,11 @@ bool ModuleEditor::DrawMenu()
 
 	if (ImGui::BeginMenu("Engine"))
 	{
+
+		if (ImGui::MenuItem("Scene Viewport"))
+		{
+			showScene = !showScene;
+		}
 		if (ImGui::MenuItem("Objects Tree"))
 		{
 			showSceneTree = !showSceneTree;
@@ -235,8 +240,7 @@ bool ModuleEditor::DrawMenu()
 
 void ModuleEditor::DrawConfiguration()
 {
-	//ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 300.0f, 17.0f));
-	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->camera->screenHeight - 217.0f));
+	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
 	ImGui::Begin("Configuration", &showConfiguration);
 
 	if (ImGui::CollapsingHeader("Application"))
@@ -271,7 +275,7 @@ void ModuleEditor::DrawConfiguration()
 
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		int window[2] = { App->camera->screenWidth, App->camera->screenHeight };
+		int window[2] = { App->window->screenWidth, App->window->screenHeight };
 		ImGui::InputInt2("Size", window, ImGuiInputTextFlags_ReadOnly);
 	}
 
@@ -282,8 +286,7 @@ void ModuleEditor::DrawConfiguration()
 
 void ModuleEditor::DrawSceneTree()
 {
-	//ImGui::SetNextWindowPos(ImVec2(0.0f, 17.0f));
-	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
+	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
 	ImGui::Begin("Scene information", &showSceneTree);
 	App->scene->DrawGameObjectTreeImGui();
 	ImGui::End();
@@ -291,8 +294,7 @@ void ModuleEditor::DrawSceneTree()
 
 void ModuleEditor::DrawModel()
 {
-	//ImGui::SetNextWindowPos(ImVec2((float)App->camera->screenWidth - 350.0f, 17.0f));
-	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->camera->screenHeight - 217.0f));
+	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
 	ImGui::Begin("Model selected", &showModel);
 	App->scene->DrawModelImGui();
 	ImGui::End();
@@ -300,8 +302,7 @@ void ModuleEditor::DrawModel()
 
 void ModuleEditor::DrawConsole()
 {
-	//ImGui::SetNextWindowPos(ImVec2(0, (float)App->camera->screenHeight - 200.0f));
-	ImGui::SetNextWindowSize(ImVec2((float)App->camera->screenWidth, 200.0f));
+	ImGui::SetNextWindowSize(ImVec2((float)App->window->screenWidth, 200.0f), ImGuiCond_FirstUseEver);
 	ImGui::Begin("Console", &showConsole);
 	if (ImGui::Button("Clear")) Clear();
 	ImGui::SameLine();

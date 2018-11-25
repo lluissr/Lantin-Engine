@@ -1,8 +1,5 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
 #include "GameObject.h"
 #include "ModuleModelLoader.h"
 

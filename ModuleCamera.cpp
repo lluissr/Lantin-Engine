@@ -5,9 +5,6 @@
 #include "ModuleProgram.h"
 #include "ModuleModelLoader.h"
 
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
 #include "GL/glew.h"
 #include "SDL.h"
 #include "MathGeoLib.h"
@@ -238,7 +235,6 @@ void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 
 void ModuleCamera::WindowResized(unsigned width, unsigned height)
 {
-	glViewport(0, 0, width, height);
 	screenWidth = width;
 	screenHeight = height;
 	SetHorizontalFOV(fovX);

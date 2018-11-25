@@ -3,8 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
 #include <vector>
 
 
@@ -28,8 +26,6 @@ public:
 	void Clear();
 	void addMemory(float memory);
 
-	ImGuiIO io;
-
 private:
 	const char* glsl_version = "#version 130";
 	std::vector<float> fps_log;
@@ -44,6 +40,7 @@ private:
 	bool showAbout = false;
 	bool showHardware = false;
 	bool showConsole = true;
+	bool showScene = true;
 
 	bool DrawMenu();
 	void DrawConsole();
@@ -52,6 +49,7 @@ private:
 	void DrawSceneTree();
 	void DrawModel();
 	void DrawConfiguration();
+	void DrawScene();
 	void CreateDockSpace() const;
 };
 

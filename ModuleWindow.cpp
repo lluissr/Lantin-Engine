@@ -72,4 +72,9 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+void ModuleWindow::WindowResized(unsigned width, unsigned height)
+{
+	screenWidth = width;
+	screenHeight = height;
+}
 
