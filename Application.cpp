@@ -10,6 +10,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
 #include "ModuleDebugDraw.h"
+#include "Brofiler.h"
 #include "Timer.h"
 
 using namespace std;
@@ -57,6 +58,7 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	BROFILER_FRAME("Main loop motherfucker")
 	FPSCalculation();
 
 	update_status ret = UPDATE_CONTINUE;
