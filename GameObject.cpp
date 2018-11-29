@@ -59,3 +59,7 @@ void GameObject::SetIsSelected(bool selected)
 	if (parent != nullptr)
 		parent->SetIsSelected(selected);
 }
+
+void GameObject::Duplicate()
+{
+}

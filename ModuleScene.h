@@ -2,6 +2,7 @@
 #define __ModuleScene_h__
 
 #include "Module.h"
+#include <list>
 
 class GameObject;
 

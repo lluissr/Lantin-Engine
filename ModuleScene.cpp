@@ -60,8 +60,16 @@ void ModuleScene::DrawGameObjectTreeImGui()
 
 	if (ImGui::TreeNode(root->name.c_str()))
 	{
-		for (GameObject* gameObject : root->gameObjects)
+
+		for (std::list<GameObject*>::iterator it = root->gameObjects.begin(); it != root->gameObjects.end(); ++it)
 		{
+			if ((*it)->toDelete)
+			{
+				delete *it;
+			}
+		}
+		for (GameObject* gameObject : root->gameObjects)
+		{	
 			DrawModelImGui(gameObject);
 		}
 		ImGui::TreePop();
@@ -88,8 +96,31 @@ void ModuleScene::DrawModelImGui(GameObject* go)
 	{
 		SelectGameObject(go);
 	}
+	if (ImGui::IsItemClicked(1))
+	{
+		ImGui::OpenPopup("TreePopup");
+	}
+	if (ImGui::BeginPopup("TreePopup"))
+	{
+		if (ImGui::Button("Duplicar"))
+		{
+		
+		}
+		if (ImGui::Button("Eliminar"))
+		{
+			go->toDelete = true;
+		}
+		ImGui::EndPopup();
+	}
 	if (opened)
 	{
+		for (std::list<GameObject*>::iterator it = root->gameObjects.begin(); it != root->gameObjects.end(); ++it)
+		{
+			if ((*it)->toDelete)
+			{
+				delete *it;
+			}
+		}
 		for (GameObject* gameObject : go->gameObjects)
 		{
 			DrawModelImGui(gameObject);

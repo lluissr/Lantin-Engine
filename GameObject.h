@@ -18,6 +18,7 @@ public:
 	void Update();
 	Component* CreateComponent(ComponentType type);
 	void SetIsSelected(bool selected);
+	void Duplicate();
 
 	std::string name = "";
 	std::string uuid = "";
@@ -27,6 +28,7 @@ public:
 	bool isActive = true;
 	bool isStatic = false;
 	bool isSelected = false;
+	bool toDelete = false;
 
 	ComponentMesh* mesh = nullptr;
 	ComponentMaterial* material = nullptr;
