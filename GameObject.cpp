@@ -84,10 +84,6 @@ void GameObject::SetIsSelected(bool selected)
 		parent->SetIsSelected(selected);
 }
 
-void GameObject::Duplicate()
-{
-}
-
 void GameObject::RemoveChild()
 {
 	if (!gameObjects.empty())

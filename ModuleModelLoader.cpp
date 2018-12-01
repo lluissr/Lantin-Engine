@@ -100,6 +100,8 @@ void ModuleModelLoader::ImportModel(const char* path)
 	go->parent = App->scene->root;
 	App->scene->root->gameObjects.push_back(go);
 
+	aiReleaseImport(scene);
+	
 	App->camera->Focus();
 }
 

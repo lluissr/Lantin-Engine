@@ -18,7 +18,6 @@ public:
 	void Update();
 	Component* CreateComponent(ComponentType type);
 	void SetIsSelected(bool selected);
-	void Duplicate();
 	void RemoveChild();
 
 	std::string name = "";
