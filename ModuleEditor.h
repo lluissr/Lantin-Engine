@@ -34,7 +34,7 @@ private:
 	ImGuiTextBuffer Buf;
 	bool ScrollToBottom;
 
-	bool showConfiguration = false;
+	bool showConfiguration = true;
 	bool showSceneTree = true;
 	bool showModel = true;
 	bool showAbout = false;

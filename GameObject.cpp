@@ -63,3 +63,16 @@ void GameObject::SetIsSelected(bool selected)
 void GameObject::Duplicate()
 {
 }
+
+void GameObject::RemoveChild()
+{
+	if (!gameObjects.empty())
+	{
+		gameObjects.remove_if([](GameObject* i) {return i->toDelete;});
+
+		for each (GameObject* go in gameObjects)
+		{
+			go->RemoveChild();
+		}
+	}
+}

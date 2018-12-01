@@ -19,6 +19,14 @@ bool ModuleScene::Init()
 	return true;
 }
 
+update_status ModuleScene::PreUpdate()
+{
+	root->RemoveChild();
+
+	return UPDATE_CONTINUE;
+}
+
+
 update_status ModuleScene::Update()
 {
 	return UPDATE_CONTINUE;
@@ -60,14 +68,6 @@ void ModuleScene::DrawGameObjectTreeImGui()
 
 	if (ImGui::TreeNode(root->name.c_str()))
 	{
-
-		for (std::list<GameObject*>::iterator it = root->gameObjects.begin(); it != root->gameObjects.end(); ++it)
-		{
-			if ((*it)->toDelete)
-			{
-				delete *it;
-			}
-		}
 		for (GameObject* gameObject : root->gameObjects)
 		{	
 			DrawModelImGui(gameObject);
@@ -114,13 +114,6 @@ void ModuleScene::DrawModelImGui(GameObject* go)
 	}
 	if (opened)
 	{
-		for (std::list<GameObject*>::iterator it = root->gameObjects.begin(); it != root->gameObjects.end(); ++it)
-		{
-			if ((*it)->toDelete)
-			{
-				delete *it;
-			}
-		}
 		for (GameObject* gameObject : go->gameObjects)
 		{
 			DrawModelImGui(gameObject);

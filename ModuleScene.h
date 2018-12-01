@@ -12,9 +12,10 @@ public:
 	ModuleScene();
 	~ModuleScene();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
