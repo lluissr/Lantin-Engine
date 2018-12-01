@@ -104,7 +104,8 @@ void ModuleScene::DrawModelImGui(GameObject* go)
 	{
 		if (ImGui::Button("Duplicar"))
 		{
-		
+			GameObject* newGameObject = new GameObject(*go);
+			go->parent->gameObjects.push_back(newGameObject);
 		}
 		if (ImGui::Button("Eliminar"))
 		{

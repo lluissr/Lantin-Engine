@@ -9,10 +9,34 @@ GameObject::GameObject()
 }
 
 
-GameObject::GameObject(GameObject* parent)
+GameObject::GameObject(const GameObject& go)
 {
-	this->parent = parent;
 	uuid = xg::newGuid().str();
+	name = go.name;
+	GameObject* parent = go.parent;
+	isActive = go.isActive;
+	isStatic = go.isStatic;
+
+	position = go.position;
+	scale = go.scale;
+	rotation = go.rotation;
+	matrix = go.matrix;
+	if (go.mesh != NULL)
+	{
+		mesh = (ComponentMesh*)CreateComponent(ComponentType::MESH);
+		mesh->mesh = go.mesh->mesh;
+	}
+	if (go.material != NULL)
+	{
+		material = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
+		material->material = go.material->material;
+	}
+
+	for each (GameObject* gameObject in go.gameObjects)
+	{
+		GameObject* childCopy = new GameObject(*gameObject);
+		gameObjects.push_back(childCopy);
+	}
 }
 
 GameObject::~GameObject()

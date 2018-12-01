@@ -12,7 +12,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(GameObject* parent);
+	GameObject(const GameObject& go);
 	~GameObject();
 
 	void Update();
