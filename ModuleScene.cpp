@@ -65,6 +65,10 @@ void ModuleScene::SelectGameObject(GameObject* go)
 
 void ModuleScene::DrawGameObjectTreeImGui()
 {
+	if (ImGui::Button("Draw Sphere"))
+	{
+		App->modelLoader->LoadSphere("sphere", 1.0f, 30, 30, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
 
 	if (ImGui::TreeNode(root->name.c_str()))
 	{

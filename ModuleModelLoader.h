@@ -1,6 +1,7 @@
 #ifndef __ModuleModelLoader_h__
 #define __ModuleModelLoader_h__
 
+#include "Application.h"
 #include "Module.h"
 #include "Globals.h"
 #include <assimp/mesh.h>
@@ -21,6 +22,7 @@ public:
 	unsigned material = 0;
 	unsigned numVertices = 0;
 	unsigned numIndices = 0;
+	unsigned normals_offset = 0;
 };
 
 class Material
@@ -48,6 +50,7 @@ public:
 	void GenerateMaterialData(const aiMaterial* aiMaterial);
 	GameObject* CreateGameObjects(const aiScene * scene, aiNode* node);
 	void ReplaceMaterial(const char* path);
+	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 
 	math::float3 minPoint;
 	math::float3 maxPoint;

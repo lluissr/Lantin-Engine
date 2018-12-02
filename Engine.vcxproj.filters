@@ -411,9 +411,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="par_shapes.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -424,6 +421,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="debug_draw.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="par_shapes.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

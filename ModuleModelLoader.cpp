@@ -5,13 +5,22 @@
 #include "ModuleEditor.h"
 #include "ModuleScene.h"
 #include "ModuleCamera.h"
-#include "GL/glew.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include "MathGeoLib.h"
 #include "SDL/include/SDL.h"
 #include "ComponentMesh.h"
+#include "GL/glew.h"
+#pragma warning(push)
+#pragma warning(disable : 4996)  
+#pragma warning(disable : 4244)  
+#pragma warning(disable : 4305)  
+#pragma warning(disable : 4838)  
+
+#define PAR_SHAPES_IMPLEMENTATION
+#include "par_shapes.h"
+#pragma warning(pop)
 
 
 ModuleModelLoader::ModuleModelLoader()
@@ -27,7 +36,8 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	ChooseModelToRender(0);
+	//ChooseModelToRender(0);
+	LoadSphere("sphere", 1.0f, 30, 30, float4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	return true;
 }
@@ -305,6 +315,75 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 		delete materials[0];
 		materials[0] = material;*/
 	}
+}
+
+bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color)
+{
+	par_shapes_mesh* parMesh = par_shapes_create_parametric_sphere(int(slices), int(stacks));
+
+	if (parMesh)
+	{
+		par_shapes_scale(parMesh, size, size, size);
+
+		GameObject* go = new GameObject();
+		go->name = name;
+		Mesh* mesh = new Mesh();
+
+		glGenBuffers(1, &mesh->vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+
+		unsigned offset_acc = sizeof(math::float3);
+
+		if (parMesh->normals)
+		{
+			mesh->normals_offset = offset_acc;
+			offset_acc += sizeof(math::float3);
+		}
+
+		mesh->numVertices = offset_acc;
+
+		glBufferData(GL_ARRAY_BUFFER, mesh->numVertices*parMesh->npoints, nullptr, GL_STATIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
+
+		if (parMesh->normals)
+		{
+			glBufferSubData(GL_ARRAY_BUFFER, mesh->normals_offset*parMesh->npoints, sizeof(math::float3)*parMesh->npoints, parMesh->normals);
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &mesh->ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
+
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
+
+		unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+			sizeof(unsigned)*parMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
+
+		for (unsigned i = 0; i< unsigned(parMesh->ntriangles * 3); ++i)
+		{
+			*(indices++) = parMesh->triangles[i];
+		}
+
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		mesh->material = 0;
+		mesh->numVertices = parMesh->npoints;
+		mesh->numIndices = parMesh->ntriangles * 3;
+				
+		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
+		cmesh->mesh = mesh;
+
+		go->parent = App->scene->root;
+		App->scene->root->gameObjects.push_back(go);
+
+		par_shapes_free_mesh(parMesh);
+
+		return true;
+	}
+
+	return false;
 }
 
 

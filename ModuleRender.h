@@ -20,6 +20,7 @@ public:
 	bool CleanUp();
 	void  RenderGameObject(GameObject* gameObject);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix);
+	void RenderMeshWithoutTexture(const Mesh& mesh, math::float4x4 modelMatrix);
 	void RenderBoundingBox() const;
 	void DrawImGui();
 	void InitFrameBuffer(int width, int height);
