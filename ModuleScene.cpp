@@ -65,18 +65,27 @@ void ModuleScene::SelectGameObject(GameObject* go)
 
 void ModuleScene::DrawGameObjectTreeImGui()
 {
-	if (ImGui::Button("Draw Sphere"))
+	if (ImGui::CollapsingHeader("Draw Primitives"))
 	{
-		App->modelLoader->LoadSphere("sphere", 1.0f, 30, 30, float4(1.0f, 1.0f, 1.0f, 1.0f));
-	}
-
-	if (ImGui::TreeNode(root->name.c_str()))
-	{
-		for (GameObject* gameObject : root->gameObjects)
-		{	
-			DrawModelImGui(gameObject);
+		static char str0[128] = "Sphere";
+		ImGui::InputText("Sphere name", str0, IM_ARRAYSIZE(str0));
+		static ImVec4 color = ImColor(114, 144, 154, 200);
+		ImGui::ColorEdit3("Color", (float*)&color);
+		if (ImGui::Button("Draw Sphere"))
+		{
+			App->modelLoader->LoadSphere(str0, 1.0f, 30, 30, math::float4(color.x, color.y, color.z, color.w));
 		}
-		ImGui::TreePop();
+	}
+	if (ImGui::CollapsingHeader("Scene hierarchy"))
+	{
+		if (ImGui::TreeNode(root->name.c_str()))
+		{
+			for (GameObject* gameObject : root->gameObjects)
+			{
+				DrawModelImGui(gameObject);
+			}
+			ImGui::TreePop();
+		}
 	}
 }
 
@@ -245,12 +254,23 @@ void ModuleScene::DrawModelImGui()
 
 	if (selectedGO->material != NULL)
 	{
-		if (ImGui::CollapsingHeader("Textures"))
+		if (ImGui::CollapsingHeader("Material"))
 		{
-			if (selectedGO->material->material->texture0 != 0)
+			if (selectedGO->material->material->program == 0)
 			{
-				ImGui::Image((ImTextureID)selectedGO->material->material->texture0, ImVec2(200, 200));
-				ImGui::Text("Dimensions: %dx%d", selectedGO->material->material->width, selectedGO->material->material->height);
+				if (selectedGO->material->material->texture0 != 0)
+				{
+					ImGui::Image((ImTextureID)selectedGO->material->material->texture0, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", selectedGO->material->material->width, selectedGO->material->material->height);
+				}
+			}
+			else if (selectedGO->material->material->program == 1)
+			{
+				static ImVec4 color = ImColor(selectedGO->material->material->color.x, selectedGO->material->material->color.y, selectedGO->material->material->color.z, selectedGO->material->material->color.w);
+				if (ImGui::ColorEdit3("Color", (float*)&color))
+				{
+					selectedGO->material->material->color = math::float4(color.x, color.y, color.z, color.w);
+				}
 			}
 		}
 	}

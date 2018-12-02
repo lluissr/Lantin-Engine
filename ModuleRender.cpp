@@ -118,35 +118,39 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 		if (gameObject->mesh != NULL && gameObject->material != NULL) {
 			RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->matrix);
 		}
-		else if (gameObject->mesh != NULL)
-		{
-			RenderMeshWithoutTexture(*gameObject->mesh->mesh, gameObject->matrix);
-		}
 	}
 }
 
 void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix)
 {
-	unsigned program = App->program->program;
+	unsigned program = material.program == 0 ? App->program->program : App->program->axisProgram;
 
 	glUseProgram(program);
 	
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
-	glActiveTexture(GL_TEXTURE0);
-
-	if (useCheckerTexture)
+	if (material.program == 0)
 	{
-		glBindTexture(GL_TEXTURE_2D, checkersTexture);
+		glActiveTexture(GL_TEXTURE0);
+
+		if (useCheckerTexture)
+		{
+			glBindTexture(GL_TEXTURE_2D, checkersTexture);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, material.texture0);
+		}
+
+		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, material.texture0);
+		float color[4] = { material.color.x, material.color.y, material.color.z, material.color.w };
+		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, color);
 	}
-
-	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -161,34 +165,6 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-}
-
-void ModuleRender::RenderMeshWithoutTexture(const Mesh& mesh, math::float4x4 modelMatrix)
-{
-	unsigned program = App->program->axisProgram;
-
-	glUseProgram(program);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
-
-	float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(program, "newColor"), 1, red);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.numVertices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
 }
 

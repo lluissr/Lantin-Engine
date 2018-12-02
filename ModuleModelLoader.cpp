@@ -375,6 +375,12 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
 		cmesh->mesh = mesh;
 
+		Material* material = new Material();
+		material->program = 1;
+		material->color = color;
+		ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
+		cmaterial->material = material;
+
 		go->parent = App->scene->root;
 		App->scene->root->gameObjects.push_back(go);
 

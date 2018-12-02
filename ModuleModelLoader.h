@@ -28,9 +28,11 @@ public:
 class Material
 {
 public:
+	unsigned program = 0;
 	unsigned texture0 = 0;
 	unsigned width = 0;
 	unsigned height = 0;
+	math::float4 color = math::float4::zero;
 };
 
 class ModuleModelLoader : public Module
