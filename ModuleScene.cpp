@@ -1,6 +1,5 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
-#include "GameObject.h"
 #include "ModuleModelLoader.h"
 
 ModuleScene::ModuleScene()
@@ -65,6 +64,28 @@ void ModuleScene::SelectGameObject(GameObject* go)
 
 void ModuleScene::DrawGameObjectTreeImGui()
 {
+	ImGui::SliderFloat("Ambient", &ambient, 0.0f, 1.0f);
+	ImGui::Text("Light position:");
+	ImGui::PushItemWidth(70);
+	ImGui::Text("X:");
+	ImGui::SameLine();
+	ImGui::PushID("1");
+	ImGui::InputFloat("", &lightPosition.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::SameLine();
+	ImGui::PopID();
+	ImGui::Text("Y:");
+	ImGui::SameLine();
+	ImGui::PushID("2");
+	ImGui::InputFloat("", &lightPosition.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::SameLine();
+	ImGui::PopID();
+	ImGui::Text("Z:");
+	ImGui::SameLine();
+	ImGui::PushID("3");
+	ImGui::InputFloat("", &lightPosition.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::PopID();
+	ImGui::PopItemWidth();
+
 	if (ImGui::CollapsingHeader("Draw Primitives"))
 	{
 		static char str0[128] = "Sphere";
@@ -271,6 +292,10 @@ void ModuleScene::DrawModelImGui()
 				{
 					selectedGO->material->material->color = math::float4(color.x, color.y, color.z, color.w);
 				}
+				ImGui::SliderFloat("Shininess", &selectedGO->material->material->shininess, 0, 128);
+				ImGui::SliderFloat("K ambient", &selectedGO->material->material->k_ambient, 0, 1);
+				ImGui::SliderFloat("K diffuse", &selectedGO->material->material->k_diffuse, 0, 1);
+				ImGui::SliderFloat("K specular", &selectedGO->material->material->k_specular, 0, 1);
 			}
 		}
 	}

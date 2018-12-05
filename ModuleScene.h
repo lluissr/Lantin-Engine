@@ -2,6 +2,7 @@
 #define __ModuleScene_h__
 
 #include "Module.h"
+#include "MathGeoLib.h"
 #include <list>
 
 class GameObject;
@@ -26,6 +27,9 @@ public:
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;
+
+	math::float3 lightPosition = math::float3(-2.0f, 0.0f, 6.0f);
+	float ambient = 0.3f;
 };
 
 #endif

@@ -196,13 +196,12 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	}
 	else
 	{
-		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, (float*)&math::float3(-2.0f, 0.0f, 6.0f));
-		glUniform1f(glGetUniformLocation(program, "ambient"), 0.3f);
-		glUniform1f(glGetUniformLocation(program, "shininess"), 64.0f);
-		glUniform1f(glGetUniformLocation(program, "k_ambient"), 1.0f);
-		glUniform1f(glGetUniformLocation(program, "k_diffuse"), 0.5f);
-		glUniform1f(glGetUniformLocation(program, "k_specular"), 0.6f);
-		glUniform1i(glGetUniformLocation(program, "use_diffuse_map"), 0);
+		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, (float*)&App->scene->lightPosition);
+		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
+		glUniform1f(glGetUniformLocation(program, "shininess"), material.shininess);
+		glUniform1f(glGetUniformLocation(program, "k_ambient"), material.k_ambient);
+		glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
+		glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
 		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
 
 		glBindVertexArray(mesh.vao);

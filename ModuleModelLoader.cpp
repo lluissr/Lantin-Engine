@@ -382,6 +382,10 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		Material* material = new Material();
 		material->program = 2;
 		material->color = color;
+		material->shininess = 64.0f;
+		material->k_ambient = 1.0f;
+		material->k_diffuse = 0.5f;
+		material->k_specular = 0.6f;
 		ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
 		cmaterial->material = material;
 
