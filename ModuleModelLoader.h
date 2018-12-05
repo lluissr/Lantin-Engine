@@ -24,6 +24,7 @@ public:
 	unsigned numIndices = 0;
 	unsigned normals_offset = 0;
 	unsigned vertex_size = 0;
+	unsigned vao = 0;
 };
 
 class Material
@@ -54,6 +55,7 @@ public:
 	GameObject* CreateGameObjects(const aiScene * scene, aiNode* node);
 	void ReplaceMaterial(const char* path);
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
+	void GenerateVAO(Mesh& mesh);
 
 	math::float3 minPoint;
 	math::float3 maxPoint;

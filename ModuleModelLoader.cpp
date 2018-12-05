@@ -111,7 +111,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 	App->scene->root->gameObjects.push_back(go);
 
 	aiReleaseImport(scene);
-	
+
 	App->camera->Focus();
 }
 
@@ -165,7 +165,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 	float3 pos = { translation.x, translation.y, translation.z };
 	float3 scale = { scaling.x, scaling.y, scaling.z };
 	Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-	
+
 	GameObject* go = nullptr;
 	if (node->mNumMeshes > 0)
 	{
@@ -179,7 +179,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 			child->scale = scale;
 			child->rotation = rot;
 			child->matrix.Set(float4x4::FromTRS(pos, rot, scale));
-			
+
 			ComponentMesh* mesh = (ComponentMesh*)child->CreateComponent(ComponentType::MESH);
 			mesh->mesh = meshes[node->mMeshes[i]];
 
@@ -227,6 +227,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*aiMesh->mNumVertices, nullptr, GL_STATIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * aiMesh->mNumVertices, aiMesh->mVertices);
 
+
 	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * aiMesh->mNumVertices, sizeof(float) * 2 * aiMesh->mNumVertices, GL_MAP_WRITE_BIT);
 
 	for (unsigned i = 0; i < aiMesh->mNumVertices; ++i)
@@ -239,6 +240,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 		if (aiMesh->mVertices[i].y > maxPoint.y) { maxPoint.y = aiMesh->mVertices[i].y; }
 		if (aiMesh->mVertices[i].z > maxPoint.z) { maxPoint.z = aiMesh->mVertices[i].z; }
 	}
+
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -304,16 +306,16 @@ void ModuleModelLoader::ReplaceMaterial(const char* path)
 	}
 	else
 	{
-	/*	App->textures->Unload(materials[0]->texture0);
-		unsigned int id = materials[0]->texture0;
-		for (GameObject* go : App->scene->root->gameObjects)
-		{
-			if (go->material->material->texture0 == id)
-				go->material->material = material;
-		}
+		/*	App->textures->Unload(materials[0]->texture0);
+			unsigned int id = materials[0]->texture0;
+			for (GameObject* go : App->scene->root->gameObjects)
+			{
+				if (go->material->material->texture0 == id)
+					go->material->material = material;
+			}
 
-		delete materials[0];
-		materials[0] = material;*/
+			delete materials[0];
+			materials[0] = material;*/
 	}
 }
 
@@ -371,9 +373,11 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		mesh->material = 0;
 		mesh->numVertices = parMesh->npoints;
 		mesh->numIndices = parMesh->ntriangles * 3;
-				
+
 		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
 		cmesh->mesh = mesh;
+
+		GenerateVAO(*mesh);
 
 		Material* material = new Material();
 		material->program = 2;
@@ -384,12 +388,38 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		go->parent = App->scene->root;
 		App->scene->root->gameObjects.push_back(go);
 
+
 		par_shapes_free_mesh(parMesh);
 
 		return true;
 	}
 
 	return false;
+}
+
+void ModuleModelLoader::GenerateVAO(Mesh& mesh)
+{
+	glGenVertexArrays(1, &mesh.vao);
+
+	glBindVertexArray(mesh.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	if (mesh.normals_offset != 0)
+	{
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.normals_offset*mesh.numVertices));
+	}
+
+	glBindVertexArray(0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
