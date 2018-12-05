@@ -96,3 +96,12 @@ void GameObject::RemoveChild()
 		}
 	}
 }
+
+void GameObject::MarkToDelete()
+{
+	toDelete = true;
+	for each (GameObject* go in gameObjects)
+	{
+		go->MarkToDelete();
+	}
+}

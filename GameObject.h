@@ -19,6 +19,7 @@ public:
 	Component* CreateComponent(ComponentType type);
 	void SetIsSelected(bool selected);
 	void RemoveChild();
+	void MarkToDelete();
 
 	std::string name = "";
 	std::string uuid = "";

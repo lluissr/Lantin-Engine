@@ -22,6 +22,12 @@ update_status ModuleScene::PreUpdate()
 {
 	root->RemoveChild();
 
+	if (selectedGO != nullptr && selectedGO->toDelete)
+	{
+		delete selectedGO;
+		selectedGO = nullptr;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -34,6 +40,13 @@ update_status ModuleScene::Update()
 bool ModuleScene::CleanUp()
 {
 	delete root;
+
+	if (selectedGO != nullptr && selectedGO->toDelete)
+	{
+		delete selectedGO;
+		selectedGO = nullptr;
+	}
+
 	return true;
 }
 
@@ -143,7 +156,7 @@ void ModuleScene::DrawModelImGui(GameObject* go)
 		}
 		if (ImGui::Button("Eliminar"))
 		{
-			go->toDelete = true;
+			go->MarkToDelete();
 		}
 		ImGui::EndPopup();
 	}
