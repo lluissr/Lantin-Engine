@@ -264,7 +264,7 @@ void ModuleScene::DrawModelImGui()
 					ImGui::Text("Dimensions: %dx%d", selectedGO->material->material->width, selectedGO->material->material->height);
 				}
 			}
-			else if (selectedGO->material->material->program == 1)
+			else if (selectedGO->material->material->program != 0)
 			{
 				ImVec4 color = ImColor(selectedGO->material->material->color.x, selectedGO->material->material->color.y, selectedGO->material->material->color.z, selectedGO->material->material->color.w);
 				if (ImGui::ColorEdit3("Color", (float*)&color))

@@ -37,7 +37,7 @@ ModuleModelLoader::~ModuleModelLoader()
 bool ModuleModelLoader::Init()
 {
 	//ChooseModelToRender(0);
-	LoadSphere("sphere", 1.0f, 30, 30, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -340,9 +340,9 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 			offset_acc += sizeof(math::float3);
 		}
 
-		mesh->numVertices = offset_acc;
+		mesh->vertex_size = offset_acc;
 
-		glBufferData(GL_ARRAY_BUFFER, mesh->numVertices*parMesh->npoints, nullptr, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mesh->vertex_size*parMesh->npoints, nullptr, GL_STATIC_DRAW);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
 
 		if (parMesh->normals)
@@ -376,7 +376,7 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		cmesh->mesh = mesh;
 
 		Material* material = new Material();
-		material->program = 1;
+		material->program = 2;
 		material->color = color;
 		ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
 		cmaterial->material = material;

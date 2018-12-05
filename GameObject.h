@@ -35,7 +35,7 @@ public:
 
 	math::float3 position = { 0.0f,0.0f,0.0f };
 	math::float3 scale = { 1.0f,1.0f,1.0f };
-	math::Quat rotation = { 1.0f,0.0f,0.0f,0.0f };
+	math::Quat rotation = { 0.0f,0.0f,0.0f,1.0f };
 	math::float4x4 matrix = math::float4x4::identity;
 
 	bool operator == (const GameObject& go) const { return go.uuid == go.uuid; }

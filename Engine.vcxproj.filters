@@ -460,5 +460,11 @@
     <None Include="Game\defaultColor.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Game\flatShading.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Game\flatShading.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

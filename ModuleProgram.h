@@ -21,7 +21,8 @@ public:
 	GLuint CreateProgram(const char* vertexShader, const char* fragmentShader) const ;
 	
 	GLuint program;
-	GLuint axisProgram;
+	GLuint colorProgram;
+	GLuint flatProgram;
 };
 
 #endif

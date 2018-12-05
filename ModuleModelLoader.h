@@ -23,6 +23,7 @@ public:
 	unsigned numVertices = 0;
 	unsigned numIndices = 0;
 	unsigned normals_offset = 0;
+	unsigned vertex_size = 0;
 };
 
 class Material

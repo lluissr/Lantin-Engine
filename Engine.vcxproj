@@ -225,6 +225,8 @@
     <None Include="Game\Default.vs" />
     <None Include="Game\defaultColor.fs" />
     <None Include="Game\defaultColor.vs" />
+    <None Include="Game\flatShading.fs" />
+    <None Include="Game\flatShading.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

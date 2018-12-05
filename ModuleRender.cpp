@@ -123,7 +123,21 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 
 void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix)
 {
-	unsigned program = material.program == 0 ? App->program->program : App->program->axisProgram;
+	unsigned program = 0;
+	switch (material.program) {
+	case 0:
+		program = App->program->program;
+		break;
+	case 1:
+		program = App->program->colorProgram;
+		break;
+	case 2:
+		program = App->program->flatProgram;
+		break;
+	default:
+		program = App->program->program;
+		break;
+	}
 
 	glUseProgram(program);
 	
@@ -146,10 +160,20 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 
 		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 	}
+	else if (material.program == 1)
+	{
+		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
+	}
 	else
 	{
-		float color[4] = { material.color.x, material.color.y, material.color.z, material.color.w };
-		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, color);
+		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, (float*)&math::float3(-2.0f, 0.0f, 6.0f));
+		glUniform1f(glGetUniformLocation(program, "ambient"), 0.3f);
+		glUniform1f(glGetUniformLocation(program, "shininess"), 64.0f);
+		glUniform1f(glGetUniformLocation(program, "k_ambient"), 1.0f);
+		glUniform1f(glGetUniformLocation(program, "k_diffuse"), 0.5f);
+		glUniform1f(glGetUniformLocation(program, "k_specular"), 0.6f);
+		glUniform1i(glGetUniformLocation(program, "use_diffuse_map"), 0);
+		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
 	}
 
 	glEnableVertexAttribArray(0);
@@ -261,7 +285,7 @@ void ModuleRender::RenderBoundingBox() const
 		(void*)0            // array buffer offset
 	);
 
-	glUseProgram(App->program->axisProgram);
+	glUseProgram(App->program->colorProgram);
 
 	math::float4x4 model(math::float4x4::identity);
 
@@ -269,7 +293,7 @@ void ModuleRender::RenderBoundingBox() const
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 	float color[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->axisProgram, "newColor"), 1, color);
+	glUniform4fv(glGetUniformLocation(App->program->colorProgram, "newColor"), 1, color);
 
 	glDrawArrays(GL_LINES, 0, 24);
 

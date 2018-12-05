@@ -16,7 +16,8 @@ bool ModuleProgram::Init()
 {
 
 	program = CreateProgram("Default.vs", "default.fs");
-	axisProgram = CreateProgram("defaultColor.vs", "defaultColor.fs");
+	colorProgram = CreateProgram("defaultColor.vs", "defaultColor.fs");
+	flatProgram = CreateProgram("flatShading.vs", "flatShading.fs");
 
 	return true;
 }
@@ -35,7 +36,8 @@ update_status ModuleProgram::Update()
 bool ModuleProgram::CleanUp()
 {
 	glDeleteProgram(program);
-	glDeleteProgram(axisProgram);
+	glDeleteProgram(colorProgram);
+	glDeleteProgram(flatProgram);
 	return true;
 }
 
