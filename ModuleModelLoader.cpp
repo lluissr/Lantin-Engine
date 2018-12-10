@@ -330,55 +330,11 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 
 		GameObject* go = new GameObject();
 		go->name = name;
-		Mesh* mesh = new Mesh();
-
-		glGenBuffers(1, &mesh->vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-
-		unsigned offset_acc = sizeof(math::float3);
-
-		if (parMesh->normals)
-		{
-			mesh->normals_offset = offset_acc;
-			offset_acc += sizeof(math::float3);
-		}
-
-		mesh->vertex_size = offset_acc;
-
-		glBufferData(GL_ARRAY_BUFFER, mesh->vertex_size*parMesh->npoints, nullptr, GL_STATIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
-
-		if (parMesh->normals)
-		{
-			glBufferSubData(GL_ARRAY_BUFFER, mesh->normals_offset*parMesh->npoints, sizeof(math::float3)*parMesh->npoints, parMesh->normals);
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glGenBuffers(1, &mesh->ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
-
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
-
-		unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
-			sizeof(unsigned)*parMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
-
-		for (unsigned i = 0; i< unsigned(parMesh->ntriangles * 3); ++i)
-		{
-			*(indices++) = parMesh->triangles[i];
-		}
-
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		mesh->material = 0;
-		mesh->numVertices = parMesh->npoints;
-		mesh->numIndices = parMesh->ntriangles * 3;
-
+		
 		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
-		cmesh->mesh = mesh;
+		cmesh->mesh = CreateMeshFromParShapes(parMesh);
 
-		GenerateVAO(*mesh);
+		GenerateVAO(*cmesh->mesh);
 
 		Material* material = new Material();
 		material->program = 5;
@@ -411,55 +367,11 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 
 		GameObject* go = new GameObject();
 		go->name = name;
-		Mesh* mesh = new Mesh();
-
-		glGenBuffers(1, &mesh->vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-
-		unsigned offset_acc = sizeof(math::float3);
-
-		if (parMesh->normals)
-		{
-			mesh->normals_offset = offset_acc;
-			offset_acc += sizeof(math::float3);
-		}
-
-		mesh->vertex_size = offset_acc;
-
-		glBufferData(GL_ARRAY_BUFFER, mesh->vertex_size*parMesh->npoints, nullptr, GL_STATIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
-
-		if (parMesh->normals)
-		{
-			glBufferSubData(GL_ARRAY_BUFFER, mesh->normals_offset*parMesh->npoints, sizeof(math::float3)*parMesh->npoints, parMesh->normals);
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glGenBuffers(1, &mesh->ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
-
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
-
-		unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
-			sizeof(unsigned)*parMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
-
-		for (unsigned i = 0; i< unsigned(parMesh->ntriangles * 3); ++i)
-		{
-			*(indices++) = parMesh->triangles[i];
-		}
-
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		mesh->material = 0;
-		mesh->numVertices = parMesh->npoints;
-		mesh->numIndices = parMesh->ntriangles * 3;
-
+		
 		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
-		cmesh->mesh = mesh;
+		cmesh->mesh = CreateMeshFromParShapes(parMesh);
 
-		GenerateVAO(*mesh);
+		GenerateVAO(*cmesh->mesh);
 
 		Material* material = new Material();
 		material->program = 5;
@@ -480,6 +392,56 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 	}
 
 	return false;
+}
+
+Mesh* ModuleModelLoader::CreateMeshFromParShapes(par_shapes_mesh_s* parMesh)
+{
+	Mesh* mesh = new Mesh();
+
+	glGenBuffers(1, &mesh->vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+
+	unsigned offset_acc = sizeof(math::float3);
+
+	if (parMesh->normals)
+	{
+		mesh->normals_offset = offset_acc;
+		offset_acc += sizeof(math::float3);
+	}
+
+	mesh->vertex_size = offset_acc;
+
+	glBufferData(GL_ARRAY_BUFFER, mesh->vertex_size*parMesh->npoints, nullptr, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
+
+	if (parMesh->normals)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, mesh->normals_offset*parMesh->npoints, sizeof(math::float3)*parMesh->npoints, parMesh->normals);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &mesh->ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
+
+	unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+		sizeof(unsigned)*parMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
+
+	for (unsigned i = 0; i< unsigned(parMesh->ntriangles * 3); ++i)
+	{
+		*(indices++) = parMesh->triangles[i];
+	}
+
+	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	mesh->material = 0;
+	mesh->numVertices = parMesh->npoints;
+	mesh->numIndices = parMesh->ntriangles * 3;
+
+	return mesh;
 }
 
 void ModuleModelLoader::GenerateVAO(Mesh& mesh)

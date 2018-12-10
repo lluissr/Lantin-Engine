@@ -313,7 +313,7 @@ void ModuleScene::DrawModelImGui()
 					selectedGO->material->material->program = number + 2;
 				}
 				ImVec4 color = ImColor(selectedGO->material->material->color.x, selectedGO->material->material->color.y, selectedGO->material->material->color.z, selectedGO->material->material->color.w);
-				if (ImGui::ColorEdit3("Color", (float*)&color))
+				if (ImGui::ColorEdit4("Color", (float*)&color))
 				{
 					selectedGO->material->material->color = math::float4(color.x, color.y, color.z, color.w);
 				}

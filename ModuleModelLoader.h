@@ -13,6 +13,7 @@
 
 struct aiScene;
 struct aiNode;
+struct par_shapes_mesh_s;
 
 class Mesh
 {
@@ -61,6 +62,8 @@ public:
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
 	void GenerateVAO(Mesh& mesh);
+
+	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
 
 	math::float3 minPoint;
 	math::float3 maxPoint;

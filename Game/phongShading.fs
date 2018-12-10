@@ -22,18 +22,12 @@ void main()
     float diffuse = max(0.0, dot(normal, light_dir));
     float specular = 0.0;
 
-    if(diffuse > 0.0 && k_specular > 0.0 && shininess > 0.0)
-    {
-        vec3 view_pos = transpose(mat3(view))*(-view[3].xyz);
-        vec3 view_dir = normalize(view_pos-position);
-        vec3 reflect_dir = reflect(-light_dir, normal);
-        float sp = max(dot(view_dir, reflect_dir), 0.0);
+    vec3 view_pos = transpose(mat3(view))*(-view[3].xyz);
+    vec3 view_dir = normalize(view_pos-position);
+    vec3 reflect_dir = reflect(-light_dir, normal);
+    float sp = max(dot(view_dir, reflect_dir), 0.0);
 
-        if(sp > 0.0)
-        {
-            specular = pow(sp, shininess); 
-        }
-    }
+    specular = pow(sp, shininess); 
     
     float intensity = (k_ambient*ambient+k_diffuse*diffuse+k_specular*specular);
 
