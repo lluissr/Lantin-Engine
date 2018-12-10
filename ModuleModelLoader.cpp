@@ -392,7 +392,6 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		go->parent = App->scene->root;
 		App->scene->root->gameObjects.push_back(go);
 
-
 		par_shapes_free_mesh(parMesh);
 
 		return true;

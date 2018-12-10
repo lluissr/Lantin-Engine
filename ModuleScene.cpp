@@ -39,13 +39,9 @@ update_status ModuleScene::Update()
 
 bool ModuleScene::CleanUp()
 {
+	selectedGO = nullptr;
 	delete root;
-
-	if (selectedGO != nullptr && selectedGO->toDelete)
-	{
-		delete selectedGO;
-		selectedGO = nullptr;
-	}
+	root = nullptr;
 
 	return true;
 }
