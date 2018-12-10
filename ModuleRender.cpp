@@ -140,6 +140,9 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	case 4:
 		program = App->program->phongProgram;
 		break;
+	case 5:
+		program = App->program->blinnProgram;
+		break;
 	default:
 		program = App->program->program;
 		break;

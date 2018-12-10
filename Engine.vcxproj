@@ -221,6 +221,8 @@
     <ClCompile Include="Utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\blinnShading.fs" />
+    <None Include="Game\blinnShading.vs" />
     <None Include="Game\default.fs" />
     <None Include="Game\Default.vs" />
     <None Include="Game\defaultColor.fs" />
