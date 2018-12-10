@@ -472,5 +472,11 @@
     <None Include="Game\gouraudShading.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Game\phongShading.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Game\phongShading.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -24,6 +24,7 @@ public:
 	GLuint colorProgram;
 	GLuint flatProgram;
 	GLuint gouraudProgram;
+	GLuint phongProgram;
 };
 
 #endif

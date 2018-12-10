@@ -229,6 +229,8 @@
     <None Include="Game\flatShading.vs" />
     <None Include="Game\gouraudShading.fs" />
     <None Include="Game\gouraudShading.vs" />
+    <None Include="Game\phongShading.fs" />
+    <None Include="Game\phongShading.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

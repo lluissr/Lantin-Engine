@@ -19,6 +19,7 @@ bool ModuleProgram::Init()
 	colorProgram = CreateProgram("defaultColor.vs", "defaultColor.fs");
 	flatProgram = CreateProgram("flatShading.vs", "flatShading.fs");
 	gouraudProgram = CreateProgram("gouraudShading.vs", "gouraudShading.fs");
+	phongProgram = CreateProgram("phongShading.vs","phongShading.fs");
 
 	return true;
 }
@@ -40,6 +41,8 @@ bool ModuleProgram::CleanUp()
 	glDeleteProgram(colorProgram);
 	glDeleteProgram(flatProgram);
 	glDeleteProgram(gouraudProgram);
+	glDeleteProgram(phongProgram);
+
 	return true;
 }
 
