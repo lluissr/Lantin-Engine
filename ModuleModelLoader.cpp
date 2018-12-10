@@ -380,7 +380,7 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		GenerateVAO(*mesh);
 
 		Material* material = new Material();
-		material->program = 2;
+		material->program = 3;
 		material->color = color;
 		material->shininess = 64.0f;
 		material->k_ambient = 1.0f;

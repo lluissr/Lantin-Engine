@@ -134,6 +134,9 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	case 2:
 		program = App->program->flatProgram;
 		break;
+	case 3:
+		program = App->program->gouraudProgram;
+		break;
 	default:
 		program = App->program->program;
 		break;

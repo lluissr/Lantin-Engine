@@ -23,6 +23,7 @@ public:
 	GLuint program;
 	GLuint colorProgram;
 	GLuint flatProgram;
+	GLuint gouraudProgram;
 };
 
 #endif
