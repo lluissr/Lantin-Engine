@@ -296,6 +296,13 @@ void ModuleScene::DrawModelImGui()
 			}
 			else if (selectedGO->material->material->program != 0)
 			{
+
+				const char* items[] = { "Flat", "Gouraud", "Phong", "Blinn" };
+				int number = max(0, selectedGO->material->material->program-2);
+				if (ImGui::Combo("Shading", &number, items, IM_ARRAYSIZE(items)))
+				{
+					selectedGO->material->material->program = number + 2;
+				}
 				ImVec4 color = ImColor(selectedGO->material->material->color.x, selectedGO->material->material->color.y, selectedGO->material->material->color.z, selectedGO->material->material->color.w);
 				if (ImGui::ColorEdit3("Color", (float*)&color))
 				{
