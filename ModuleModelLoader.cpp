@@ -38,6 +38,7 @@ bool ModuleModelLoader::Init()
 {
 	//ChooseModelToRender(0);
 	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	LoadTorus("Torus1",0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -326,6 +327,87 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 	if (parMesh)
 	{
 		par_shapes_scale(parMesh, size, size, size);
+
+		GameObject* go = new GameObject();
+		go->name = name;
+		Mesh* mesh = new Mesh();
+
+		glGenBuffers(1, &mesh->vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+
+		unsigned offset_acc = sizeof(math::float3);
+
+		if (parMesh->normals)
+		{
+			mesh->normals_offset = offset_acc;
+			offset_acc += sizeof(math::float3);
+		}
+
+		mesh->vertex_size = offset_acc;
+
+		glBufferData(GL_ARRAY_BUFFER, mesh->vertex_size*parMesh->npoints, nullptr, GL_STATIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parMesh->npoints, parMesh->points);
+
+		if (parMesh->normals)
+		{
+			glBufferSubData(GL_ARRAY_BUFFER, mesh->normals_offset*parMesh->npoints, sizeof(math::float3)*parMesh->npoints, parMesh->normals);
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &mesh->ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
+
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
+
+		unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+			sizeof(unsigned)*parMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
+
+		for (unsigned i = 0; i< unsigned(parMesh->ntriangles * 3); ++i)
+		{
+			*(indices++) = parMesh->triangles[i];
+		}
+
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		mesh->material = 0;
+		mesh->numVertices = parMesh->npoints;
+		mesh->numIndices = parMesh->ntriangles * 3;
+
+		ComponentMesh* cmesh = (ComponentMesh*)go->CreateComponent(ComponentType::MESH);
+		cmesh->mesh = mesh;
+
+		GenerateVAO(*mesh);
+
+		Material* material = new Material();
+		material->program = 5;
+		material->color = color;
+		material->shininess = 64.0f;
+		material->k_ambient = 1.0f;
+		material->k_diffuse = 0.5f;
+		material->k_specular = 0.6f;
+		ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
+		cmaterial->material = material;
+
+		go->parent = App->scene->root;
+		App->scene->root->gameObjects.push_back(go);
+
+		par_shapes_free_mesh(parMesh);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color)
+{
+	par_shapes_mesh* parMesh = par_shapes_create_torus(int(slices), int(stacks), innerRadius);
+	
+	if (parMesh)
+	{
+		par_shapes_scale(parMesh, outerRadius, outerRadius, outerRadius);
 
 		GameObject* go = new GameObject();
 		go->name = name;
