@@ -100,10 +100,19 @@ void ModuleScene::DrawGameObjectTreeImGui()
 		static char str0[128] = "Sphere";
 		ImGui::InputText("Sphere name", str0, IM_ARRAYSIZE(str0));
 		static ImVec4 color = ImColor(114, 144, 154, 200);
-		ImGui::ColorEdit3("Color", (float*)&color);
+		ImGui::ColorEdit3("Sphere Color", (float*)&color);
 		if (ImGui::Button("Draw Sphere"))
 		{
 			App->modelLoader->LoadSphere(str0, 1.0f, 30, 30, math::float4(color.x, color.y, color.z, color.w));
+		}
+		ImGui::Separator();
+		static char str1[128] = "Torus";
+		ImGui::InputText("Torus name", str1, IM_ARRAYSIZE(str0));
+		static ImVec4 colorTorus = ImColor(100, 100, 100, 200);
+		ImGui::ColorEdit3("Torus Color", (float*)&colorTorus);
+		if (ImGui::Button("Draw Torus"))
+		{
+			App->modelLoader->LoadTorus(str1, 0.5f, 0.67f, 30, 30, math::float4(colorTorus.x, colorTorus.y, colorTorus.z, colorTorus.w));
 		}
 	}
 	if (ImGui::CollapsingHeader("Scene hierarchy"))
