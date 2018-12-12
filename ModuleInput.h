@@ -39,8 +39,6 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void DrawImGui();
-
 	KeyState GetKey(int id) const
 	{
 		return keyboard[id];

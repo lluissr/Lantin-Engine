@@ -187,12 +187,3 @@ void ModuleInput::HandleDropFile(const char* path) const
 		LOG("Incorrect file extension: %s", ext.c_str());
 	}
 }
-
-void ModuleInput::DrawImGui()
-{
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		float mouse[2] = { (float)GetMousePosition().x, (float)GetMousePosition().y };
-		ImGui::InputFloat2("Mouse position", mouse);
-	}
-}

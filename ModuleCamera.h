@@ -30,8 +30,6 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 	void Focus();
 
-	void DrawImGui();
-
 	Frustum frustum;
 	math::float3& cameraPosition = math::float3(0.0f, 1.0f, 10.0f);
 	math::float3& cameraFront = math::float3(0.0f, 0.0f, -1.0f);
@@ -40,12 +38,13 @@ public:
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;
 
-private:
 	float mSpeed = 0.5f;
 	float rSpeed = 1.0f;
 
 	float pitch = 0;
 	float yaw = 0;
+
+private:
 
 	bool firstMouse = true;
 	int lastX = 0;

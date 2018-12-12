@@ -4,9 +4,14 @@
 #include "Module.h"
 #include "Globals.h"
 #include <vector>
+#include "PanelConfiguration.h"
+#include "PanelModel.h"
+#include "PanelAbout.h"
+#include "PanelHardware.h"
+#include "PanelConsole.h"
+#include "PanelScene.h"
+#include "PanelViewport.h"
 
-
-#define MEMORY_LOG_SIZE 100
 
 class ModuleEditor : public Module
 {
@@ -21,35 +26,19 @@ public:
 	bool CleanUp();
 	void InitImGuiFrame();
 	void EndImGuiFrame();
-
-	void AddLog(const char* fmt, ...);
-	void Clear();
-	void addMemory(float memory);
+	
+	PanelConfiguration* panelConfiguration = nullptr;
+	PanelModel* panelModel = nullptr;
+	PanelAbout* panelAbout = nullptr;
+	PanelHardware* panelHardware = nullptr;
+	PanelConsole* panelConsole = nullptr;
+	PanelScene* panelScene = nullptr;
+	PanelViewport* panelViewport = nullptr;
 
 private:
 	const char* glsl_version = "#version 130";
-	std::vector<float> fps_log;
-	std::vector<float> memory_log;
-
-	ImGuiTextBuffer Buf;
-	bool ScrollToBottom;
-
-	bool showConfiguration = true;
-	bool showSceneTree = true;
-	bool showModel = true;
-	bool showAbout = false;
-	bool showHardware = false;
-	bool showConsole = true;
-	bool showScene = true;
 
 	bool DrawMenu();
-	void DrawConsole();
-	void DrawHardware();
-	void DrawAbout();
-	void DrawSceneTree();
-	void DrawModel();
-	void DrawConfiguration();
-	void DrawScene();
 	void CreateDockSpace() const;
 };
 

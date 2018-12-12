@@ -16,8 +16,8 @@ void log(const char file[], int line, const char* format, ...)
 	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
 	OutputDebugString(tmp_string2);
 
-	if (App != NULL && App->editor != NULL)
+	if (App != NULL && App->editor != NULL && App->editor->panelConsole != NULL)
 	{
-		App->editor->AddLog("%s\n",tmp_string);
+		App->editor->panelConsole->AddLog("%s\n",tmp_string);
 	}
 }

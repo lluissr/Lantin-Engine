@@ -20,10 +20,7 @@ public:
 
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
-	void DrawGameObjectTreeImGui();
-	void DrawModelImGui();
 	void SelectGameObject(GameObject* go);
-	void DrawModelImGui(GameObject* gameObject);
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;

@@ -21,18 +21,16 @@ public:
 	void  RenderGameObject(GameObject* gameObject);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix);
 	void RenderBoundingBox() const;
-	void DrawImGui();
 	void InitFrameBuffer(int width, int height);
-	void DrawCameraWindow();
 
 	void* context;
 	bool renderBoundingBox = false;
-
-private:
-	bool useCheckerTexture = false;
-	GLuint checkersTexture;
 	int currentItemSelected = 0;
+	bool useCheckerTexture = false;
+
+	unsigned renderTexture = 0u;
+private:
+	GLuint checkersTexture;
 	unsigned fbo = 0u;
 	unsigned rbo = 0u;
-	unsigned renderTexture = 0u;
 };

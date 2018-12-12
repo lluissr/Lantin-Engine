@@ -3,19 +3,18 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
-#include "ModuleCamera.h"
-#include "ModuleInput.h"
-#include "ModuleScene.h"
-#include "SDL.h"
-#include <GL/glew.h> 
-#include "mmgr/mmgr.h"
-
-using namespace std;
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
 
 ModuleEditor::ModuleEditor()
 {
-	fps_log.resize(100);
-	memory_log.resize(MEMORY_LOG_SIZE);
+	panelConfiguration = new PanelConfiguration();
+	panelModel = new PanelModel();
+	panelAbout = new PanelAbout();
+	panelHardware = new PanelHardware();
+	panelConsole = new PanelConsole();
+	panelScene = new PanelScene();
+	panelViewport = new PanelViewport();
 }
 
 // Destructor
@@ -39,11 +38,10 @@ bool ModuleEditor::Init()
 	return true;
 }
 
-
 update_status ModuleEditor::PreUpdate()
 {
-	fps_log.erase(fps_log.begin());
-	fps_log.push_back(App->fps);
+	panelConfiguration->fps_log.erase(panelConfiguration->fps_log.begin());
+	panelConfiguration->fps_log.push_back(App->fps);
 	   
 	return UPDATE_CONTINUE;
 }
@@ -87,39 +85,39 @@ void ModuleEditor::CreateDockSpace() const
 update_status ModuleEditor::Update()
 {
 
-	if (showConfiguration)
+	if (panelConfiguration->show)
 	{
-		DrawConfiguration();
+		panelConfiguration->Draw();
 	}
 
-	if (showSceneTree)
+	if (panelScene->show)
 	{
-		DrawSceneTree();
+		panelScene->Draw();
 	}
 
-	if (showModel)
+	if (panelModel->show)
 	{
-		DrawModel();
+		panelModel->Draw();
 	}
 	
-	if (showAbout)
+	if (panelAbout->show)
 	{
-		DrawAbout();
+		panelAbout->Draw();
 	}
 
-	if (showHardware)
+	if (panelHardware->show)
 	{
-		DrawHardware();
+		panelHardware->Draw();
 	}
 
-	if (showConsole)
+	if (panelConsole->show)
 	{
-		DrawConsole();
+		panelConsole->Draw();
 	}
 
-	if (showScene)
+	if (panelViewport->show)
 	{
-		DrawScene();
+		panelViewport->Draw();
 	}
 
 	//Menu
@@ -140,40 +138,18 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
+	delete panelConfiguration;
+	delete panelModel;
+	delete panelAbout;
+	delete panelHardware;
+	delete panelScene;
+	delete panelViewport;
+	delete panelConsole;
+	panelConsole = nullptr;
+
 	return true;
 }
 
-void ModuleEditor::AddLog(const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	Buf.appendfv(fmt, args);
-	va_end(args);
-	ScrollToBottom = true;
-}
-
-void ModuleEditor::Clear()
-{
-	Buf.clear();
-}
-
-void ModuleEditor::addMemory(float memory)
-{
-	for (unsigned int i = 0; i < MEMORY_LOG_SIZE - 1; ++i)
-	{
-		memory_log[i] = memory_log[i + 1];
-	}
-
-	memory_log[MEMORY_LOG_SIZE - 1] = memory;
-}
-
-
-void ModuleEditor::DrawScene()
-{
-	ImGui::Begin("Scene", &showScene, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-	App->renderer->DrawCameraWindow();
-	ImGui::End();
-}
 
 bool ModuleEditor::DrawMenu()
 {
@@ -191,28 +167,11 @@ bool ModuleEditor::DrawMenu()
 
 	if (ImGui::BeginMenu("Engine"))
 	{
-
-		if (ImGui::MenuItem("Scene Viewport"))
-		{
-			showScene = !showScene;
-		}
-		if (ImGui::MenuItem("Objects Tree"))
-		{
-			showSceneTree = !showSceneTree;
-		}
-		if (ImGui::MenuItem("Model selected"))
-		{
-			showModel = !showModel;
-		}
-		if (ImGui::MenuItem("Configuration"))
-		{
-			showConfiguration = !showConfiguration;
-		}
-		if (ImGui::MenuItem("Console"))
-		{
-			showConsole = !showConsole;
-		}
-
+		ImGui::MenuItem("Scene Viewport", "", &panelViewport->show);
+		ImGui::MenuItem("Scene Information", "", &panelScene->show);
+		ImGui::MenuItem("Model selected", "", &panelModel->show);
+		ImGui::MenuItem("Configuration", "", &panelConfiguration->show);
+		ImGui::MenuItem("Console", "", &panelConsole->show);
 		ImGui::EndMenu();
 	}
 
@@ -222,172 +181,10 @@ bool ModuleEditor::DrawMenu()
 		{
 			ShellExecute(NULL, "open", "https://github.com/lluissr/Lantin-Engine", NULL, NULL, SW_SHOWNORMAL);
 		}
-		if (ImGui::MenuItem("Hardware"))
-		{
-			showHardware = !showHardware;
-		}
-		if (ImGui::MenuItem("About"))
-		{
-			showAbout = !showAbout;
-		}
-
+		ImGui::MenuItem("Hardware", "", &panelHardware->show);
+		ImGui::MenuItem("About", "", &panelAbout->show);
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
 	return false;
-}
-
-
-void ModuleEditor::DrawConfiguration()
-{
-	ImGui::SetNextWindowSize(ImVec2(300.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Configuration", &showConfiguration);
-
-	if (ImGui::CollapsingHeader("Application"))
-	{
-		char title[25];
-		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-
-		sMStats stats = m_getMemoryStatistics();
-		addMemory((float)stats.totalReportedMemory);
-
-		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption (Bytes)", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(310, 100));
-
-		ImGui::Text("Total Reported Mem: %u", stats.totalReportedMemory);
-		ImGui::Text("Total Actual Mem: %u", stats.totalActualMemory);
-		ImGui::Text("Peak Reported Mem: %u", stats.peakReportedMemory);
-		ImGui::Text("Peak Actual Mem: %u", stats.peakActualMemory);
-		ImGui::Text("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
-		ImGui::Text("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
-		ImGui::Text("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
-		ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
-		ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
-	}
-
-
-	App->camera->DrawImGui();
-
-	App->input->DrawImGui();
-
-	App->renderer->DrawImGui();
-
-
-	if (ImGui::CollapsingHeader("Window"))
-	{
-		int window[2] = { App->window->screenWidth, App->window->screenHeight };
-		ImGui::InputInt2("Size", window, ImGuiInputTextFlags_ReadOnly);
-	}
-
-
-	ImGui::End();
-}
-
-
-void ModuleEditor::DrawSceneTree()
-{
-	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Scene information", &showSceneTree);
-	App->scene->DrawGameObjectTreeImGui();
-	ImGui::End();
-}
-
-void ModuleEditor::DrawModel()
-{
-	ImGui::SetNextWindowSize(ImVec2(350.0f, (float)App->window->screenHeight - 217.0f), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Model selected", &showModel);
-	App->scene->DrawModelImGui();
-	ImGui::End();
-}
-
-void ModuleEditor::DrawConsole()
-{
-	ImGui::SetNextWindowSize(ImVec2((float)App->window->screenWidth, 200.0f), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Console", &showConsole);
-	if (ImGui::Button("Clear")) Clear();
-	ImGui::SameLine();
-	bool copy = ImGui::Button("Copy");
-	ImGui::Separator();
-	ImGui::BeginChild("scrolling");
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
-	if (copy) ImGui::LogToClipboard();
-	ImGui::TextUnformatted(Buf.begin());
-	if (ScrollToBottom)
-		ImGui::SetScrollHere(1.0f);
-	ScrollToBottom = false;
-	ImGui::PopStyleVar();
-	ImGui::EndChild();
-	ImGui::End();
-}
-
-
-void ModuleEditor::DrawHardware()
-{
-	ImGui::Begin("Hardware", &showHardware);
-	ImGui::Text("CPUs: %d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-	ImGui::Text("System RAM: %dGb", SDL_GetSystemRAM() / 1000);
-	std::string caps = "Caps: ";
-	if (SDL_HasAVX()) { caps += "AVX, "; }
-	if (SDL_HasAVX2()) { caps += "AVX2, "; }
-	if (SDL_HasRDTSC()) { caps += "RDTSC, "; }
-	if (SDL_HasSSE()) { caps += "SSE, "; }
-	if (SDL_HasSSE2()) { caps += "SSE2, "; }
-	if (SDL_HasSSE3()) { caps += "SSE3, "; }
-	if (SDL_HasSSE41()) { caps += "SSE41, "; }
-	if (SDL_HasSSE42()) { caps += "SSE42, "; }
-	if (SDL_HasMMX()) { caps += "MMX, "; }
-	ImGui::Text(caps.c_str());
-	ImGui::End();
-}
-
-
-void ModuleEditor::DrawAbout()
-{
-	ImGui::Begin("About", &showAbout);
-
-	ImGui::Text("Name:        Lantin Engine");
-	ImGui::Text("Description: Engine developed in UPC");
-	ImGui::Text("Author:      Lluis Sanchez Roig");
-	ImGui::Separator();
-	ImGui::Text("Software");
-	if (ImGui::MenuItem("SDL 2.0.9"))
-	{
-		ShellExecute(NULL, "open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("OpenGL 4"))
-	{
-		ShellExecute(NULL, "open", "https://www.opengl.org/", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("glew 2.1.0"))
-	{
-		ShellExecute(NULL, "open", "https://github.com/nigels-com/glew", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("Assimp 3.3.1"))
-	{
-		ShellExecute(NULL, "open", "https://github.com/assimp/assimp", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("DevIL 1.8.0"))
-	{
-		ShellExecute(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("ImGui - docking branch"))
-	{
-		ShellExecute(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("MathGeoLib 1.5"))
-	{
-		ShellExecute(NULL, "open", "https://github.com/juj/MathGeoLib", NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::MenuItem("mmgr 1.0"))
-	{
-		ShellExecute(NULL, "open", "http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml", NULL, NULL, SW_SHOWNORMAL);
-	}
-
-	ImGui::Separator();
-	if (ImGui::MenuItem("MIT License"))
-	{
-		ShellExecute(NULL, "open", "https://github.com/lluissr/Lantin-Engine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
-	}
-
-	ImGui::End();
 }

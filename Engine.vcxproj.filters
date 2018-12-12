@@ -175,6 +175,27 @@
     <ClCompile Include="log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="PanelConsole.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConfiguration.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelModel.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelAbout.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelHardware.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelScene.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelViewport.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -426,6 +447,30 @@
     <ClInclude Include="par_shapes.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConsole.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConfiguration.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelModel.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelAbout.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelHardware.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelScene.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelViewport.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -445,6 +490,9 @@
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{447a7ef6-cfde-4c2f-ba14-d966d6a8ab5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Panels">
+      <UniqueIdentifier>{dc3f5c48-c5eb-4eca-9ba0-389e1d0df8ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

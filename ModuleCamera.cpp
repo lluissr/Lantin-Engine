@@ -254,24 +254,4 @@ void ModuleCamera::SetVerticalFOV(float fovY) {
 }
 
 
-void ModuleCamera::DrawImGui()
-{
-	if (ImGui::CollapsingHeader("Camera"))
-	{
-		float front[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
-		float up[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
-		float position[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
-
-		ImGui::InputFloat3("Front", front);
-		ImGui::InputFloat3("Up", up);
-		ImGui::InputFloat3("Position", position);
-		ImGui::InputFloat("Movement Speed", &mSpeed);
-		ImGui::InputFloat("Rotation Speed", &rSpeed);
-		ImGui::InputFloat("Pitch", &pitch);
-		ImGui::InputFloat("Yaw", &yaw);
-		ImGui::InputFloat("Near Plane", &frustum.nearPlaneDistance);
-		ImGui::InputFloat("Far Plane", &frustum.farPlaneDistance);
-	}
-}
-
 

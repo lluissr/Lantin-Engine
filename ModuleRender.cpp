@@ -336,36 +336,6 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::DrawImGui()
-{
-	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_FirstUseEver);
-	if (ImGui::CollapsingHeader("Render"))
-	{
-		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
-
-		ImGui::Checkbox("Checkers texture ", &App->renderer->useCheckerTexture);
-
-		const char* items[] = { "Backer House", "T-Rex", "Radioactive Barrel" };
-		if (ImGui::Combo("Models", &currentItemSelected, items, IM_ARRAYSIZE(items)))
-		{
-			if (App->modelLoader->modelRendered != currentItemSelected)
-			{
-				App->modelLoader->CleanModel();
-				App->modelLoader->ChooseModelToRender(currentItemSelected);
-			}
-		}
-	}
-}
-
-void ModuleRender::DrawCameraWindow()
-{
-	ImVec2 size = ImGui::GetWindowSize();
-
-	App->camera->WindowResized((unsigned)size.x, (unsigned)size.y);
-
-	ImGui::Image((ImTextureID)App->renderer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
-}
-
 void ModuleRender::InitFrameBuffer(int width, int height)
 {
 	glDeleteFramebuffers(1, &fbo);
