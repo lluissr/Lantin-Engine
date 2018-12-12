@@ -13,7 +13,7 @@ GameObject::GameObject(const GameObject& go)
 {
 	uuid = xg::newGuid().str();
 	name = go.name;
-	GameObject* parent = go.parent;
+	parent = go.parent;
 	isActive = go.isActive;
 	isStatic = go.isStatic;
 
