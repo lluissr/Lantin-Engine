@@ -23,9 +23,10 @@ public:
 	unsigned material = 0;
 	unsigned numVertices = 0;
 	unsigned numIndices = 0;
-	unsigned normals_offset = 0;
-	unsigned vertex_size = 0;
+	unsigned normalsOffset = 0;
+	unsigned vertexSize = 0;
 	unsigned vao = 0;
+	unsigned texturesOffset = 0;
 };
 
 class Material

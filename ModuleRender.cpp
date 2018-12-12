@@ -154,7 +154,6 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
 
-	//TODO: Refactor all with vao
 	if (material.program == 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -169,21 +168,6 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 		}
 
 		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.numVertices));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-		glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
 	}
 	else if (material.program == 1)
 	{
@@ -212,14 +196,14 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 		glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
 		glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
 		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
-
-		glBindVertexArray(mesh.vao);
-		glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
-		glBindVertexArray(0);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
 	}
+
+	glBindVertexArray(mesh.vao);
+	glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
 }
 
 void ModuleRender::RenderBoundingBox() const
