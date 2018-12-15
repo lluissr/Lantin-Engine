@@ -20,7 +20,9 @@ GameObject::GameObject(const GameObject& go)
 	position = go.position;
 	scale = go.scale;
 	rotation = go.rotation;
-	matrix = go.matrix;
+	localMatrix = go.localMatrix;
+	globalMatrix = go.globalMatrix;
+
 	if (go.mesh != NULL)
 	{
 		mesh = (ComponentMesh*)CreateComponent(ComponentType::MESH);

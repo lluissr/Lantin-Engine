@@ -116,7 +116,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 		}
 
 		if (gameObject->mesh != NULL && gameObject->material != NULL) {
-			RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->matrix);
+			RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->globalMatrix);
 		}
 	}
 }

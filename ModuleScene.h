@@ -21,6 +21,8 @@ public:
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
 	void SelectGameObject(GameObject* go);
+	void CalculateGlobalMatrix(GameObject* go);
+
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;

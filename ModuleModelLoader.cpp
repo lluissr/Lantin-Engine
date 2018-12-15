@@ -40,6 +40,8 @@ bool ModuleModelLoader::Init()
 	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
 	LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
+	App->scene->CalculateGlobalMatrix(App->scene->root);
+
 	return true;
 }
 
@@ -179,7 +181,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 			child->position = pos;
 			child->scale = scale;
 			child->rotation = rot;
-			child->matrix.Set(float4x4::FromTRS(pos, rot, scale));
+			child->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 			ComponentMesh* mesh = (ComponentMesh*)child->CreateComponent(ComponentType::MESH);
 			mesh->mesh = meshes[node->mMeshes[i]];

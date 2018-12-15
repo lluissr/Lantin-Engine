@@ -36,10 +36,11 @@ void PanelModel::Draw()
 	{
 		if (ImGui::Button("Apply identity matrix"))
 		{
-			App->scene->selectedGO->matrix = math::float4x4::identity;
+			App->scene->selectedGO->localMatrix = math::float4x4::identity;
 			App->scene->selectedGO->position = { 0.0f,0.0f,0.0f };
 			App->scene->selectedGO->scale = { 1.0f,1.0f,1.0f };
 			App->scene->selectedGO->rotation = { 0.0f,0.0f,0.0f,1.0f };
+			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
 		}
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
@@ -116,7 +117,8 @@ void PanelModel::Draw()
 
 		if (changed)
 		{
-			App->scene->selectedGO->matrix.Set(float4x4::FromTRS(App->scene->selectedGO->position, App->scene->selectedGO->rotation, App->scene->selectedGO->scale));
+			App->scene->selectedGO->localMatrix.Set(float4x4::FromTRS(App->scene->selectedGO->position, App->scene->selectedGO->rotation, App->scene->selectedGO->scale));
+			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
 		}
 
 	}

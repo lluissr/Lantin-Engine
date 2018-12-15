@@ -70,3 +70,21 @@ void ModuleScene::SelectGameObject(GameObject* go)
 	if (go != nullptr)
 		go->SetIsSelected(true);
 }
+
+void ModuleScene::CalculateGlobalMatrix(GameObject* go)
+{
+	if (go->parent == nullptr)
+	{
+		go->globalMatrix = go->localMatrix;
+	}
+	else
+	{
+		go->globalMatrix = go->parent->globalMatrix*go->localMatrix;
+	}
+
+	for each (GameObject* gameObject in go->gameObjects)
+	{
+		CalculateGlobalMatrix(gameObject);
+	}
+
+}
