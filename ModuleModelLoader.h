@@ -27,6 +27,8 @@ public:
 	unsigned vertexSize = 0;
 	unsigned vao = 0;
 	unsigned texturesOffset = 0;
+	math::AABB localBoundingBox;
+	math::AABB globalBoundingBox;
 };
 
 class Material
@@ -63,12 +65,7 @@ public:
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
 	void GenerateVAO(Mesh& mesh);
-
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
-
-	math::float3 minPoint;
-	math::float3 maxPoint;
-
 
 	std::vector<Mesh*> meshes;
 	std::vector<Material*> materials;

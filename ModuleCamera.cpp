@@ -116,26 +116,26 @@ void ModuleCamera::Orbit()
 
 void ModuleCamera::Focus()
 {
-	math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);
-	math::float3 center = boundingBox.FaceCenterPoint(5);
+	//math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);
+	//math::float3 center = boundingBox.FaceCenterPoint(5);
 	
 	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
-	frustum.pos = cameraPosition = math::float3(center.x, center.y, 0.0f);
-	frustum.front = cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-	frustum.up = cameraUp = math::float3(0.0f, 1.0f, 0.0f);
-	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
-	fovY = 45.0f;
-	fovX = 45.0f;
-	pitch = 0;
-	yaw = 0;
-	firstMouse = true;
+	//frustum.pos = cameraPosition = math::float3(center.x, center.y, 0.0f);
+	//frustum.front = cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+	//frustum.up = cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+	//frustum.verticalFov = math::pi / 4.0f;
+	//frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
+	//fovY = 45.0f;
+	//fovX = 45.0f;
+	//pitch = 0;
+	//yaw = 0;
+	//firstMouse = true;
 
-	//Add distance still we can see all the bounding box
-	while (!App->camera->frustum.Contains(boundingBox))
-	{
-		App->camera->cameraPosition.z = App->camera->frustum.pos.z += 10;
-	}
+	////Add distance still we can see all the bounding box
+	//while (!App->camera->frustum.Contains(boundingBox))
+	//{
+	//	App->camera->cameraPosition.z = App->camera->frustum.pos.z += 10;
+//	}
 }
 
 

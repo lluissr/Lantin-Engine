@@ -93,9 +93,9 @@ update_status ModuleRender::Update()
 		}
 	}
 
-	if (renderBoundingBox)
+	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
 	{
-		RenderBoundingBox();
+		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -107,6 +107,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 {
 	if (gameObject->isActive)
 	{
+
 		if (gameObject->gameObjects.size() > 0)
 		{
 			for (GameObject* go : gameObject->gameObjects)
@@ -115,8 +116,8 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 			}
 		}
 
-		if (gameObject->mesh != NULL && gameObject->material != NULL) {
-			RenderMesh(*gameObject->mesh->mesh, *gameObject->material->material, gameObject->globalMatrix);
+		if (gameObject->componentMesh != NULL && gameObject->componentMaterial != NULL) {
+			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix);
 		}
 	}
 }
@@ -203,116 +204,6 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-}
-
-void ModuleRender::RenderBoundingBox() const
-{
-	math::AABB boundingBox = math::AABB(App->modelLoader->minPoint, App->modelLoader->maxPoint);
-	math::float3 corner1 = boundingBox.CornerPoint(0);
-	math::float3 corner2 = boundingBox.CornerPoint(1);
-	math::float3 corner3 = boundingBox.CornerPoint(2);
-	math::float3 corner4 = boundingBox.CornerPoint(3);
-	math::float3 corner5 = boundingBox.CornerPoint(4);
-	math::float3 corner6 = boundingBox.CornerPoint(5);
-	math::float3 corner7 = boundingBox.CornerPoint(6);
-	math::float3 corner8 = boundingBox.CornerPoint(7);
-
-	float vertex_buffer_data[] = {
-	corner1.x, corner1.y, corner1.z,
-	corner2.x, corner2.y, corner2.z,
-
-	corner1.x, corner1.y, corner1.z,
-	corner3.x, corner3.y, corner3.z,
-
-	corner2.x, corner2.y, corner2.z,
-	corner4.x, corner4.y, corner4.z,
-
-	corner3.x, corner3.y, corner3.z,
-	corner4.x, corner4.y, corner4.z,
-
-	corner1.x, corner1.y, corner1.z,
-	corner5.x, corner5.y, corner5.z,
-
-	corner3.x, corner3.y, corner3.z,
-	corner7.x, corner7.y, corner7.z,
-
-	corner2.x, corner2.y, corner2.z,
-	corner6.x, corner6.y, corner6.z,
-
-	corner4.x, corner4.y, corner4.z,
-	corner8.x, corner8.y, corner8.z,
-
-	corner7.x, corner7.y, corner7.z,
-	corner8.x, corner8.y, corner8.z,
-
-	corner6.x, corner6.y, corner6.z,
-	corner8.x, corner8.y, corner8.z,
-
-	corner7.x, corner7.y, corner7.z,
-	corner5.x, corner5.y, corner5.z,
-
-	corner6.x, corner6.y, corner6.z,
-	corner5.x, corner5.y, corner5.z,
-	};
-
-	/*float vertex_buffer_data[] = {
-	corner1.x, corner1.y, corner1.z,
-	corner2.x, corner2.y, corner2.z,
-	corner3.x, corner3.y, corner3.z,
-	corner4.x, corner4.y, corner4.z,
-	corner5.x, corner5.y, corner5.z,
-	corner6.x, corner6.y, corner6.z,
-	corner7.x, corner7.y, corner7.z,
-	corner8.x, corner8.y, corner8.z,
-	};
-
-	float index_buffer_data[] = {
-		0,1,
-		0,2,
-		1,3,
-		2,3,
-		0,4,
-		1,5,
-		2,6,
-		3,7,
-		4,6,
-		4,5,
-		6,7,
-		5,7,
-	};*/
-
-	unsigned vbo = 0;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(
-		0,                  // attribute 0
-		3,                  // number of componentes (3 floats)
-		GL_FLOAT,           // data type
-		GL_FALSE,           // should be normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
-
-	glUseProgram(App->program->colorProgram);
-
-	math::float4x4 model(math::float4x4::identity);
-
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp)[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
-	float color[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
-	glUniform4fv(glGetUniformLocation(App->program->colorProgram, "newColor"), 1, color);
-
-	glDrawArrays(GL_LINES, 0, 24);
-
-	glDisableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
 }
 

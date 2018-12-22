@@ -20,6 +20,7 @@ public:
 	void SetIsSelected(bool selected);
 	void RemoveChild();
 	void MarkToDelete();
+	void UpdateBoundingBox();
 
 	std::string name = "";
 	std::string uuid = "";
@@ -31,8 +32,8 @@ public:
 	bool isSelected = false;
 	bool toDelete = false;
 
-	ComponentMesh* mesh = nullptr;
-	ComponentMaterial* material = nullptr;
+	ComponentMesh* componentMesh = nullptr;
+	ComponentMaterial* componentMaterial = nullptr;
 
 	math::float3 position = { 0.0f,0.0f,0.0f };
 	math::float3 scale = { 1.0f,1.0f,1.0f };

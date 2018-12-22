@@ -36,9 +36,9 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	//ChooseModelToRender(0);
-	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
-	LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
+	ChooseModelToRender(0);
+	//LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	//LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	App->scene->CalculateGlobalMatrix(App->scene->root);
 
@@ -87,13 +87,6 @@ void ModuleModelLoader::ImportModel(const char* path)
 	else
 	{
 		LOG("Fbx imported: %s", path);
-	}
-
-
-	if (scene->mNumMeshes > 0)
-	{
-		minPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
-		maxPoint = math::float3(scene->mMeshes[0]->mVertices->x, scene->mMeshes[0]->mVertices->y, scene->mMeshes[0]->mVertices->z);
 	}
 
 	LOG("Start GenerateMeshData");
@@ -189,7 +182,7 @@ GameObject* ModuleModelLoader::CreateGameObjects(const aiScene * scene, aiNode* 
 			if (materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr)
 			{
 				ComponentMaterial* material = (ComponentMaterial*)child->CreateComponent(ComponentType::MATERIAL);
-				material->material = materials[go->mesh->mesh->material];
+				material->material = materials[go->componentMesh->mesh->material];
 			}
 		}
 	}
@@ -256,12 +249,6 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	for (unsigned i = 0; i < aiMesh->mNumVertices; ++i)
 	{
 		texture_coords[i] = math::float2(aiMesh->mTextureCoords[0][i].x, aiMesh->mTextureCoords[0][i].y);
-		if (aiMesh->mVertices[i].x < minPoint.x) { minPoint.x = aiMesh->mVertices[i].x; }
-		if (aiMesh->mVertices[i].y < minPoint.y) { minPoint.y = aiMesh->mVertices[i].y; }
-		if (aiMesh->mVertices[i].z < minPoint.z) { minPoint.z = aiMesh->mVertices[i].z; }
-		if (aiMesh->mVertices[i].x > maxPoint.x) { maxPoint.x = aiMesh->mVertices[i].x; }
-		if (aiMesh->mVertices[i].y > maxPoint.y) { maxPoint.y = aiMesh->mVertices[i].y; }
-		if (aiMesh->mVertices[i].z > maxPoint.z) { maxPoint.z = aiMesh->mVertices[i].z; }
 	}
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -289,6 +276,7 @@ void ModuleModelLoader::GenerateMeshData(const aiMesh* aiMesh)
 	mesh->material = aiMesh->mMaterialIndex;
 	mesh->numVertices = aiMesh->mNumVertices;
 	mesh->numIndices = aiMesh->mNumFaces * 3;
+	mesh->localBoundingBox.Enclose((float3*)aiMesh->mVertices, mesh->numVertices);
 
 	GenerateVAO(*mesh);
 

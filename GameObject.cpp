@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ModuleModelLoader.h"
 
 
 GameObject::GameObject()
@@ -23,15 +24,15 @@ GameObject::GameObject(const GameObject& go)
 	localMatrix = go.localMatrix;
 	globalMatrix = go.globalMatrix;
 
-	if (go.mesh != NULL)
+	if (go.componentMesh != NULL)
 	{
-		mesh = (ComponentMesh*)CreateComponent(ComponentType::MESH);
-		mesh->mesh = go.mesh->mesh;
+		componentMesh = (ComponentMesh*)CreateComponent(ComponentType::MESH);
+		componentMesh->mesh = go.componentMesh->mesh;
 	}
-	if (go.material != NULL)
+	if (go.componentMaterial != NULL)
 	{
-		material = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
-		material->material = go.material->material;
+		componentMaterial = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
+		componentMaterial->material = go.componentMaterial->material;
 	}
 
 	for each (GameObject* gameObject in go.gameObjects)
@@ -65,12 +66,12 @@ Component* GameObject::CreateComponent(ComponentType type)
 	switch (type)
 	{
 	case ComponentType::MESH:
-		mesh = new ComponentMesh(this, type);
-		ret = mesh;
+		componentMesh = new ComponentMesh(this, type);
+		ret = componentMesh;
 		break;
 	case ComponentType::MATERIAL:
-		material = new ComponentMaterial(this, type);
-		ret = material;
+		componentMaterial = new ComponentMaterial(this, type);
+		ret = componentMaterial;
 		break;
 	}
 
@@ -105,5 +106,19 @@ void GameObject::MarkToDelete()
 	for each (GameObject* go in gameObjects)
 	{
 		go->MarkToDelete();
+	}
+}
+
+void GameObject::UpdateBoundingBox()
+{
+	if (componentMesh != nullptr)
+	{
+		componentMesh->mesh->globalBoundingBox = componentMesh->mesh->localBoundingBox;
+		componentMesh->mesh->globalBoundingBox.TransformAsAABB(globalMatrix);
+	}
+
+	for each (GameObject* go in gameObjects)
+	{
+		go->UpdateBoundingBox();
 	}
 }

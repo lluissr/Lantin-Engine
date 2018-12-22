@@ -41,6 +41,7 @@ void PanelModel::Draw()
 			App->scene->selectedGO->scale = { 1.0f,1.0f,1.0f };
 			App->scene->selectedGO->rotation = { 0.0f,0.0f,0.0f,1.0f };
 			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
+			App->scene->selectedGO->UpdateBoundingBox();
 		}
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
@@ -119,50 +120,51 @@ void PanelModel::Draw()
 		{
 			App->scene->selectedGO->localMatrix.Set(float4x4::FromTRS(App->scene->selectedGO->position, App->scene->selectedGO->rotation, App->scene->selectedGO->scale));
 			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
+			App->scene->selectedGO->UpdateBoundingBox();
 		}
 
 	}
 
-	if (App->scene->selectedGO->mesh != NULL)
+	if (App->scene->selectedGO->componentMesh != NULL)
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			ImGui::Text("Triangles count: %d", App->scene->selectedGO->mesh->mesh->numVertices / 3);
-			ImGui::Text("Vertices count: %d", App->scene->selectedGO->mesh->mesh->numVertices);
+			ImGui::Text("Triangles count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices / 3);
+			ImGui::Text("Vertices count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices);
 		}
 	}
 
-	if (App->scene->selectedGO->material != NULL)
+	if (App->scene->selectedGO->componentMaterial != NULL)
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
-			if (App->scene->selectedGO->material->material->program == 0)
+			if (App->scene->selectedGO->componentMaterial->material->program == 0)
 			{
-				if (App->scene->selectedGO->material->material->texture0 != 0)
+				if (App->scene->selectedGO->componentMaterial->material->texture0 != 0)
 				{
-					App->scene->selectedGO->material->material;
-					ImGui::Image((ImTextureID)App->scene->selectedGO->material->material->texture0, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", App->scene->selectedGO->material->material->width, App->scene->selectedGO->material->material->height);
+					App->scene->selectedGO->componentMaterial->material;
+					ImGui::Image((ImTextureID)App->scene->selectedGO->componentMaterial->material->texture0, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", App->scene->selectedGO->componentMaterial->material->width, App->scene->selectedGO->componentMaterial->material->height);
 				}
 			}
-			else if (App->scene->selectedGO->material->material->program != 0)
+			else if (App->scene->selectedGO->componentMaterial->material->program != 0)
 			{
 
 				const char* items[] = { "Flat", "Gouraud", "Phong", "Blinn" };
-				int number = max(0, App->scene->selectedGO->material->material->program - 2);
+				int number = max(0, App->scene->selectedGO->componentMaterial->material->program - 2);
 				if (ImGui::Combo("Shading", &number, items, IM_ARRAYSIZE(items)))
 				{
-					App->scene->selectedGO->material->material->program = number + 2;
+					App->scene->selectedGO->componentMaterial->material->program = number + 2;
 				}
-				ImVec4 color = ImColor(App->scene->selectedGO->material->material->color.x, App->scene->selectedGO->material->material->color.y, App->scene->selectedGO->material->material->color.z, App->scene->selectedGO->material->material->color.w);
+				ImVec4 color = ImColor(App->scene->selectedGO->componentMaterial->material->color.x, App->scene->selectedGO->componentMaterial->material->color.y, App->scene->selectedGO->componentMaterial->material->color.z, App->scene->selectedGO->componentMaterial->material->color.w);
 				if (ImGui::ColorEdit4("Color", (float*)&color))
 				{
-					App->scene->selectedGO->material->material->color = math::float4(color.x, color.y, color.z, color.w);
+					App->scene->selectedGO->componentMaterial->material->color = math::float4(color.x, color.y, color.z, color.w);
 				}
-				ImGui::SliderFloat("Shininess", &App->scene->selectedGO->material->material->shininess, 0, 128);
-				ImGui::SliderFloat("K ambient", &App->scene->selectedGO->material->material->k_ambient, 0, 1);
-				ImGui::SliderFloat("K diffuse", &App->scene->selectedGO->material->material->k_diffuse, 0, 1);
-				ImGui::SliderFloat("K specular", &App->scene->selectedGO->material->material->k_specular, 0, 1);
+				ImGui::SliderFloat("Shininess", &App->scene->selectedGO->componentMaterial->material->shininess, 0, 128);
+				ImGui::SliderFloat("K ambient", &App->scene->selectedGO->componentMaterial->material->k_ambient, 0, 1);
+				ImGui::SliderFloat("K diffuse", &App->scene->selectedGO->componentMaterial->material->k_diffuse, 0, 1);
+				ImGui::SliderFloat("K specular", &App->scene->selectedGO->componentMaterial->material->k_specular, 0, 1);
 			}
 		}
 	}
