@@ -104,6 +104,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 	GameObject* go = CreateGameObjects(scene, scene->mRootNode);
 
 	go->parent = App->scene->root;
+	go->UpdateBoundingBox();
 	App->scene->root->gameObjects.push_back(go);
 
 	aiReleaseImport(scene);
@@ -358,6 +359,7 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		cmaterial->material = material;
 
 		go->parent = App->scene->root;
+		go->UpdateBoundingBox();
 		App->scene->root->gameObjects.push_back(go);
 
 		par_shapes_free_mesh(parMesh);
@@ -395,6 +397,7 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 		cmaterial->material = material;
 
 		go->parent = App->scene->root;
+		go->UpdateBoundingBox();
 		App->scene->root->gameObjects.push_back(go);
 
 		par_shapes_free_mesh(parMesh);
@@ -453,6 +456,7 @@ Mesh* ModuleModelLoader::CreateMeshFromParShapes(par_shapes_mesh_s* parMesh)
 	mesh->material = 0;
 	mesh->numVertices = parMesh->npoints;
 	mesh->numIndices = parMesh->ntriangles * 3;
+	mesh->localBoundingBox.Enclose((float3*)parMesh->points, mesh->numVertices);
 
 	return mesh;
 }
