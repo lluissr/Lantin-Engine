@@ -196,6 +196,9 @@
     <ClCompile Include="PanelEditor.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="PanelEditor.h">
       <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

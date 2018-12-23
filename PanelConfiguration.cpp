@@ -49,19 +49,19 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		float front[3] = { App->camera->cameraFront.x,  App->camera->cameraFront.y,  App->camera->cameraFront.z };
-		float up[3] = { App->camera->cameraUp.x,  App->camera->cameraUp.y,  App->camera->cameraUp.z };
-		float position[3] = { App->camera->cameraPosition.x,  App->camera->cameraPosition.y,  App->camera->cameraPosition.z };
+		float front[3] = { App->camera->sceneCamera->cameraFront.x,  App->camera->sceneCamera->cameraFront.y,  App->camera->sceneCamera->cameraFront.z };
+		float up[3] = { App->camera->sceneCamera->cameraUp.x,  App->camera->sceneCamera->cameraUp.y,  App->camera->sceneCamera->cameraUp.z };
+		float position[3] = { App->camera->sceneCamera->cameraPosition.x,  App->camera->sceneCamera->cameraPosition.y,  App->camera->sceneCamera->cameraPosition.z };
 
 		ImGui::InputFloat3("Front", front);
 		ImGui::InputFloat3("Up", up);
 		ImGui::InputFloat3("Position", position);
-		ImGui::InputFloat("Movement Speed", &App->camera->mSpeed);
-		ImGui::InputFloat("Rotation Speed", &App->camera->rSpeed);
-		ImGui::InputFloat("Pitch", &App->camera->pitch);
-		ImGui::InputFloat("Yaw", &App->camera->yaw);
-		ImGui::InputFloat("Near Plane", &App->camera->frustum.nearPlaneDistance);
-		ImGui::InputFloat("Far Plane", &App->camera->frustum.farPlaneDistance);
+		ImGui::InputFloat("Movement Speed", &App->camera->sceneCamera->mSpeed);
+		ImGui::InputFloat("Rotation Speed", &App->camera->sceneCamera->rSpeed);
+		ImGui::InputFloat("Pitch", &App->camera->sceneCamera->pitch);
+		ImGui::InputFloat("Yaw", &App->camera->sceneCamera->yaw);
+		ImGui::InputFloat("Near Plane", &App->camera->sceneCamera->frustum.nearPlaneDistance);
+		ImGui::InputFloat("Far Plane", &App->camera->sceneCamera->frustum.farPlaneDistance);
 	}
 
 	if (ImGui::CollapsingHeader("Input"))

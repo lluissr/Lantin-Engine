@@ -73,6 +73,10 @@ Component* GameObject::CreateComponent(ComponentType type)
 		componentMaterial = new ComponentMaterial(this, type);
 		ret = componentMaterial;
 		break;
+	case ComponentType::CAMERA:
+		componentCamera = new ComponentCamera(this, type);
+		ret = componentCamera;
+		break;
 	}
 
 	components.push_back(ret);

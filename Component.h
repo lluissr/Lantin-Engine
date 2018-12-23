@@ -5,7 +5,7 @@ class GameObject;
 
 enum class ComponentType
 {
-	EMPTY, MESH, MATERIAL, SOUND, SCRIPT, LIGHT
+	EMPTY, MESH, MATERIAL, CAMERA, SOUND, SCRIPT, LIGHT
 };
 
 class Component

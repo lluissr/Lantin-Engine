@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 #include "MathGeoLib.h"
 #include <list>
 #include "Utils/crossguid/guid.hpp"
@@ -34,6 +35,7 @@ public:
 
 	ComponentMesh* componentMesh = nullptr;
 	ComponentMaterial* componentMaterial = nullptr;
+	ComponentCamera* componentCamera = nullptr;
 
 	math::float3 position = { 0.0f,0.0f,0.0f };
 	math::float3 scale = { 1.0f,1.0f,1.0f };

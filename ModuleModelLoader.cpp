@@ -2,9 +2,7 @@
 #include "Application.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
-#include "ModuleEditor.h"
 #include "ModuleScene.h"
-#include "ModuleCamera.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -109,7 +107,7 @@ void ModuleModelLoader::ImportModel(const char* path)
 
 	aiReleaseImport(scene);
 
-	App->camera->Focus();
+	//App->camera->Focus();
 }
 
 bool ModuleModelLoader::CleanUp()
