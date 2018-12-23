@@ -22,6 +22,8 @@ bool ModuleCamera::Init()
 {
 	sceneCamera = new ComponentCamera(nullptr, ComponentType::CAMERA);
 	selectedCamera = sceneCamera;
+	sceneCamera->frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
+	sceneCamera->frustum.front = -float3::unitZ;
 
 	return true;
 }

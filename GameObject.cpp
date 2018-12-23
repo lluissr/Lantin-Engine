@@ -24,15 +24,30 @@ GameObject::GameObject(const GameObject& go)
 	localMatrix = go.localMatrix;
 	globalMatrix = go.globalMatrix;
 
-	if (go.componentMesh != NULL)
+	if (go.componentMesh != nullptr)
 	{
 		componentMesh = (ComponentMesh*)CreateComponent(ComponentType::MESH);
 		componentMesh->mesh = go.componentMesh->mesh;
 	}
-	if (go.componentMaterial != NULL)
+	if (go.componentMaterial != nullptr)
 	{
 		componentMaterial = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
 		componentMaterial->material = go.componentMaterial->material;
+	}
+	if (go.componentCamera != nullptr)
+	{
+		componentCamera = (ComponentCamera*)CreateComponent(ComponentType::CAMERA);
+		componentCamera->frustum = go.componentCamera->frustum;
+		componentCamera->active = go.componentCamera->active;
+		componentCamera->rSpeed = go.componentCamera->rSpeed;
+		componentCamera->mSpeed = go.componentCamera->mSpeed;
+		componentCamera->pitch = go.componentCamera->pitch;
+		componentCamera->yaw = go.componentCamera->yaw;
+		componentCamera->firstMouse = go.componentCamera->firstMouse;
+		componentCamera->lastX = go.componentCamera->lastX;
+		componentCamera->lastY = go.componentCamera->lastY;
+		componentCamera->fovY = go.componentCamera->fovY;
+		componentCamera->fovX = go.componentCamera->fovX;
 	}
 
 	for each (GameObject* gameObject in go.gameObjects)

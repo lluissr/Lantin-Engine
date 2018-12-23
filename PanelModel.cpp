@@ -168,5 +168,74 @@ void PanelModel::Draw()
 			}
 		}
 	}
+
+	if (App->scene->selectedGO->componentCamera != NULL)
+	{
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			ImGui::PushItemWidth(75);
+			ImGui::Text("Position:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("1");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("2");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("3");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::PopID();
+			ImGui::Text("Front:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("4");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("5");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("6");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::PopID();
+			ImGui::Text("Up:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("7");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("8");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("9");
+			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+			ImGui::InputFloat("Movement Speed", &App->scene->selectedGO->componentCamera->mSpeed);
+			ImGui::InputFloat("Rotation Speed", &App->scene->selectedGO->componentCamera->rSpeed);
+			ImGui::InputFloat("Pitch", &App->scene->selectedGO->componentCamera->pitch);
+			ImGui::InputFloat("Yaw", &App->scene->selectedGO->componentCamera->yaw);
+			ImGui::InputFloat("Near Plane", &App->scene->selectedGO->componentCamera->frustum.nearPlaneDistance);
+			ImGui::InputFloat("Far Plane", &App->scene->selectedGO->componentCamera->frustum.farPlaneDistance);
+		}
+	}
 	ImGui::End();
 }

@@ -5,8 +5,8 @@
 ComponentCamera::ComponentCamera(GameObject* parent, ComponentType type) : Component(parent, type)
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
-	frustum.front = -float3::unitZ;
+	frustum.pos = math::float3(0.0f, 1.0f, -10.0f);
+	frustum.front = float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 1000.0f;

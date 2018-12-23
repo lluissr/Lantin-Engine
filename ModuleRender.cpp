@@ -123,8 +123,13 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 			}
 		}
 
-		if (gameObject->componentMesh != NULL && gameObject->componentMaterial != NULL) {
+		if (gameObject->componentMesh != nullptr && gameObject->componentMaterial != nullptr) {
 			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix);
+		}
+
+		if (gameObject->componentCamera != nullptr)
+		{
+			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->frustum.ViewMatrix()).Inverted(), dd::colors::Blue);
 		}
 	}
 }
