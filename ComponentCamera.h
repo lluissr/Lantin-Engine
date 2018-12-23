@@ -11,6 +11,8 @@ public:
 	ComponentCamera(GameObject* parent, ComponentType type);
 	~ComponentCamera();
 
+	bool showFrustum = true;
+
 	math::Frustum frustum;
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;

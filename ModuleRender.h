@@ -7,6 +7,20 @@ struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 
+enum class FrameBufferType
+{
+	SCENE,
+	GAME
+};
+
+struct FrameBuffer
+{
+	unsigned fbo = 0u;
+	unsigned rbo = 0u;
+	unsigned renderTexture = 0u;
+	FrameBufferType frameBufferType;
+};
+
 class ModuleRender : public Module
 {
 public:
@@ -16,24 +30,23 @@ public:
 	bool Init();
 	update_status PreUpdate();
 	update_status Update();
-	void UpdateDrawDebug();
+	void DrawInFrameBuffer(FrameBuffer& frameBuffer);
+	void UpdateDrawDebug(FrameBuffer& frameBuffer);
 	update_status PostUpdate();
 	bool CleanUp();
-	void  RenderGameObject(GameObject* gameObject);
-	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix);
-	void RenderBoundingBox() const;
-	void InitFrameBuffer(int width, int height);
+	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
+	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
+	void InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer);
 
 	void* context;
+	FrameBuffer frameBufferScene;
+	FrameBuffer frameBufferGame;
 	bool renderBoundingBox = false;
 	int currentItemSelected = 0;
 	bool useCheckerTexture = false;
 	bool showAxis = true;
 	bool showGrid = true;
 
-	unsigned renderTexture = 0u;
 private:
 	GLuint checkersTexture;
-	unsigned fbo = 0u;
-	unsigned rbo = 0u;
 };

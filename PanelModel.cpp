@@ -175,6 +175,7 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{
+			ImGui::Checkbox("Draw frustum", &App->scene->selectedGO->componentCamera->showFrustum);
 			ImGui::PushItemWidth(75);
 			ImGui::Text("Position:");
 			ImGui::Text("X:");

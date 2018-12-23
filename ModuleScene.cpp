@@ -16,11 +16,11 @@ bool ModuleScene::Init()
 	root = new GameObject();
 	root->name = "Scene Root";
 
-	GameObject* camera = new GameObject();
-	camera->name = "Game camera";
-	camera->CreateComponent(ComponentType::CAMERA);
-	camera->parent = root;
-	root->gameObjects.push_back(camera);
+	gameCamera = new GameObject();
+	gameCamera->name = "Game camera";
+	gameCamera->CreateComponent(ComponentType::CAMERA);
+	gameCamera->parent = root;
+	root->gameObjects.push_back(gameCamera);
 
 	return true;
 }

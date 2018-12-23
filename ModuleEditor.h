@@ -35,6 +35,7 @@ public:
 	PanelConsole* panelConsole = nullptr;
 	PanelScene* panelScene = nullptr;
 	PanelViewport* panelViewport = nullptr;
+	PanelViewport* panelViewportGame = nullptr;
 	PanelEditor* panelEditor = nullptr;
 
 private:

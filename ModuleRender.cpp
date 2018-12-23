@@ -56,7 +56,10 @@ bool ModuleRender::Init()
 
 	checkersTexture = App->textures->Load("./Textures/checker.jpg");
 
-	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight);
+	frameBufferScene.frameBufferType = FrameBufferType::SCENE;
+	frameBufferGame.frameBufferType = FrameBufferType::GAME;
+	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight, frameBufferScene);
+	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight, frameBufferGame);
 
 	return true;
 }
@@ -72,45 +75,71 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::Update()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	DrawInFrameBuffer(frameBufferScene);
+	DrawInFrameBuffer(frameBufferGame);
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
+{
+
+	math::float4x4 viewMatrix = math::float4x4::identity;
+	math::float4x4 projectionMatrix = math::float4x4::identity;
+	switch (frameBuffer.frameBufferType)
+	{
+	case  FrameBufferType::SCENE:
+		viewMatrix = App->camera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		projectionMatrix = App->camera->sceneCamera->frustum.ProjectionMatrix();
+		break;
+	case  FrameBufferType::GAME:
+		viewMatrix = App->camera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up);
+		projectionMatrix = App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix();
+		break;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	UpdateDrawDebug();
+	UpdateDrawDebug(frameBuffer);
 
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
 		if (gameObject->isActive)
 		{
-			RenderGameObject(gameObject);
+			RenderGameObject(gameObject, viewMatrix, projectionMatrix);
 		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	return UPDATE_CONTINUE;
 }
 
 
-void ModuleRender::UpdateDrawDebug()
+void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer)
 {
-	App->debugDraw->Draw(fbo, App->camera->screenWidth, App->camera->screenHeight);
-	if (showGrid)
-	{
-		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-	}
-	if (showAxis)
-	{
-		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
-	}
+	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight);
 
-	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	if (frameBuffer.frameBufferType != FrameBufferType::SCENE)
 	{
-		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
+		if (showGrid)
+		{
+			dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+		}
+		if (showAxis)
+		{
+			dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+		}
+
+		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+		{
+			dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
+		}
 	}
 }
 
 
-void  ModuleRender::RenderGameObject(GameObject* gameObject)
+void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
 	if (gameObject->isActive)
 	{
@@ -119,22 +148,22 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject)
 		{
 			for (GameObject* go : gameObject->gameObjects)
 			{
-				RenderGameObject(go);
+				RenderGameObject(go, viewMatrix, projectionMatrix);
 			}
 		}
 
 		if (gameObject->componentMesh != nullptr && gameObject->componentMaterial != nullptr) {
-			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix);
+			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
 		}
 
-		if (gameObject->componentCamera != nullptr)
+		if (gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)
 		{
-			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->frustum.ViewMatrix()).Inverted(), dd::colors::Blue);
+			dd::frustum((projectionMatrix * viewMatrix).Inverted(), dd::colors::Blue);
 		}
 	}
 }
 
-void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix)
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
 	unsigned program = 0;
 	switch (material.program) {
@@ -162,10 +191,10 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	}
 
 	glUseProgram(program);
-	
+
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->selectedCamera->frustum.pos, App->camera->selectedCamera->frustum.front, App->camera->selectedCamera->frustum.up)[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &App->camera->selectedCamera->frustum.ProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
 
 	if (material.program == 0)
 	{
@@ -233,22 +262,24 @@ bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
+	glDeleteFramebuffers(1, &frameBufferScene.fbo);
+	glDeleteRenderbuffers(1, &frameBufferScene.rbo);
+	glDeleteFramebuffers(1, &frameBufferGame.fbo);
+	glDeleteRenderbuffers(1, &frameBufferGame.rbo);
 
 	return true;
 }
 
-void ModuleRender::InitFrameBuffer(int width, int height)
+void ModuleRender::InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer)
 {
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
+	glDeleteFramebuffers(1, &frameBuffer.fbo);
+	glDeleteRenderbuffers(1, &frameBuffer.rbo);
 
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glGenFramebuffers(1, &frameBuffer.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 
-	glGenTextures(1, &renderTexture);
-	glBindTexture(GL_TEXTURE_2D, renderTexture);
+	glGenTextures(1, &frameBuffer.renderTexture);
+	glBindTexture(GL_TEXTURE_2D, frameBuffer.renderTexture);
 
 	glTexImage2D(
 		GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
@@ -258,15 +289,15 @@ void ModuleRender::InitFrameBuffer(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glFramebufferTexture2D(
-		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0
+		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBuffer.renderTexture, 0
 	);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glGenRenderbuffers(1, &frameBuffer.rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer.rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, frameBuffer.rbo);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 

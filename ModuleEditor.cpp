@@ -14,7 +14,8 @@ ModuleEditor::ModuleEditor()
 	panelHardware = new PanelHardware();
 	panelConsole = new PanelConsole();
 	panelScene = new PanelScene();
-	panelViewport = new PanelViewport();
+	panelViewport = new PanelViewport("Scene");
+	panelViewportGame = new PanelViewport("Game");
 	panelEditor = new PanelEditor();
 }
 
@@ -35,6 +36,9 @@ bool ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	ImGui::StyleColorsDark();
+
+	panelViewport->frameBuffer = &App->renderer->frameBufferScene;
+	panelViewportGame->frameBuffer = &App->renderer->frameBufferGame;
 
 	return true;
 }
@@ -121,6 +125,11 @@ update_status ModuleEditor::Update()
 		panelViewport->Draw();
 	}
 
+	if (panelViewportGame->show)
+	{
+		panelViewportGame->Draw();
+	}
+
 	if (panelEditor->show)
 	{
 		panelEditor->Draw();
@@ -150,6 +159,7 @@ bool ModuleEditor::CleanUp()
 	delete panelHardware;
 	delete panelScene;
 	delete panelViewport;
+	delete panelViewportGame;
 	delete panelEditor;
 	delete panelConsole;
 	panelConsole = nullptr;
@@ -175,6 +185,7 @@ bool ModuleEditor::DrawMenu()
 	if (ImGui::BeginMenu("Engine"))
 	{
 		ImGui::MenuItem("Scene Viewport", "", &panelViewport->show);
+		ImGui::MenuItem("Game Viewport", "", &panelViewportGame->show);
 		ImGui::MenuItem("Game editor", "", &panelEditor->show);
 		ImGui::MenuItem("Scene Information", "", &panelScene->show);
 		ImGui::MenuItem("Model selected", "", &panelModel->show);

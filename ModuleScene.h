@@ -26,6 +26,7 @@ public:
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;
+	GameObject* gameCamera = nullptr;
 
 	math::float3 lightPosition = math::float3(-2.0f, 0.0f, 6.0f);
 	float ambient = 0.3f;
