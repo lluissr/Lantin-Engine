@@ -615,9 +615,7 @@ void ModuleDebugDraw::Draw(unsigned fbo, unsigned fb_width, unsigned fb_height)
     implementation->height    = fb_height;
     implementation->mvpMatrix = proj * view;
 
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     dd::flush();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 

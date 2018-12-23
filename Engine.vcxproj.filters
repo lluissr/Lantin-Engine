@@ -10,9 +10,6 @@
     <ClCompile Include="ModuleRender.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleRenderExercise.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleTextures.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -196,6 +193,9 @@
     <ClCompile Include="PanelViewport.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="PanelEditor.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -208,9 +208,6 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleRender.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRenderExercise.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleTextures.h">
@@ -469,6 +466,9 @@
       <Filter>Panels</Filter>
     </ClInclude>
     <ClInclude Include="PanelViewport.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelEditor.h">
       <Filter>Panels</Filter>
     </ClInclude>
   </ItemGroup>

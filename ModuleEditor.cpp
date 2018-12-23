@@ -15,6 +15,7 @@ ModuleEditor::ModuleEditor()
 	panelConsole = new PanelConsole();
 	panelScene = new PanelScene();
 	panelViewport = new PanelViewport();
+	panelEditor = new PanelEditor();
 }
 
 // Destructor
@@ -120,6 +121,11 @@ update_status ModuleEditor::Update()
 		panelViewport->Draw();
 	}
 
+	if (panelEditor->show)
+	{
+		panelEditor->Draw();
+	}
+
 	//Menu
 	 if (DrawMenu()) return UPDATE_STOP;
 
@@ -144,6 +150,7 @@ bool ModuleEditor::CleanUp()
 	delete panelHardware;
 	delete panelScene;
 	delete panelViewport;
+	delete panelEditor;
 	delete panelConsole;
 	panelConsole = nullptr;
 
@@ -168,6 +175,7 @@ bool ModuleEditor::DrawMenu()
 	if (ImGui::BeginMenu("Engine"))
 	{
 		ImGui::MenuItem("Scene Viewport", "", &panelViewport->show);
+		ImGui::MenuItem("Game editor", "", &panelEditor->show);
 		ImGui::MenuItem("Scene Information", "", &panelScene->show);
 		ImGui::MenuItem("Model selected", "", &panelModel->show);
 		ImGui::MenuItem("Configuration", "", &panelConfiguration->show);

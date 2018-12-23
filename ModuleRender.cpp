@@ -70,20 +70,12 @@ update_status ModuleRender::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-// Called every draw update
 update_status ModuleRender::Update()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-	dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	App->debugDraw->Draw(fbo, App->camera->screenWidth, App->camera->screenHeight);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	UpdateDrawDebug();
 
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
@@ -93,15 +85,30 @@ update_status ModuleRender::Update()
 		}
 	}
 
-	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
-	{
-		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
-	}
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return UPDATE_CONTINUE;
 }
+
+
+void ModuleRender::UpdateDrawDebug()
+{
+	App->debugDraw->Draw(fbo, App->camera->screenWidth, App->camera->screenHeight);
+	if (showGrid)
+	{
+		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+	}
+	if (showAxis)
+	{
+		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+	}
+
+	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	{
+		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
+	}
+}
+
 
 void  ModuleRender::RenderGameObject(GameObject* gameObject)
 {

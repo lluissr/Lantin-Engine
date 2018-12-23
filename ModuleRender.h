@@ -16,6 +16,7 @@ public:
 	bool Init();
 	update_status PreUpdate();
 	update_status Update();
+	void UpdateDrawDebug();
 	update_status PostUpdate();
 	bool CleanUp();
 	void  RenderGameObject(GameObject* gameObject);
@@ -27,6 +28,8 @@ public:
 	bool renderBoundingBox = false;
 	int currentItemSelected = 0;
 	bool useCheckerTexture = false;
+	bool showAxis = true;
+	bool showGrid = true;
 
 	unsigned renderTexture = 0u;
 private:
