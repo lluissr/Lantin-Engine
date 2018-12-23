@@ -608,7 +608,7 @@ update_status  ModuleDebugDraw::Update()
 
 void ModuleDebugDraw::Draw(unsigned fbo, unsigned fb_width, unsigned fb_height)
 {
-	math::float4x4 view  = App->camera->LookAt(App->camera->selectedCamera->cameraPosition, App->camera->selectedCamera->cameraFront, App->camera->selectedCamera->cameraUp);
+	math::float4x4 view  = App->camera->LookAt(App->camera->selectedCamera->frustum.pos, App->camera->selectedCamera->frustum.front, App->camera->selectedCamera->frustum.up);
 	math::float4x4 proj = App->camera->selectedCamera->frustum.ProjectionMatrix();
 
     implementation->width     = fb_width;

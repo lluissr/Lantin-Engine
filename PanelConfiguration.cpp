@@ -49,9 +49,9 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		float front[3] = { App->camera->sceneCamera->cameraFront.x,  App->camera->sceneCamera->cameraFront.y,  App->camera->sceneCamera->cameraFront.z };
-		float up[3] = { App->camera->sceneCamera->cameraUp.x,  App->camera->sceneCamera->cameraUp.y,  App->camera->sceneCamera->cameraUp.z };
-		float position[3] = { App->camera->sceneCamera->cameraPosition.x,  App->camera->sceneCamera->cameraPosition.y,  App->camera->sceneCamera->cameraPosition.z };
+		float front[3] = { App->camera->sceneCamera->frustum.front.x,  App->camera->sceneCamera->frustum.front.y,  App->camera->sceneCamera->frustum.front.z };
+		float up[3] = { App->camera->sceneCamera->frustum.up.x,  App->camera->sceneCamera->frustum.up.y,  App->camera->sceneCamera->frustum.up.z };
+		float position[3] = { App->camera->sceneCamera->frustum.pos.x,  App->camera->sceneCamera->frustum.pos.y,  App->camera->sceneCamera->frustum.pos.z };
 
 		ImGui::InputFloat3("Front", front);
 		ImGui::InputFloat3("Up", up);

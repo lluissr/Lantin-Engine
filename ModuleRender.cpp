@@ -159,7 +159,7 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glUseProgram(program);
 	
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->selectedCamera->cameraPosition, App->camera->selectedCamera->cameraFront, App->camera->selectedCamera->cameraUp)[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &App->camera->LookAt(App->camera->selectedCamera->frustum.pos, App->camera->selectedCamera->frustum.front, App->camera->selectedCamera->frustum.up)[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &App->camera->selectedCamera->frustum.ProjectionMatrix()[0][0]);
 
 	if (material.program == 0)

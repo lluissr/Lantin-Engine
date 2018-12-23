@@ -117,9 +117,9 @@ void ModuleCamera::Focus()
 	}
 
 	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
-	selectedCamera->frustum.pos = selectedCamera->cameraPosition = center;
-	selectedCamera->frustum.front = selectedCamera->cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-	selectedCamera->frustum.up = selectedCamera->cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+	selectedCamera->frustum.pos = selectedCamera->frustum.pos = center;
+	selectedCamera->frustum.front = selectedCamera->frustum.front = math::float3(0.0f, 0.0f, -1.0f);
+	selectedCamera->frustum.up = selectedCamera->frustum.up = math::float3(0.0f, 1.0f, 0.0f);
 	selectedCamera->frustum.verticalFov = math::pi / 4.0f;
 	selectedCamera->frustum.horizontalFov = 2.f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 	selectedCamera->fovY = 45.0f;
@@ -133,7 +133,7 @@ void ModuleCamera::Focus()
 		//Add distance still we can see all the bounding box
 		while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox))
 		{
-			selectedCamera->cameraPosition.z = selectedCamera->frustum.pos.z += 10;
+			selectedCamera->frustum.pos.z += 10;
 		}
 	}
 }
@@ -167,22 +167,22 @@ void ModuleCamera::Move(Directions dir)
 {
 	switch (dir) {
 	case Directions::UP:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition += selectedCamera->cameraUp.Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos += selectedCamera->frustum.up.Normalized() * selectedCamera->mSpeed;
 		break;
 	case Directions::DOWN:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition -= selectedCamera->cameraUp.Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos -= selectedCamera->frustum.up.Normalized() * selectedCamera->mSpeed;
 		break;
 	case Directions::FORWARD:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition += selectedCamera->cameraFront.Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos += selectedCamera->frustum.front.Normalized() * selectedCamera->mSpeed;
 		break;
 	case Directions::BACKWARD:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition -= selectedCamera->cameraFront.Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos -= selectedCamera->frustum.front.Normalized() * selectedCamera->mSpeed;
 		break;
 	case Directions::LEFT:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition += selectedCamera->cameraUp.Cross(selectedCamera->cameraFront).Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos += selectedCamera->frustum.up.Cross(selectedCamera->frustum.front).Normalized() * selectedCamera->mSpeed;
 		break;
 	case Directions::RIGHT:
-		selectedCamera->frustum.pos = selectedCamera->cameraPosition -= selectedCamera->cameraUp.Cross(selectedCamera->cameraFront).Normalized() * selectedCamera->mSpeed;
+		selectedCamera->frustum.pos -= selectedCamera->frustum.up.Cross(selectedCamera->frustum.front).Normalized() * selectedCamera->mSpeed;
 		break;
 	}
 }
@@ -216,7 +216,7 @@ void ModuleCamera::MouseUpdate()
 	front.x = SDL_sinf(math::DegToRad(selectedCamera->yaw)) * SDL_cosf(math::DegToRad(selectedCamera->pitch));
 	front.y = SDL_sinf(math::DegToRad(selectedCamera->pitch));
 	front.z = -SDL_cosf(math::DegToRad(selectedCamera->yaw)) * SDL_cosf(math::DegToRad(selectedCamera->pitch));
-	selectedCamera->frustum.front = selectedCamera->cameraFront = front.Normalized();
+	selectedCamera->frustum.front = front.Normalized();
 }
 
 void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
