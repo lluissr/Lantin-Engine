@@ -25,7 +25,9 @@ void PanelModel::Draw()
 		return;
 	}
 
-	ImGui::Text("Name: %s", App->scene->selectedGO->name.c_str());
+	ImGui::Text("Name:");
+	ImGui::SameLine();
+	ImGui::InputText("##", &App->scene->selectedGO->name[0], 40);
 	ImGui::Text("Model selected has %d childs.", App->scene->selectedGO->gameObjects.size());
 	ImGui::NewLine();
 	ImGui::Checkbox("Active", &App->scene->selectedGO->isActive);
