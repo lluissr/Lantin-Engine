@@ -12,6 +12,7 @@ public:
 	~ComponentMesh();
 
 	void Update();
+	void CopyFromComponentMesh(const ComponentMesh& componentMesh);
 
 	Mesh* mesh = nullptr;
 };

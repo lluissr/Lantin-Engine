@@ -55,3 +55,18 @@ void ComponentCamera::SetVerticalFOV(float fovY) {
 	frustum.verticalFov = math::DegToRad(fovY);
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }
+
+void ComponentCamera::CopyFromComponentCamera(const ComponentCamera& componentCamera)
+{
+	frustum = componentCamera.frustum;
+	active = componentCamera.active;
+	rSpeed = componentCamera.rSpeed;
+	mSpeed = componentCamera.mSpeed;
+	pitch = componentCamera.pitch;
+	yaw = componentCamera.yaw;
+	firstMouse = componentCamera.firstMouse;
+	lastX = componentCamera.lastX;
+	lastY = componentCamera.lastY;
+	fovY = componentCamera.fovY;
+	fovX = componentCamera.fovX;
+}

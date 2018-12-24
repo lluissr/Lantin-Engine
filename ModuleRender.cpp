@@ -128,8 +128,6 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
 
-	//if (frameBuffer.frameBufferType == FrameBufferType::SCENE)
-	//{
 	if (showGrid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -145,7 +143,6 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 	}
 
 	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight, viewMatrix, projectionMatrix);
-	//}
 }
 
 

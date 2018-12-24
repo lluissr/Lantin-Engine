@@ -15,6 +15,7 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 	void SetVerticalFOV(float fovY);
 	void SetHorizontalFOV(float fovX);
+	void CopyFromComponentCamera(const ComponentCamera& componentCamera);
 
 	bool showFrustum = true;
 
