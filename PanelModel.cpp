@@ -139,6 +139,7 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
+			ImGui::Checkbox("Wireframe", &App->scene->selectedGO->componentMesh->mesh->useWireframe);
 			ImGui::Text("Triangles count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices / 3);
 			ImGui::Text("Vertices count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices);
 		}

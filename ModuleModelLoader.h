@@ -29,6 +29,7 @@ public:
 	unsigned texturesOffset = 0;
 	math::AABB localBoundingBox;
 	math::AABB globalBoundingBox;
+	bool useWireframe = false;
 };
 
 class Material

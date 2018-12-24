@@ -41,7 +41,7 @@ public:
 	void* context;
 	FrameBuffer frameBufferScene;
 	FrameBuffer frameBufferGame;
-	bool renderBoundingBox = false;
+	bool renderBoundingBoxes = true;
 	int currentItemSelected = 0;
 	bool useCheckerTexture = false;
 	bool showAxis = true;

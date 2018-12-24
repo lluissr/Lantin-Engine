@@ -139,7 +139,7 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
 	}
 
-	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	if (renderBoundingBoxes && App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
 	{
 		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
 	}
@@ -200,6 +200,15 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	default:
 		program = App->program->program;
 		break;
+	}
+
+	if (mesh.useWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	glUseProgram(program);

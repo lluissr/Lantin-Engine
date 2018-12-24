@@ -88,7 +88,7 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Render"))
 	{
-		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBox);
+		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBoxes);
 
 		ImGui::Checkbox("Checkers texture ", &App->renderer->useCheckerTexture);
 
