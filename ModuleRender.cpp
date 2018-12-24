@@ -35,6 +35,8 @@ bool ModuleRender::Init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	
+	SDL_GL_SetSwapInterval(1);
 
 	context = SDL_GL_CreateContext(App->window->window);
 

@@ -49,6 +49,8 @@ public:
 	bool frustumCulling = true;
 	bool sceneFocused = true;
 
+	bool enableVSync = true;
+
 private:
 	GLuint checkersTexture;
 };

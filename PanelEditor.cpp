@@ -18,20 +18,26 @@ PanelEditor::~PanelEditor()
 void PanelEditor::Draw()
 {
 	ImGui::Begin("Editor", &show);
-	if (ImGui::ArrowButton("Play", ImGuiDir_Right)) {
-		if (App->time->gameState == State::STOP) {
+	if (ImGui::ArrowButton("Play", ImGuiDir_Right)) 
+	{
+		if (App->time->gameState == State::STOP) 
+		{
 			App->time->Start();
 		}
-		else {
+		else 
+		{
 			App->time->Stop();
 		}
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("||", { 23,19 })) {
-		if (App->time->gameState == State::RUN) {
+	if (ImGui::Button("||", { 23,19 })) 
+	{
+		if (App->time->gameState == State::RUN) 
+		{
 			App->time->Pause(true);
 		}
-		else if (App->time->gameState == State::PAUSE) {
+		else if (App->time->gameState == State::PAUSE) 
+		{
 			App->time->Pause(false);
 		}
 	}
@@ -41,5 +47,17 @@ void PanelEditor::Draw()
 	ImGui::Checkbox("Grid", &App->renderer->showGrid);
 	ImGui::SameLine();
 	ImGui::Checkbox("Frustum culling", &App->renderer->frustumCulling);
+	ImGui::SameLine();
+	if (ImGui::Checkbox("VSync", &App->renderer->enableVSync)) 
+	{
+		if (App->renderer->enableVSync) 
+		{
+			SDL_GL_SetSwapInterval(1);
+		}
+		else 
+		{
+			SDL_GL_SetSwapInterval(0);
+		}
+	}
 	ImGui::End();
 }
