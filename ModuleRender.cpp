@@ -168,7 +168,8 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 
 		if (frameBuffer.frameBufferType == FrameBufferType::SCENE && gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)
 		{
-			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->LookAt(gameObject->componentCamera->frustum.pos, gameObject->componentCamera->frustum.front, gameObject->componentCamera->frustum.up)).Inverted(), dd::colors::Blue);
+			ddVec3 color = App->scene->gameCamera != nullptr && App->scene->gameCamera->uuid == gameObject->uuid ? dd::colors::LightGreen : dd::colors::Blue;
+			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->LookAt(gameObject->componentCamera->frustum.pos, gameObject->componentCamera->frustum.front, gameObject->componentCamera->frustum.up)).Inverted(), color);
 		}
 	}
 }

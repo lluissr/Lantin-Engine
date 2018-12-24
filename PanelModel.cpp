@@ -33,6 +33,14 @@ void PanelModel::Draw()
 	ImGui::Checkbox("Active", &App->scene->selectedGO->isActive);
 	ImGui::Checkbox("Static", &App->scene->selectedGO->isStatic);
 	ImGui::NewLine();
+	if (App->scene->selectedGO->componentCamera != nullptr)
+	{
+		if (ImGui::Button("Use as game camera"))
+		{
+			App->scene->UseAsGameCamera(App->scene->selectedGO);
+		}
+		ImGui::NewLine();
+	}
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{

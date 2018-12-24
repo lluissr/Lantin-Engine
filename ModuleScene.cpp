@@ -17,14 +17,11 @@ bool ModuleScene::Init()
 	root = new GameObject();
 	root->name = "Scene Root";
 
-	gameCamera = new GameObject();
-	gameCamera->name = "Game camera";
-	gameCamera->CreateComponent(ComponentType::CAMERA);
-	gameCamera->parent = root;
-	root->gameObjects.push_back(gameCamera);
+	gameCamera = CreateCamera();
 
 	return true;
 }
+
 
 update_status ModuleScene::PreUpdate()
 {
@@ -114,5 +111,24 @@ void ModuleScene::CalculateGlobalMatrix(GameObject* go)
 	{
 		CalculateGlobalMatrix(gameObject);
 	}
+}
 
+void ModuleScene::UseAsGameCamera(GameObject* go)
+{
+	if (App->camera->selectedCamera == nullptr || (App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->uuid == App->camera->selectedCamera->uuid))
+	{
+		App->camera->selectedCamera = go->componentCamera;
+	}
+	App->scene->gameCamera = go;
+}
+
+
+GameObject* ModuleScene::CreateCamera()
+{
+	GameObject* go = new GameObject();
+	go->name = "Game camera";
+	go->CreateComponent(ComponentType::CAMERA);
+	go->parent = root;
+	root->gameObjects.push_back(go);
+	return go;
 }

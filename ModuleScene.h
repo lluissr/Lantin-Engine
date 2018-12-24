@@ -18,11 +18,12 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
+	GameObject* CreateCamera();
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
 	void SelectGameObject(GameObject* go);
 	void CalculateGlobalMatrix(GameObject* go);
-
+	void UseAsGameCamera(GameObject* go);
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;

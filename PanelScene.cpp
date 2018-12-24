@@ -59,8 +59,12 @@ void PanelScene::Draw()
 			App->modelLoader->LoadTorus(str1, 0.5f, 0.67f, 30, 30, math::float4(colorTorus.x, colorTorus.y, colorTorus.z, colorTorus.w));
 		}
 	}
-	if (ImGui::CollapsingHeader("Scene hierarchy"))
+	if (ImGui::CollapsingHeader("Scene objects"))
 	{
+		if (ImGui::Button("Add camera"))
+		{
+			App->scene->CreateCamera();
+		}
 		if (ImGui::TreeNode(App->scene->root->name.c_str()))
 		{
 			for (GameObject* gameObject : App->scene->root->gameObjects)
@@ -85,11 +89,19 @@ void PanelScene::DrawTreeNode(GameObject* go)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
+	if (App->scene->gameCamera != nullptr && go->uuid == App->scene->gameCamera->uuid)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, { 0,1,0,1 });
+	}
 	if (!go->isActive)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1,0,0,1 });
 	}
 	bool opened = ImGui::TreeNodeEx(go->uuid.c_str(), flags, go->name.c_str());
+	if (App->scene->gameCamera != nullptr && go->uuid == App->scene->gameCamera->uuid)
+	{
+		ImGui::PopStyleColor();
+	}
 	if (ImGui::IsItemClicked(0))
 	{
 		App->scene->SelectGameObject(go);
@@ -100,6 +112,13 @@ void PanelScene::DrawTreeNode(GameObject* go)
 	}
 	if (ImGui::BeginPopup("TreePopup"))
 	{
+		if (go->componentCamera != nullptr)
+		{
+			if (ImGui::Button("Use as game camera"))
+			{
+				App->scene->UseAsGameCamera(go);
+			}
+		}
 		if (ImGui::Button("Duplicar"))
 		{
 			GameObject* newGameObject = new GameObject(*go);

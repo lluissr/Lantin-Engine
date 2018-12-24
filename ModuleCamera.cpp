@@ -79,7 +79,8 @@ update_status ModuleCamera::PreUpdate()
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
 	{
-		selectedCamera->firstMouse = true;
+		if (selectedCamera != nullptr)
+			selectedCamera->firstMouse = true;
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
@@ -183,6 +184,11 @@ void ModuleCamera::Move(Directions dir)
 
 void ModuleCamera::MouseUpdate()
 {
+	if (selectedCamera == nullptr)
+	{
+		return;
+	}
+
 	iPoint mousePosition = App->input->GetMousePosition();
 
 	if (selectedCamera->firstMouse) {
