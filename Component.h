@@ -1,5 +1,6 @@
 #ifndef __Component_h__
 #define __Component_h__
+#include <string>
 
 class GameObject;
 
@@ -11,12 +12,13 @@ enum class ComponentType
 class Component
 {
 public:
-	Component(GameObject* gameObject, ComponentType type) : myGameObject(gameObject), type(type) {}
+	Component(GameObject* gameObject, ComponentType type);
 	virtual ~Component() {}
 
+	std::string uuid = "";
 	bool active = true;
 	GameObject* myGameObject = nullptr;
-	ComponentType type = ComponentType::EMPTY;
+	ComponentType componentType = ComponentType::EMPTY;
 
 	virtual void Enable()
 	{

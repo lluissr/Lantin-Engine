@@ -25,13 +25,14 @@ bool ModuleCamera::Init()
 	sceneCamera->frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
 	sceneCamera->frustum.front = -float3::unitZ;
 	sceneCamera->frustum.farPlaneDistance = 1000.0f;
+	sceneCamera->yaw = 0;
 
 	return true;
 }
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (selectedCamera->myGameObject != nullptr && !selectedCamera->myGameObject->isActive)
+	if (selectedCamera != nullptr && selectedCamera->myGameObject != nullptr && !selectedCamera->myGameObject->isActive)
 	{
 		return UPDATE_CONTINUE;
 	}
@@ -84,12 +85,12 @@ update_status ModuleCamera::PreUpdate()
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
 	{
 		selectedCamera->fovX -= 1;
-		SetHorizontalFOV(selectedCamera->fovX);
+		//SetHorizontalFOV(selectedCamera->fovX);
 	}
 	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
 	{
 		selectedCamera->fovX += 1;
-		SetHorizontalFOV(selectedCamera->fovX);
+		//SetHorizontalFOV(selectedCamera->fovX);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
@@ -223,27 +224,5 @@ void ModuleCamera::SetPlaneDistances(float nearDist, float farDist)
 		selectedCamera->frustum.farPlaneDistance = farDist;
 	}
 }
-
-
-void ModuleCamera::WindowResized(unsigned width, unsigned height)
-{
-	screenWidth = width;
-	screenHeight = height;
-	SetHorizontalFOV(selectedCamera->fovX);
-	SetVerticalFOV(selectedCamera->fovY);
-}
-
-
-void ModuleCamera::SetHorizontalFOV(float fovX) {
-	selectedCamera->frustum.horizontalFov = math::DegToRad(fovX);
-	selectedCamera->frustum.verticalFov = 2.0f * atanf(tanf(selectedCamera->frustum.horizontalFov * 0.5f) * ((float)screenHeight / (float)screenWidth));
-}
-
-
-void ModuleCamera::SetVerticalFOV(float fovY) {
-	selectedCamera->frustum.verticalFov = math::DegToRad(fovY);
-	selectedCamera->frustum.horizontalFov = 2.0f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
-}
-
 
 

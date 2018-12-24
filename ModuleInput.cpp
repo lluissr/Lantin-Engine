@@ -5,6 +5,7 @@
 #include "ModuleEditor.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleScene.h"
 #include "SDL/include/SDL.h"
 
 ModuleInput::ModuleInput()
@@ -102,7 +103,11 @@ update_status ModuleInput::PreUpdate()
 
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				App->camera->WindowResized(event.window.data1, event.window.data2);
+				App->camera->sceneCamera->WindowResized(event.window.data1, event.window.data2);
+				if (App->scene->gameCamera != nullptr)
+				{
+					App->scene->gameCamera->componentCamera->WindowResized(event.window.data1, event.window.data2);
+				}
 				App->window->WindowResized(event.window.data1, event.window.data2);
 				break;
 			}

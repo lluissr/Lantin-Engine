@@ -1,6 +1,7 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "ModuleModelLoader.h"
+#include "ModuleCamera.h"
 
 ModuleScene::ModuleScene()
 {
@@ -33,6 +34,10 @@ update_status ModuleScene::PreUpdate()
 	{
 		if (selectedGO->uuid == gameCamera->uuid)
 		{
+			if (gameCamera->componentCamera->uuid == App->camera->selectedCamera->uuid)
+			{
+				App->camera->selectedCamera = nullptr;
+			}
 			gameCamera = nullptr;
 		}
 		delete selectedGO;
@@ -42,6 +47,10 @@ update_status ModuleScene::PreUpdate()
 	{
 		if (gameCamera != nullptr && gameCamera->toDelete)
 		{
+			if (gameCamera->componentCamera->uuid == App->camera->selectedCamera->uuid)
+			{
+				App->camera->selectedCamera = nullptr;
+			}
 			delete gameCamera;
 			gameCamera = nullptr;
 		}

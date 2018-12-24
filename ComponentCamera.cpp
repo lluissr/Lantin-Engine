@@ -35,3 +35,23 @@ math::float4x4 ComponentCamera::LookAt(math::float3& cameraPosition, math::float
 	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
 	return matrix;
 }
+
+void ComponentCamera::WindowResized(unsigned width, unsigned height)
+{
+	screenWidth = width;
+	screenHeight = height;
+	SetHorizontalFOV(fovX);
+	SetVerticalFOV(fovY);
+}
+
+
+void ComponentCamera::SetHorizontalFOV(float fovX) {
+	frustum.horizontalFov = math::DegToRad(fovX);
+	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5f) * ((float)screenHeight / (float)screenWidth));
+}
+
+
+void ComponentCamera::SetVerticalFOV(float fovY) {
+	frustum.verticalFov = math::DegToRad(fovY);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
+}

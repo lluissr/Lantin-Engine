@@ -39,7 +39,18 @@ void PanelViewport::Draw()
 		}
 	}
 	ImVec2 size = ImGui::GetWindowSize();
-	App->camera->WindowResized((unsigned)size.x, (unsigned)size.y);
+	switch (frameBuffer->frameBufferType)
+	{
+	case FrameBufferType::SCENE:
+		App->camera->sceneCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
+		break;
+	case FrameBufferType::GAME:
+		if (App->scene->gameCamera != nullptr)
+		{
+			App->scene->gameCamera->componentCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
+		}
+		break;
+	}
 	ImGui::Image((ImTextureID)frameBuffer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 	ImGui::End();
 }

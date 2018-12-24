@@ -5,13 +5,16 @@
 #include "MathGeoLib.h"
 #include "Globals.h"
 
-class ComponentCamera :	public Component
+class ComponentCamera : public Component
 {
 public:
 	ComponentCamera(GameObject* parent, ComponentType type);
 	~ComponentCamera();
 
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
+	void WindowResized(unsigned width, unsigned height);
+	void SetVerticalFOV(float fovY);
+	void SetHorizontalFOV(float fovX);
 
 	bool showFrustum = true;
 
@@ -23,7 +26,7 @@ public:
 	float rSpeed = 1.0f;
 
 	float pitch = 0;
-	float yaw = 0;
+	float yaw = 180;
 
 	bool firstMouse = true;
 	int lastX = 0;

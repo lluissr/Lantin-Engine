@@ -28,7 +28,6 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
-	void WindowResized(unsigned width, unsigned height);
 	void Focus();
 
 	ComponentCamera* sceneCamera = nullptr;
@@ -41,8 +40,6 @@ private:
 
 	void Move(Directions dir);
 	void MouseUpdate();
-	void SetVerticalFOV(float fovY);
-	void SetHorizontalFOV(float fovX);
 	void Orbit();
 	void SetPlaneDistances(float nearDist, float farDist);
 };
