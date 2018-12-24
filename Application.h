@@ -9,13 +9,13 @@ class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
-class ModuleRenderExercise;
 class ModuleEditor;
 class ModuleCamera;
 class ModuleProgram;
 class ModuleModelLoader;
 class ModuleScene;
 class ModuleDebugDraw;
+class ModuleTime;
 class Timer;
 
 class Application
@@ -40,20 +40,12 @@ public:
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleDebugDraw* debugDraw = nullptr;
+	ModuleTime* time = nullptr;
 
-	Timer* timer = nullptr;
-	float fps;
+	Timer* debugTimer = nullptr;
 
 private:
 	std::list<Module*> modules;
-
-	Uint32 frametimes[FRAME_VALUES];
-	Uint32 frametimelast;
-	Uint32 framecount;
-
-	void FPSInit();
-	void FPSCalculation();
-
 };
 
 extern Application* App;

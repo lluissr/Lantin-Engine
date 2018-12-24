@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
+#include "ModuleTime.h"
 #include "mmgr/mmgr.h"
 
 
@@ -45,6 +46,21 @@ void PanelConfiguration::Draw()
 		ImGui::Text("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
 		ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
 		ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
+	}
+	if (ImGui::CollapsingHeader("Time"))
+	{
+		ImGui::Text("Time since engine start: %f seconds", App->time->realTime);
+		ImGui::Text("Frames since engine start: %u", App->time->realFrameCount);
+
+		if (App->time->gameState == State::STOP) {
+			ImGui::TextDisabled("Time since game start: 0.0000000 seconds");
+			ImGui::TextDisabled("Frames since game start: 0");
+		}
+		else 
+		{
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Time since game start: %f seconds", App->time->gameTime);
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Frames since game start: %u", App->time->totalFrames);
+		}
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))

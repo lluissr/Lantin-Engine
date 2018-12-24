@@ -3,6 +3,7 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleTime.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
@@ -46,7 +47,7 @@ bool ModuleEditor::Init()
 update_status ModuleEditor::PreUpdate()
 {
 	panelConfiguration->fps_log.erase(panelConfiguration->fps_log.begin());
-	panelConfiguration->fps_log.push_back(App->fps);
+	panelConfiguration->fps_log.push_back(App->time->fps);
 	   
 	return UPDATE_CONTINUE;
 }

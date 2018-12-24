@@ -10,16 +10,18 @@
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleTime.h"
 #include "Brofiler.h"
 #include "Timer.h"
 #include <list>
 
 Application::Application()
 {
-	timer = new Timer();
+	//timer = new Timer();
 	
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
+	modules.push_back(time = new ModuleTime());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(renderer = new ModuleRender());
@@ -29,9 +31,6 @@ Application::Application()
     modules.push_back(camera = new ModuleCamera());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(modelLoader = new ModuleModelLoader());
-
-	FPSInit();
-	
 }
 
 Application::~Application()
@@ -41,8 +40,8 @@ Application::~Application()
         delete *it;
     }
 
-	if (timer != nullptr)
-		delete timer;
+	if (debugTimer != nullptr)
+		delete debugTimer;
 }
 
 bool Application::Init()
@@ -58,7 +57,6 @@ bool Application::Init()
 update_status Application::Update()
 {
 	BROFILER_FRAME("Main loop motherfucker")
-	FPSCalculation();
 
 	update_status ret = UPDATE_CONTINUE;
 
@@ -82,47 +80,4 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 
 	return ret;
-}
-
-void Application::FPSInit() 
-{
-	memset(frametimes, 0, sizeof(frametimes));
-	framecount = 0;
-	fps = 0;
-	frametimelast = SDL_GetTicks();
-}
-
-void Application::FPSCalculation() 
-{
-	Uint32 frametimesindex;
-	Uint32 getticks;
-	Uint32 count;
-	Uint32 i;
-
-	frametimesindex = framecount % FRAME_VALUES;
-
-	getticks = SDL_GetTicks();
-
-	frametimes[frametimesindex] = getticks - frametimelast;
-
-	frametimelast = getticks;
-	framecount++;
-	
-	if (framecount < FRAME_VALUES) 
-	{
-		count = framecount;
-	}
-	else 
-	{
-		count = FRAME_VALUES;
-	}
-
-	fps = 0;
-	for (i = 0; i < count; i++) 
-	{
-		fps += frametimes[i];
-	}
-
-	fps /= count;
-	fps = 1000.f / fps;
 }
