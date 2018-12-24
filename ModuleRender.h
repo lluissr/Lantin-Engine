@@ -31,10 +31,10 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	void DrawInFrameBuffer(FrameBuffer& frameBuffer);
-	void UpdateDrawDebug(FrameBuffer& frameBuffer);
+	void UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	update_status PostUpdate();
 	bool CleanUp();
-	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
+	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	void InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer);
 
@@ -46,6 +46,7 @@ public:
 	bool useCheckerTexture = false;
 	bool showAxis = true;
 	bool showGrid = true;
+	bool sceneFocused = true;
 
 private:
 	GLuint checkersTexture;

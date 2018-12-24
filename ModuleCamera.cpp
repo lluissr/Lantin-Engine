@@ -24,12 +24,18 @@ bool ModuleCamera::Init()
 	selectedCamera = sceneCamera;
 	sceneCamera->frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
 	sceneCamera->frustum.front = -float3::unitZ;
+	sceneCamera->frustum.farPlaneDistance = 1000.0f;
 
 	return true;
 }
 
 update_status ModuleCamera::PreUpdate()
 {
+	if (selectedCamera->myGameObject != nullptr && !selectedCamera->myGameObject->isActive)
+	{
+		return UPDATE_CONTINUE;
+	}
+
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
@@ -119,9 +125,9 @@ void ModuleCamera::Focus()
 	}
 
 	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
-	selectedCamera->frustum.pos = selectedCamera->frustum.pos = center;
-	selectedCamera->frustum.front = selectedCamera->frustum.front = math::float3(0.0f, 0.0f, -1.0f);
-	selectedCamera->frustum.up = selectedCamera->frustum.up = math::float3(0.0f, 1.0f, 0.0f);
+	selectedCamera->frustum.pos = center;
+	selectedCamera->frustum.front = math::float3(0.0f, 0.0f, -1.0f);
+	selectedCamera->frustum.up = math::float3(0.0f, 1.0f, 0.0f);
 	selectedCamera->frustum.verticalFov = math::pi / 4.0f;
 	selectedCamera->frustum.horizontalFov = 2.f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 	selectedCamera->fovY = 45.0f;
@@ -143,25 +149,9 @@ void ModuleCamera::Focus()
 
 bool ModuleCamera::CleanUp()
 {
+	selectedCamera = nullptr;
+	delete sceneCamera;
 	return true;
-}
-
-
-math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
-{
-	math::float4x4 matrix;
-
-	cameraFront.Normalize();
-	math::float3 side(cameraFront.Cross(cameraUp));
-	side.Normalize();
-	math::float3 up(side.Cross(cameraFront));
-
-	matrix[0][0] = side.x; matrix[0][1] = side.y; matrix[0][2] = side.z;
-	matrix[1][0] = up.x; matrix[1][1] = up.y; matrix[1][2] = up.z;
-	matrix[2][0] = -cameraFront.x; matrix[2][1] = -cameraFront.y; matrix[2][2] = -cameraFront.z;
-	matrix[0][3] = -side.Dot(cameraPosition); matrix[1][3] = -up.Dot(cameraPosition); matrix[2][3] = cameraFront.Dot(cameraPosition);
-	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
-	return matrix;
 }
 
 

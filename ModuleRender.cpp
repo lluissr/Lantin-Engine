@@ -77,7 +77,16 @@ update_status ModuleRender::Update()
 {
 
 	DrawInFrameBuffer(frameBufferScene);
-	DrawInFrameBuffer(frameBufferGame);
+	if (App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive)
+	{
+		DrawInFrameBuffer(frameBufferGame);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGame.fbo);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -90,11 +99,11 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	switch (frameBuffer.frameBufferType)
 	{
 	case  FrameBufferType::SCENE:
-		viewMatrix = App->camera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		viewMatrix = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
 		projectionMatrix = App->camera->sceneCamera->frustum.ProjectionMatrix();
 		break;
 	case  FrameBufferType::GAME:
-		viewMatrix = App->camera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up);
+		viewMatrix = App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up);
 		projectionMatrix = App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix();
 		break;
 	}
@@ -102,44 +111,45 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	UpdateDrawDebug(frameBuffer);
-
 	for (GameObject* gameObject : App->scene->root->gameObjects)
 	{
 		if (gameObject->isActive)
 		{
-			RenderGameObject(gameObject, viewMatrix, projectionMatrix);
+			RenderGameObject(gameObject, viewMatrix, projectionMatrix, frameBuffer);
 		}
 	}
+
+	UpdateDrawDebug(frameBuffer, viewMatrix, projectionMatrix);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
-void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer)
+void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
-	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight);
 
-	if (frameBuffer.frameBufferType != FrameBufferType::SCENE)
+	//if (frameBuffer.frameBufferType == FrameBufferType::SCENE)
+	//{
+	if (showGrid)
 	{
-		if (showGrid)
-		{
-			dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-		}
-		if (showAxis)
-		{
-			dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
-		}
-
-		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
-		{
-			dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
-		}
+		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
 	}
+	if (showAxis)
+	{
+		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+	}
+
+	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	{
+		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
+	}
+
+	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight, viewMatrix, projectionMatrix);
+	//}
 }
 
 
-void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
+void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer)
 {
 	if (gameObject->isActive)
 	{
@@ -148,7 +158,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 		{
 			for (GameObject* go : gameObject->gameObjects)
 			{
-				RenderGameObject(go, viewMatrix, projectionMatrix);
+				RenderGameObject(go, viewMatrix, projectionMatrix, frameBuffer);
 			}
 		}
 
@@ -156,9 +166,9 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
 		}
 
-		if (gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)
+		if (frameBuffer.frameBufferType == FrameBufferType::SCENE && gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)
 		{
-			dd::frustum((projectionMatrix * viewMatrix).Inverted(), dd::colors::Blue);
+			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->LookAt(gameObject->componentCamera->frustum.pos, gameObject->componentCamera->frustum.front, gameObject->componentCamera->frustum.up)).Inverted(), dd::colors::Blue);
 		}
 	}
 }

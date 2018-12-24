@@ -34,9 +34,9 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	ChooseModelToRender(0);
-	//LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
-	//LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
+	//ChooseModelToRender(0);
+	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	App->scene->CalculateGlobalMatrix(App->scene->root);
 
@@ -106,8 +106,6 @@ void ModuleModelLoader::ImportModel(const char* path)
 	App->scene->root->gameObjects.push_back(go);
 
 	aiReleaseImport(scene);
-
-	//App->camera->Focus();
 }
 
 bool ModuleModelLoader::CleanUp()

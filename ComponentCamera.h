@@ -11,6 +11,8 @@ public:
 	ComponentCamera(GameObject* parent, ComponentType type);
 	~ComponentCamera();
 
+	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
+
 	bool showFrustum = true;
 
 	math::Frustum frustum;

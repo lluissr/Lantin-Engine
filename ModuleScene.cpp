@@ -31,8 +31,20 @@ update_status ModuleScene::PreUpdate()
 
 	if (selectedGO != nullptr && selectedGO->toDelete)
 	{
+		if (selectedGO->uuid == gameCamera->uuid)
+		{
+			gameCamera = nullptr;
+		}
 		delete selectedGO;
 		selectedGO = nullptr;
+	}
+	else
+	{
+		if (gameCamera != nullptr && gameCamera->toDelete)
+		{
+			delete gameCamera;
+			gameCamera = nullptr;
+		}
 	}
 
 	return UPDATE_CONTINUE;

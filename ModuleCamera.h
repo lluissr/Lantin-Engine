@@ -28,7 +28,6 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
-	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void WindowResized(unsigned width, unsigned height);
 	void Focus();
 
