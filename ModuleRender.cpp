@@ -163,7 +163,9 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 		}
 
 		if (gameObject->componentMesh != nullptr && gameObject->componentMaterial != nullptr) {
-			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
+			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive ||(App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
+				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
+			}
 		}
 
 		if (frameBuffer.frameBufferType == FrameBufferType::SCENE && gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)

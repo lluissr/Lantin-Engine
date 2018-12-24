@@ -46,6 +46,7 @@ public:
 	bool useCheckerTexture = false;
 	bool showAxis = true;
 	bool showGrid = true;
+	bool frustumCulling = true;
 	bool sceneFocused = true;
 
 private:

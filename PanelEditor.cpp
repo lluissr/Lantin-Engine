@@ -22,5 +22,7 @@ void PanelEditor::Draw()
 	ImGui::Checkbox("Axis", &App->renderer->showAxis);
 	ImGui::SameLine();
 	ImGui::Checkbox("Grid", &App->renderer->showGrid);
+	ImGui::SameLine();
+	ImGui::Checkbox("Frustum culling", &App->renderer->frustumCulling);
 	ImGui::End();
 }
