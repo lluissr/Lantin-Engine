@@ -43,12 +43,26 @@ GLuint ModuleTextures::Load(const char* path)
 
 	ilBindImage(image);
 
+	bool success = false;
 
 	LOG("Try loading texture from path: %s", path);
 	char* fileBuffer;
 	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &fileBuffer);
-	bool success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
-	
+	std::string ext;
+	App->fileSystem->GetExtension(path, &ext);
+	if (ext == "png")
+	{
+		success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+	}
+	else if (ext == "jpg")
+	{
+		success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
+	}
+	else if (ext == "dds")
+	{
+		success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
+	}
+
 	if (!success)
 	{
 		LOG("Fail at loading texture");
@@ -61,17 +75,39 @@ GLuint ModuleTextures::Load(const char* path)
 		}
 		std::ostringstream stringStream;
 		stringStream << "Textures/" << cont[cont.size() - 1];
-		
+
 		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
 		lenghtBuffer = App->fileSystem->ReadFile(stringStream.str().c_str(), &fileBuffer);
-		success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+		if (ext == "png")
+		{
+			success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+		}
+		else if (ext == "jpg")
+		{
+			success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
+		}
+		else if (ext == "dds")
+		{
+			success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
+		}
 		if (!success)
 		{
 			LOG("Fail at loading texture in second try");
-			
+
 			LOG("3rd tryfor loading texture from path: %s", cont[cont.size() - 1]);
 			lenghtBuffer = App->fileSystem->ReadFile(cont[cont.size() - 1].c_str(), &fileBuffer);
-			success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+			if (ext == "png")
+			{
+				success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+			}
+			else if (ext == "jpg")
+			{
+				success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
+			}
+			else if (ext == "dds")
+			{
+				success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
+			}
 		}
 	}
 

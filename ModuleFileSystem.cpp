@@ -170,6 +170,17 @@ void ModuleFileSystem::SplitPath(const char* full_path, std::string* path, std::
 	}
 }
 
+void ModuleFileSystem::GetExtension(const char* full_path, std::string* extension)
+{
+	std::string str = NormalizePath(full_path);
+	unsigned pos_dot = str.find_last_of('.');
+
+	if (pos_dot < str.length())
+		*extension = str.substr(pos_dot + 1);
+	else
+		extension->clear();
+}
+
 std::string ModuleFileSystem::NormalizePath(const char * path)
 {
 	std::string str = path;

@@ -20,6 +20,7 @@ public:
 	unsigned WriteFile(const char* path, const void* buffer, unsigned size, bool overwrite = false);
 	const char* GetAvailablePath(const char* path);
 	void SplitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
+	void GetExtension(const char* full_path, std::string* extension);
 	std::string NormalizePath(const char * path);
 };
 
