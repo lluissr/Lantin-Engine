@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleTime.h"
+#include "ModuleFileSystem.h"
 #include "Brofiler.h"
 #include "Timer.h"
 #include <list>
@@ -20,6 +21,7 @@ Application::Application()
 	//timer = new Timer();
 	
 	// Order matters: they will Init/start/update in this order
+	modules.push_back(fileSystem = new ModuleFileSystem());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(time = new ModuleTime());
 	modules.push_back(textures = new ModuleTextures());

@@ -15,12 +15,12 @@ ModuleProgram::~ModuleProgram()
 bool ModuleProgram::Init()
 {
 
-	program = CreateProgram("Default.vs", "default.fs");
-	colorProgram = CreateProgram("defaultColor.vs", "defaultColor.fs");
-	flatProgram = CreateProgram("flatShading.vs", "flatShading.fs");
-	gouraudProgram = CreateProgram("gouraudShading.vs", "gouraudShading.fs");
-	phongProgram = CreateProgram("phongShading.vs","phongShading.fs");
-	blinnProgram = CreateProgram("blinnShading.vs","blinnShading.fs");
+	program = CreateProgram("Shaders/Default.vs", "Shaders/default.fs");
+	colorProgram = CreateProgram("Shaders/defaultColor.vs", "Shaders/defaultColor.fs");
+	flatProgram = CreateProgram("Shaders/flatShading.vs", "Shaders/flatShading.fs");
+	gouraudProgram = CreateProgram("Shaders/gouraudShading.vs", "Shaders/gouraudShading.fs");
+	phongProgram = CreateProgram("Shaders/phongShading.vs","Shaders/phongShading.fs");
+	blinnProgram = CreateProgram("Shaders/blinnShading.vs","Shaders/blinnShading.fs");
 
 	return true;
 }

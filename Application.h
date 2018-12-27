@@ -16,6 +16,7 @@ class ModuleModelLoader;
 class ModuleScene;
 class ModuleDebugDraw;
 class ModuleTime;
+class ModuleFileSystem;
 class Timer;
 
 class Application
@@ -41,6 +42,7 @@ public:
 	ModuleScene* scene = nullptr;
 	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleTime* time = nullptr;
+	ModuleFileSystem* fileSystem = nullptr;
 
 	Timer* debugTimer = nullptr;
 

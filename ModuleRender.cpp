@@ -56,7 +56,7 @@ bool ModuleRender::Init()
 	SDL_GetWindowSize(App->window->window, &width, &height);
 	glViewport(0, 0, width, height);
 
-	checkersTexture = App->textures->Load("./Textures/checker.jpg");
+	checkersTexture = App->textures->Load("Textures/checker.jpg");
 
 	frameBufferScene.frameBufferType = FrameBufferType::SCENE;
 	frameBufferGame.frameBufferType = FrameBufferType::GAME;

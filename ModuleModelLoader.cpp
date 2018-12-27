@@ -3,6 +3,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleFileSystem.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -51,13 +52,13 @@ void ModuleModelLoader::ChooseModelToRender(int num)
 	switch (num)
 	{
 	case 0:
-		path = "BakerHouse.fbx";
+		path = "Assets/BakerHouse.fbx";
 		break;
 	case 1:
-		path = "Trex.fbx";
+		path = "Assets/Trex.fbx";
 		break;
 	case 2:
-		path = "Radioactive_barrel.fbx";
+		path = "Assets/Radioactive_barrel.fbx";
 		break;
 	default:
 		modelRendered = -1;
@@ -74,7 +75,9 @@ void ModuleModelLoader::ImportModel(const char* path)
 	assert(path != NULL);
 
 	LOG("Try importing model from path: %s", path);
-	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
+	char* buffer;
+	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &buffer);
+	const aiScene* scene = aiImportFileFromMemory(buffer, lenghtBuffer, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate, "");
 
 	if (scene == NULL)
 	{

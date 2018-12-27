@@ -181,7 +181,18 @@ void ModuleInput::HandleDropFile(const char* path) const
 	if (ext == "fbx" || ext == "FBX")
 	{
 		App->modelLoader->CleanModel();
-		App->modelLoader->ImportModel(path);
+
+		std::string str(path);
+		std::stringstream ss(str);
+		std::string token;
+		std::vector<std::string> cont;
+		while (std::getline(ss, token, '\\')) {
+			cont.push_back(token);
+		}
+		std::ostringstream stringStream;
+		stringStream << "Assets/" << cont[cont.size() - 1];
+
+		App->modelLoader->ImportModel(stringStream.str().c_str());
 	}
 	else if (ext == "png" || ext == "jpg" || ext == "dds")
 	{

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
+#include "ModuleFileSystem.h"
 #include "GL/glew.h"
 #include "DevIL/include/IL/il.h"
 #include "DevIL/include/IL/ilu.h"
@@ -42,9 +43,12 @@ GLuint ModuleTextures::Load(const char* path)
 
 	ilBindImage(image);
 
-	LOG("Try loading texture from path: %s", path);
-	bool success = ilLoadImage(path);
 
+	LOG("Try loading texture from path: %s", path);
+	char* fileBuffer;
+	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &fileBuffer);
+	bool success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
+	
 	if (!success)
 	{
 		LOG("Fail at loading texture");
@@ -56,14 +60,18 @@ GLuint ModuleTextures::Load(const char* path)
 			cont.push_back(token);
 		}
 		std::ostringstream stringStream;
-		stringStream << "./Textures/" << cont[cont.size() - 1];
+		stringStream << "Textures/" << cont[cont.size() - 1];
+		
 		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
-		success = ilLoadImage(stringStream.str().c_str());
+		lenghtBuffer = App->fileSystem->ReadFile(stringStream.str().c_str(), &fileBuffer);
+		success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
 		if (!success)
 		{
 			LOG("Fail at loading texture in second try");
+			
 			LOG("3rd tryfor loading texture from path: %s", cont[cont.size() - 1]);
-			success = ilLoadImage(cont[cont.size() - 1].c_str());
+			lenghtBuffer = App->fileSystem->ReadFile(cont[cont.size() - 1].c_str(), &fileBuffer);
+			success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
 		}
 	}
 

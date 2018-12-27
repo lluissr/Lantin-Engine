@@ -202,6 +202,9 @@
     <ClCompile Include="ModuleTime.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleFileSystem.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -483,6 +486,9 @@
     <ClInclude Include="ModuleTime.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleFileSystem.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -508,40 +514,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\default.fs">
+    <None Include="Game\Shaders\blinnShading.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\Default.vs">
+    <None Include="Game\Shaders\blinnShading.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\defaultColor.fs">
+    <None Include="Game\Shaders\default.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\defaultColor.vs">
+    <None Include="Game\Shaders\Default.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\flatShading.fs">
+    <None Include="Game\Shaders\defaultColor.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\flatShading.vs">
+    <None Include="Game\Shaders\defaultColor.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\gouraudShading.fs">
+    <None Include="Game\Shaders\flatShading.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\gouraudShading.vs">
+    <None Include="Game\Shaders\flatShading.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\phongShading.fs">
+    <None Include="Game\Shaders\gouraudShading.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\phongShading.vs">
+    <None Include="Game\Shaders\gouraudShading.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\blinnShading.fs">
+    <None Include="Game\Shaders\phongShading.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Game\blinnShading.vs">
+    <None Include="Game\Shaders\phongShading.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

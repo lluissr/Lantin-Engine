@@ -47,12 +47,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>.\physicsFS\include;.\Brofiler\include;.\Assimp\include;.\DevIL\include\;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;.\IMGUI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\PhysFS\include;.\Brofiler\include;.\Assimp\include;.\DevIL\include\;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;.\IMGUI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>.\physicsFS\lib;.\Brofiler\lib;.\Assimp\lib\x86;.\DevIL\lib\x86\Release;./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\PhysFS\libx86;.\Brofiler\lib;.\Assimp\lib\x86;.\DevIL\lib\x86\Release;./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>physfs.lib;ProfilerCore32.lib;assimp.lib;DevIL.lib;ILu.lib;Ilut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -64,14 +64,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>.\physicsFS\include;.\Brofiler\include;.\Assimp\include;.\DevIL\include\;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;.\IMGUI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\PhysFS\include;.\Brofiler\include;.\Assimp\include;.\DevIL\include\;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;.\IMGUI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>.\physicsFS\lib;.\Brofiler\lib;.\Assimp\lib\x86;.\DevIL\lib\x86\Release;./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\PhysFS\libx86;.\Brofiler\lib;.\Assimp\lib\x86;.\DevIL\lib\x86\Release;./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>physfs.lib;ProfilerCore32.lib;assimp.lib;DevIL.lib;ILu.lib;Ilut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -148,6 +148,7 @@
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleDebugDraw.h" />
     <ClInclude Include="ModuleEditor.h" />
+    <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleModelLoader.h" />
     <ClInclude Include="ModuleProgram.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
+    <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleModelLoader.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
@@ -240,18 +242,18 @@
     <ClCompile Include="Utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\blinnShading.fs" />
-    <None Include="Game\blinnShading.vs" />
-    <None Include="Game\default.fs" />
-    <None Include="Game\Default.vs" />
-    <None Include="Game\defaultColor.fs" />
-    <None Include="Game\defaultColor.vs" />
-    <None Include="Game\flatShading.fs" />
-    <None Include="Game\flatShading.vs" />
-    <None Include="Game\gouraudShading.fs" />
-    <None Include="Game\gouraudShading.vs" />
-    <None Include="Game\phongShading.fs" />
-    <None Include="Game\phongShading.vs" />
+    <None Include="Game\Shaders\blinnShading.fs" />
+    <None Include="Game\Shaders\blinnShading.vs" />
+    <None Include="Game\Shaders\default.fs" />
+    <None Include="Game\Shaders\Default.vs" />
+    <None Include="Game\Shaders\defaultColor.fs" />
+    <None Include="Game\Shaders\defaultColor.vs" />
+    <None Include="Game\Shaders\flatShading.fs" />
+    <None Include="Game\Shaders\flatShading.vs" />
+    <None Include="Game\Shaders\gouraudShading.fs" />
+    <None Include="Game\Shaders\gouraudShading.vs" />
+    <None Include="Game\Shaders\phongShading.fs" />
+    <None Include="Game\Shaders\phongShading.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
