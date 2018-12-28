@@ -19,7 +19,7 @@ void Watcher()
 	{
 		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
 		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Textures/");
-		if (files.size() != currentFiles.size())
+		if (files.size() > currentFiles.size())
 		{
 			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
 			{
@@ -41,6 +41,7 @@ void Watcher()
 
 			App->fileSystem->UpdateFiles();
 		}
+
 		Sleep(1000);
 	}
 }

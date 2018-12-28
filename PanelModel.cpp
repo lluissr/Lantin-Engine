@@ -3,6 +3,8 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "ModuleModelLoader.h"
+#include "ModuleFileSystem.h"
+#include "ModuleTextures.h"
 
 PanelModel::PanelModel()
 {
@@ -151,6 +153,7 @@ void PanelModel::Draw()
 		{
 			if (App->scene->selectedGO->componentMaterial->material->program == 0)
 			{
+				DrawComboBoxMaterials("MainTexture");
 				if (App->scene->selectedGO->componentMaterial->material->texture0 != 0)
 				{
 					App->scene->selectedGO->componentMaterial->material;
@@ -250,4 +253,35 @@ void PanelModel::Draw()
 		}
 	}
 	ImGui::End();
+}
+
+void PanelModel::DrawComboBoxMaterials(const char * id)
+{
+	static const char* labelCurrentFileTextureSelected = "Select a Texture";
+	
+	if (App->fileSystem->texturesList.size() > 0)
+	{
+		ImGui::PushID(id);
+		if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected))
+		{
+			for (std::vector<std::string>::iterator iterator = App->fileSystem->texturesList.begin(); iterator != App->fileSystem->texturesList.end(); ++iterator)
+			{
+				bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
+				if (ImGui::Selectable((*iterator).c_str(), isSelected))
+				{
+					labelCurrentFileTextureSelected = (*iterator).c_str();
+					App->textures->Unload(App->scene->selectedGO->componentMaterial->material->texture0);
+					App->scene->selectedGO->componentMaterial->material->texture0 = App->textures->Load(labelCurrentFileTextureSelected);
+					App->scene->selectedGO->componentMaterial->material->width = App->textures->lastImageInfo.Width;
+					App->scene->selectedGO->componentMaterial->material->height = App->textures->lastImageInfo.Height;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::PopID();
+	}
 }

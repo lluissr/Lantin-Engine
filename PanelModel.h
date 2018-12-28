@@ -2,6 +2,7 @@
 #define __PanelModel_h__
 
 #include "Panel.h"
+#include <string>
 
 class PanelModel : public Panel
 {
@@ -10,6 +11,7 @@ public:
 	~PanelModel();
 
 	void Draw() override;
+	void DrawComboBoxMaterials(const char * id);
 };
 
 #endif

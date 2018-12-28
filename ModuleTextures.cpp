@@ -61,7 +61,7 @@ GLuint ModuleTextures::Load(const char* path)
 			cont.push_back(token);
 		}
 		std::ostringstream stringStream;
-		stringStream << "Textures/" << cont[cont.size() - 1];
+		stringStream << "Library/Textures/" << cont[cont.size() - 1];
 
 		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
 		lenghtBuffer = App->fileSystem->ReadFile(stringStream.str().c_str(), &fileBuffer);
