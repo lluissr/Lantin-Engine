@@ -205,6 +205,9 @@
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="PanelLibrary.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -488,6 +491,12 @@
     </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelLibrary.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="LibraryThread.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

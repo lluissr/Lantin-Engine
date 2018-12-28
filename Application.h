@@ -18,6 +18,7 @@ class ModuleDebugDraw;
 class ModuleTime;
 class ModuleFileSystem;
 class Timer;
+class LibraryThread;
 
 class Application
 {
@@ -45,6 +46,7 @@ public:
 	ModuleFileSystem* fileSystem = nullptr;
 
 	Timer* debugTimer = nullptr;
+	LibraryThread* libraryThread = nullptr;
 
 private:
 	std::list<Module*> modules;

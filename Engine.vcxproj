@@ -85,6 +85,7 @@
     <ClInclude Include="debug_draw.hpp" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="LibraryThread.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB2D.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="PanelConsole.h" />
     <ClInclude Include="PanelEditor.h" />
     <ClInclude Include="PanelHardware.h" />
+    <ClInclude Include="PanelLibrary.h" />
     <ClInclude Include="PanelModel.h" />
     <ClInclude Include="PanelScene.h" />
     <ClInclude Include="PanelViewport.h" />
@@ -236,6 +238,7 @@
     <ClCompile Include="PanelConsole.cpp" />
     <ClCompile Include="PanelEditor.cpp" />
     <ClCompile Include="PanelHardware.cpp" />
+    <ClCompile Include="PanelLibrary.cpp" />
     <ClCompile Include="PanelModel.cpp" />
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="PanelViewport.cpp" />

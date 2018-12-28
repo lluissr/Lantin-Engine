@@ -12,6 +12,7 @@
 #include "PanelScene.h"
 #include "PanelViewport.h"
 #include "PanelEditor.h"
+#include "PanelLibrary.h"
 
 
 class ModuleEditor : public Module
@@ -37,6 +38,7 @@ public:
 	PanelViewport* panelViewport = nullptr;
 	PanelViewport* panelViewportGame = nullptr;
 	PanelEditor* panelEditor = nullptr;
+	PanelLibrary* panelLibrary = nullptr;
 
 private:
 	const char* glsl_version = "#version 130";

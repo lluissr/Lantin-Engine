@@ -95,30 +95,36 @@ unsigned ModuleFileSystem::ReadFile(const char * pathAndFileName, char** buffer)
 	return result;
 }
 
-unsigned ModuleFileSystem::WriteFile(const char * path, const void * buffer, unsigned size, bool overwrite)
+unsigned ModuleFileSystem::WriteFile(const char * pathAndFileName, const void * buffer, unsigned size, bool append)
 {
-	if (!overwrite)
-	{
-		path = GetAvailablePath(path);
-		LOG("File with same name already exists - Saved as: %s", path);
-	}
+	unsigned result = 0;
 
-	PHYSFS_file* file = PHYSFS_openWrite(path);
-	if (file != nullptr)
-	{
-		unsigned written = PHYSFS_write(file, (const void*)buffer, 1, size);
-		PHYSFS_close(file);
+	bool overwrite = PHYSFS_exists(pathAndFileName) != 0;
+	PHYSFS_file* fsFile = (append) ? PHYSFS_openAppend(pathAndFileName) : PHYSFS_openWrite(pathAndFileName);
 
-		if (written != size)
+	if (fsFile != nullptr)
+	{
+		unsigned written = (unsigned)PHYSFS_write(fsFile, (const void*)buffer, 1, size);
+		if (written == size)
 		{
-			LOG("Error on writting file: Written data size does not match buffer size - PHYSFS: %s", PHYSFS_getLastError());
-			return 0;
+			result = written;
+		}
+		else
+		{
+			LOG("Error while writing to file %s: %s", pathAndFileName, PHYSFS_getLastError());
 		}
 
-		return written;
+		if (PHYSFS_close(fsFile) == 0)
+		{
+			LOG("Error closing file %s: %s", pathAndFileName, PHYSFS_getLastError());
+		}
 	}
-	LOG("Error opening file for writting - PHYSFS: %d", PHYSFS_getLastError());
-	return 0;
+	else
+	{
+		LOG("Error opening file %s: %s", pathAndFileName, PHYSFS_getLastError());
+	}
+
+	return result;
 }
 
 const char* ModuleFileSystem::GetAvailablePath(const char* path)
@@ -194,3 +200,64 @@ std::string ModuleFileSystem::NormalizePath(const char * path)
 	return str.c_str();
 }
 
+std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory)
+{
+	std::map<std::string, std::string> result;
+	char **enumeratedFiles = PHYSFS_enumerateFiles(directory);
+	char **iterator;
+
+	std::string dir(directory);
+	std::vector<std::string> directoryList;
+
+	for (iterator = enumeratedFiles; *iterator != nullptr; iterator++)
+	{
+		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
+		{
+			directoryList.push_back(*iterator);
+		}
+		else
+		{
+			result[(*iterator)] = dir;
+		}
+	}
+
+	PHYSFS_freeList(enumeratedFiles);
+
+	for (std::vector<std::string>::iterator iterator = directoryList.begin(); iterator != directoryList.end(); ++iterator)
+	{
+		(*iterator).insert(0, directory);
+		(*iterator).append("/");
+		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str());
+		result.insert(partialResult.begin(), partialResult.end());
+	}
+
+	return result;
+}
+
+
+void ModuleFileSystem::GetFilesFromDirectory(const char * directory, std::vector<std::string>& fileList) const
+{
+	char **enumeratedFiles = PHYSFS_enumerateFiles(directory);
+	char **iterator;
+
+	std::string dir(directory);
+
+	for (iterator = enumeratedFiles; *iterator != nullptr; iterator++)
+	{
+		if (!PHYSFS_isDirectory((dir + *iterator).c_str()))
+		{
+			fileList.push_back(*iterator);
+		}
+	}
+
+	PHYSFS_freeList(enumeratedFiles);
+}
+
+
+void ModuleFileSystem::UpdateFiles()
+{
+	meshList.clear();
+	texturesList.clear();
+	GetFilesFromDirectory("/Library/Meshes/", meshList);
+	GetFilesFromDirectory("/Library/Textures/", texturesList);
+}

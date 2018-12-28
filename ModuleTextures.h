@@ -24,6 +24,8 @@ public:
 	GLuint Load(const char* path);
 	void Unload(unsigned id) const;
 
+	bool Import(const char* path);
+
 	ILinfo lastImageInfo;
 };
 

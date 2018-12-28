@@ -14,6 +14,7 @@
 #include "ModuleFileSystem.h"
 #include "Brofiler.h"
 #include "Timer.h"
+#include "LibraryThread.h"
 #include <list>
 
 Application::Application()
@@ -24,15 +25,17 @@ Application::Application()
 	modules.push_back(fileSystem = new ModuleFileSystem());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(time = new ModuleTime());
+	modules.push_back(input = new ModuleInput());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
-	modules.push_back(input = new ModuleInput());
     modules.push_back(camera = new ModuleCamera());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(modelLoader = new ModuleModelLoader());
+	
+	libraryThread = new LibraryThread();
 }
 
 Application::~Application()
@@ -44,6 +47,7 @@ Application::~Application()
 
 	if (debugTimer != nullptr)
 		delete debugTimer;
+	
 }
 
 bool Application::Init()
@@ -52,6 +56,8 @@ bool Application::Init()
 
 	for(std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
+
+	libraryThread->Start();
 
 	return ret;
 }

@@ -48,21 +48,8 @@ GLuint ModuleTextures::Load(const char* path)
 	LOG("Try loading texture from path: %s", path);
 	char* fileBuffer;
 	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &fileBuffer);
-	std::string ext;
-	App->fileSystem->GetExtension(path, &ext);
-	if (ext == "png")
-	{
-		success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
-	}
-	else if (ext == "jpg")
-	{
-		success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
-	}
-	else if (ext == "dds")
-	{
-		success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
-	}
-
+	success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
+	
 	if (!success)
 	{
 		LOG("Fail at loading texture");
@@ -78,36 +65,14 @@ GLuint ModuleTextures::Load(const char* path)
 
 		LOG("2nd try for loading texture from path: %s", stringStream.str().c_str());
 		lenghtBuffer = App->fileSystem->ReadFile(stringStream.str().c_str(), &fileBuffer);
-		if (ext == "png")
-		{
-			success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
-		}
-		else if (ext == "jpg")
-		{
-			success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
-		}
-		else if (ext == "dds")
-		{
-			success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
-		}
+		success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
 		if (!success)
 		{
 			LOG("Fail at loading texture in second try");
 
 			LOG("3rd tryfor loading texture from path: %s", cont[cont.size() - 1]);
 			lenghtBuffer = App->fileSystem->ReadFile(cont[cont.size() - 1].c_str(), &fileBuffer);
-			if (ext == "png")
-			{
-				success = ilLoadL(IL_PNG, fileBuffer, lenghtBuffer);
-			}
-			else if (ext == "jpg")
-			{
-				success = ilLoadL(IL_JPG, fileBuffer, lenghtBuffer);
-			}
-			else if (ext == "dds")
-			{
-				success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
-			}
+			success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
 		}
 	}
 
@@ -159,5 +124,57 @@ void ModuleTextures::Unload(unsigned id) const
 	{
 		glDeleteTextures(1, &id);
 	}
+}
+
+
+bool ModuleTextures::Import(const char* path)
+{
+	bool result = false;
+
+	char* fileBuffer;
+	unsigned lenghBuffer = App->fileSystem->ReadFile(path, &fileBuffer);
+
+	if (fileBuffer)
+	{
+		ILuint ImageName;
+		ilGenImages(1, &ImageName);
+		ilBindImage(ImageName);
+
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)fileBuffer, lenghBuffer))
+		{
+			ilEnable(IL_FILE_OVERWRITE);
+
+			ILuint   size;
+			ILubyte *data;
+			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+			size = ilSaveL(IL_DDS, NULL, 0);
+			if (size > 0)
+			{
+				data = new ILubyte[size];
+				if (ilSaveL(IL_DDS, data, size) > 0)
+				{
+					std::string fileName;
+					std::string fileExtension;
+					App->fileSystem->SplitPath(path, nullptr, &fileName, &fileExtension);
+
+					fileName.insert(0, "/Library/Textures/");
+					fileName.append(".dds");
+
+					result = App->fileSystem->WriteFile(fileName.c_str(), data, size, false);
+				}
+
+				delete[] data;
+				data = nullptr;
+			}
+			ilDeleteImages(1, &ImageName);
+		}
+	}
+
+	if (result == false)
+	{
+		LOG("Cannot load texture from buffer of size %u", lenghBuffer);
+	}
+
+	return result;
 }
 
