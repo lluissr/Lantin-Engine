@@ -139,7 +139,7 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
 	}
 
-	if (renderBoundingBoxes && App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	if (renderBoundingBoxes && App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr && App->scene->selectedGO->componentMesh->mesh != nullptr)
 	{
 		dd::aabb(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.minPoint, App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.maxPoint, dd::colors::Yellow);
 	}
@@ -161,7 +161,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 			}
 		}
 
-		if (gameObject->componentMesh != nullptr && gameObject->componentMaterial != nullptr) {
+		if (gameObject->componentMesh != nullptr && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
 			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive ||(App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
 				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
 			}

@@ -11,6 +11,7 @@
 #include "SDL/include/SDL.h"
 #include "ComponentMesh.h"
 #include "GL/glew.h"
+
 #pragma warning(push)
 #pragma warning(disable : 4996)  
 #pragma warning(disable : 4244)  
@@ -490,4 +491,257 @@ void ModuleModelLoader::GenerateVAO(Mesh& mesh)
 	glDisableVertexAttribArray(2);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+bool ModuleModelLoader::Import(const char* path)
+{
+	bool result = false;
+
+	char* buffer;
+	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &buffer);
+	const aiScene* scene = aiImportFileFromMemory(buffer, lenghtBuffer, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate, "");
+
+	if (scene == NULL)
+	{
+		const char* a = aiGetErrorString();
+		LOG("Importing error: %s", a);
+		return false;
+	}
+	else
+	{
+		LOG("Fbx imported for export: %s", path);
+	}
+
+	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
+	{
+		ImportMesh(scene->mMeshes[i]);
+	}
+
+	return result;
+}
+
+bool ModuleModelLoader::ImportMesh(const aiMesh* mesh)
+{
+	bool ret = false;
+	Mesh* newMesh = new Mesh();
+	const char* name = (mesh->mName.length > 0) ? mesh->mName.C_Str() : "Unnamed";
+
+	if (mesh->mNumVertices > 0)
+	{
+		newMesh->numVertices = mesh->mNumVertices;
+
+		newMesh->vertices = new float[newMesh->numVertices * 3];
+		memcpy(newMesh->vertices, mesh->mVertices, sizeof(float)*newMesh->numVertices * 3);
+	}
+
+	if (mesh->HasNormals())
+	{
+		newMesh->normalsOffset = mesh->mNumVertices;
+		newMesh->normals = new float[newMesh->normalsOffset * 3];
+		memcpy(newMesh->normals, mesh->mNormals, sizeof(float)*newMesh->normalsOffset * 3);
+	}
+
+	if (mesh->HasFaces())
+	{
+		ret = true;
+		int t = 0;
+		if (mesh->HasTextureCoords(0))
+		{
+			newMesh->texturesOffset = mesh->mNumVertices;
+			newMesh->texCoords = new float[newMesh->texturesOffset * 2];
+			for (unsigned q = 0; q < newMesh->numVertices * 2; q = q + 2)
+			{
+				newMesh->texCoords[q] = mesh->mTextureCoords[0][t].x;
+				newMesh->texCoords[q + 1] = mesh->mTextureCoords[0][t].y;
+				t++;
+			}
+		}
+
+		newMesh->numIndices = mesh->mNumFaces * 3;
+		newMesh->indices = new unsigned[newMesh->numIndices];
+
+		for (int j = 0; j < mesh->mNumFaces; ++j)
+		{
+			if (mesh->mFaces[j].mNumIndices != 3)
+			{
+				LOG("WARNING, geometry face with != 3 indices!");
+				LOG("WARNING, face normals couldn't be loaded");
+				delete newMesh;
+				ret = false;
+				break;
+			}
+			else
+			{
+				memcpy(&newMesh->indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(unsigned));
+			}
+		}
+		
+	}
+	else
+	{
+		LOG("Current mesh has no faces, so will not be loaded");
+		ret = false;
+	}
+
+	if (ret) {
+		std::string name = "Library/Meshes/";
+		name += mesh->mName.C_Str();
+		name += ".pisifai";
+		SaveMesh(newMesh, name);
+	}
+
+	delete newMesh;
+
+	return ret;
+}
+
+
+bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
+{
+	bool ret = true;
+
+	unsigned ranges[4] = { mesh->numVertices, mesh->numIndices, mesh->normalsOffset, mesh->texturesOffset };
+
+	unsigned size = sizeof(ranges) + sizeof(float)*mesh->numVertices * 3 + sizeof(unsigned)*mesh->numIndices + sizeof(float)*mesh->normalsOffset * 3 + sizeof(float)*mesh->texturesOffset * 2;
+	char* buffer = new char[size];
+	char* cursor = buffer;
+
+	unsigned bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float)*mesh->numVertices * 3;
+	memcpy(cursor, mesh->vertices, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(unsigned)*mesh->numIndices;
+	memcpy(cursor, mesh->indices, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float)*mesh->normalsOffset * 3;
+	memcpy(cursor, mesh->normals, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float)*mesh->texturesOffset * 2;
+	memcpy(cursor, mesh->texCoords, bytes);
+	cursor += bytes;
+
+	if (App->fileSystem->WriteFile(path.c_str(), buffer, size, false) == 0)
+	{
+		ret = false;
+	}
+	else
+	{
+		LOG("Mesh saved as %s", path.c_str());
+	}
+	delete[] buffer;
+
+	return ret;
+}
+
+
+Mesh* ModuleModelLoader::Load(const char* path)
+{
+	Mesh* mesh = new Mesh;
+
+	std::string pathName = "Library/Meshes/";
+	pathName += path;
+	char* buffer = nullptr;
+	unsigned size = App->fileSystem->ReadFile(pathName.c_str(), &buffer);
+	char* cursor = buffer;
+
+	unsigned ranges[4];
+	unsigned bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+	cursor += bytes;
+
+	mesh->numVertices = ranges[0];
+	mesh->numIndices = ranges[1];
+	mesh->normalsOffset = ranges[2];
+	mesh->texturesOffset = ranges[3];
+
+	if (mesh->numVertices > 0)
+	{
+		bytes = sizeof(float)*mesh->numVertices * 3;
+		mesh->vertices = new float[mesh->numVertices * 3];
+		memcpy(mesh->vertices, cursor, bytes);
+		cursor += bytes;
+	}
+
+	if (mesh->numIndices > 0)
+	{
+		bytes = sizeof(unsigned)*mesh->numIndices;
+		mesh->indices = new unsigned[mesh->numIndices];
+		memcpy(mesh->indices, cursor, bytes);
+		cursor += bytes;
+	}
+
+	if (mesh->normalsOffset > 0)
+	{
+		bytes = sizeof(float)*mesh->normalsOffset * 3;
+		mesh->normals = new float[mesh->normalsOffset * 3];
+		memcpy(mesh->normals, cursor, bytes);
+		cursor += bytes;
+	}
+
+	if (mesh->texturesOffset > 0)
+	{
+		bytes = sizeof(float)*mesh->texturesOffset * 2;
+		mesh->texCoords = new float[mesh->texturesOffset * 2];
+		memcpy(mesh->texCoords, cursor, bytes);
+		cursor += bytes;
+	}
+
+	delete[] buffer;
+	
+	GenerateVBO(*mesh);
+	GenerateVAO(*mesh);
+	mesh->localBoundingBox.SetNegativeInfinity();
+	mesh->localBoundingBox.Enclose((float3*)mesh->vertices, mesh->numVertices);
+
+	return mesh;
+}
+
+void ModuleModelLoader::GenerateVBO(Mesh& mesh) 
+{
+	glGenBuffers(1, &mesh.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+
+	unsigned offset = sizeof(math::float3);
+
+	if (mesh.normals != nullptr)
+	{
+		mesh.normalsOffset = offset;
+		offset += sizeof(math::float3);
+	}
+
+	if (mesh.texCoords != nullptr)
+	{
+		mesh.texturesOffset = offset;
+		offset += sizeof(math::float2);
+	}
+
+	mesh.vertexSize = offset;
+
+	glBufferData(GL_ARRAY_BUFFER, mesh.vertexSize*mesh.numVertices, nullptr, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh.numVertices, mesh.vertices);
+
+	if (mesh.normals != nullptr)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, mesh.normalsOffset*mesh.numVertices, sizeof(float) * 3 * mesh.numVertices, mesh.normals);
+	}
+
+	if (mesh.texCoords != nullptr)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, mesh.texturesOffset * mesh.numVertices, sizeof(float2)*mesh.numVertices, mesh.texCoords);
+	}
+
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &mesh.ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.numIndices * sizeof(unsigned), mesh.indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

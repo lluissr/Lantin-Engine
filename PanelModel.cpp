@@ -43,6 +43,12 @@ void PanelModel::Draw()
 		}
 		ImGui::NewLine();
 	}
+
+	if (ImGui::Button("Add mesh"))
+	{
+		App->scene->selectedGO->CreateComponent(ComponentType::MESH);
+	}
+
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
@@ -141,9 +147,13 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			ImGui::Checkbox("Wireframe", &App->scene->selectedGO->componentMesh->mesh->useWireframe);
-			ImGui::Text("Triangles count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices / 3);
-			ImGui::Text("Vertices count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices);
+			DrawComboBoxMeshes("Meshes");
+			if (App->scene->selectedGO->componentMesh->mesh != nullptr)
+			{
+				ImGui::Checkbox("Wireframe", &App->scene->selectedGO->componentMesh->mesh->useWireframe);
+				ImGui::Text("Triangles count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices / 3);
+				ImGui::Text("Vertices count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices);
+			}
 		}
 	}
 
@@ -274,6 +284,41 @@ void PanelModel::DrawComboBoxMaterials(const char * id)
 					App->scene->selectedGO->componentMaterial->material->texture0 = App->textures->Load(labelCurrentFileTextureSelected);
 					App->scene->selectedGO->componentMaterial->material->width = App->textures->lastImageInfo.Width;
 					App->scene->selectedGO->componentMaterial->material->height = App->textures->lastImageInfo.Height;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::PopID();
+	}
+}
+
+void PanelModel::DrawComboBoxMeshes(const char * id)
+{
+	static const char* labelCurrentFileTextureSelected = "Select a Mesh";
+
+	if (App->fileSystem->meshList.size() > 0)
+	{
+		ImGui::PushID(id);
+		if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected))
+		{
+			for (std::vector<std::string>::iterator iterator = App->fileSystem->meshList.begin(); iterator != App->fileSystem->meshList.end(); ++iterator)
+			{
+				bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
+				if (ImGui::Selectable((*iterator).c_str(), isSelected))
+				{
+					labelCurrentFileTextureSelected = (*iterator).c_str();
+					App->scene->selectedGO->componentMesh->mesh = App->modelLoader->Load(labelCurrentFileTextureSelected);
+					Material* material = new Material();
+					material->program = 0;
+				
+					ComponentMaterial* cmaterial = (ComponentMaterial*)App->scene->selectedGO->CreateComponent(ComponentType::MATERIAL);
+					cmaterial->material = material;
+					App->scene->CalculateGlobalMatrix(App->scene->root);
+					App->scene->selectedGO->UpdateBoundingBox();
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();

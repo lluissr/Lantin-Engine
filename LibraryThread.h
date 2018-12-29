@@ -18,7 +18,7 @@ void Watcher()
 	while (run)
 	{
 		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
-		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Textures/");
+		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
 		if (files.size() > currentFiles.size())
 		{
 			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
@@ -32,6 +32,15 @@ void Watcher()
 						std::string fullPath = (*iterator).second;
 						fullPath.append((*iterator).first);
 						if (App->textures->Import(fullPath.c_str()))
+						{
+							currentFiles.insert(*iterator);
+						}
+					}
+					else if (ext == "fbx" || ext == "FBX")
+					{
+						std::string fullPath = (*iterator).second;
+						fullPath.append((*iterator).first);
+						if (App->modelLoader->Import(fullPath.c_str()))
 						{
 							currentFiles.insert(*iterator);
 						}

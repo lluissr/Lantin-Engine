@@ -65,6 +65,14 @@ void PanelScene::Draw()
 		{
 			App->scene->CreateCamera();
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("New GameObject"))
+		{
+			GameObject* go = new GameObject();
+			go->name = "New GameObject";
+			go->parent = App->scene->root;
+			App->scene->root->gameObjects.push_back(go);
+		}
 		if (ImGui::TreeNode(App->scene->root->name.c_str()))
 		{
 			for (GameObject* gameObject : App->scene->root->gameObjects)

@@ -12,6 +12,7 @@ public:
 
 	void Draw() override;
 	void DrawComboBoxMaterials(const char * id);
+	void DrawComboBoxMeshes(const char * id);
 };
 
 #endif

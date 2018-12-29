@@ -10,6 +10,7 @@
 #include "MathGeoLib.h"
 #include <vector>
 #include "GameObject.h"
+#include <string>
 
 struct aiScene;
 struct aiNode;
@@ -30,6 +31,11 @@ public:
 	math::AABB localBoundingBox;
 	math::AABB globalBoundingBox;
 	bool useWireframe = false;
+
+	float* normals = nullptr;
+	unsigned* indices = nullptr;
+	float* vertices = nullptr;
+	float* texCoords = nullptr;
 };
 
 class Material
@@ -67,6 +73,12 @@ public:
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
 	void GenerateVAO(Mesh& mesh);
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
+	
+	bool Import(const char* path);
+	bool ImportMesh(const aiMesh* aiMesh);
+	bool SaveMesh(Mesh* mesh, std::string& newpath);
+	Mesh* Load(const char* path);
+	void GenerateVBO(Mesh& mesh);
 
 	std::vector<Mesh*> meshes;
 	std::vector<Material*> materials;
