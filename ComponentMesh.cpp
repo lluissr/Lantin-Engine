@@ -8,7 +8,11 @@ ComponentMesh::ComponentMesh(GameObject* parent, ComponentType type) : Component
 
 ComponentMesh::~ComponentMesh()
 {
-	mesh = nullptr;
+	if (mesh != nullptr)
+	{
+		delete mesh;
+		mesh = nullptr;
+	}
 }
 
 void ComponentMesh::Update()

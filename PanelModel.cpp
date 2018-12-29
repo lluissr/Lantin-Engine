@@ -44,9 +44,12 @@ void PanelModel::Draw()
 		ImGui::NewLine();
 	}
 
-	if (ImGui::Button("Add mesh"))
+	if (App->scene->selectedGO->componentMesh == nullptr)
 	{
-		App->scene->selectedGO->CreateComponent(ComponentType::MESH);
+		if (ImGui::Button("Add mesh"))
+		{
+			App->scene->selectedGO->CreateComponent(ComponentType::MESH);
+		}
 	}
 
 	bool changed = false;
@@ -298,27 +301,35 @@ void PanelModel::DrawComboBoxMaterials(const char * id)
 
 void PanelModel::DrawComboBoxMeshes(const char * id)
 {
-	static const char* labelCurrentFileTextureSelected = "Select a Mesh";
+	static const char* labelCurrentFileMeshSelected = "Select a Mesh";
 
 	if (App->fileSystem->meshList.size() > 0)
 	{
 		ImGui::PushID(id);
-		if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected))
+		if (ImGui::BeginCombo("##", labelCurrentFileMeshSelected))
 		{
 			for (std::vector<std::string>::iterator iterator = App->fileSystem->meshList.begin(); iterator != App->fileSystem->meshList.end(); ++iterator)
 			{
-				bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
+				bool isSelected = (labelCurrentFileMeshSelected == (*iterator).c_str());
 				if (ImGui::Selectable((*iterator).c_str(), isSelected))
 				{
-					labelCurrentFileTextureSelected = (*iterator).c_str();
-					App->scene->selectedGO->componentMesh->mesh = App->modelLoader->Load(labelCurrentFileTextureSelected);
-					Material* material = new Material();
-					material->program = 0;
-				
-					ComponentMaterial* cmaterial = (ComponentMaterial*)App->scene->selectedGO->CreateComponent(ComponentType::MATERIAL);
-					cmaterial->material = material;
-					App->scene->CalculateGlobalMatrix(App->scene->root);
-					App->scene->selectedGO->UpdateBoundingBox();
+					labelCurrentFileMeshSelected = (*iterator).c_str();
+					Mesh* mesh = App->modelLoader->Load(labelCurrentFileMeshSelected);
+					if (mesh != nullptr)
+					{
+						if (App->scene->selectedGO->componentMesh->mesh != nullptr)
+						{
+							delete App->scene->selectedGO->componentMesh->mesh;
+						}
+						App->scene->selectedGO->componentMesh->mesh = mesh;
+						Material * material = new Material();
+						material->program = 0;
+
+						ComponentMaterial* cmaterial = (ComponentMaterial*)App->scene->selectedGO->CreateComponent(ComponentType::MATERIAL);
+						cmaterial->material = material;
+						App->scene->CalculateGlobalMatrix(App->scene->root);
+						App->scene->selectedGO->UpdateBoundingBox();
+					}
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();

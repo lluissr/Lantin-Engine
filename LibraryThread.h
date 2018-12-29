@@ -77,8 +77,6 @@ public:
 
 		App->fileSystem->UpdateFiles();
 	}
-
-
 	
 };
 
