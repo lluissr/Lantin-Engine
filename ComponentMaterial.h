@@ -3,6 +3,14 @@
 
 #include "Component.h"
 
+enum class MaterialType
+{
+	DIFFUSE = 0,
+	OCCLUSION = 1,
+	SPECULAR = 2,
+	EMISSIVE = 3
+};
+
 class Material;
 
 class ComponentMaterial : public Component

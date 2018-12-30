@@ -78,7 +78,7 @@ GLuint ModuleTextures::Load(const char* path)
 
 	if (success)
 	{
-		LOG("Texture loaded correctly");
+		LOG("Texture loaded correctly \n");
 		iluGetImageInfo(&lastImageInfo);
 		if (lastImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{

@@ -227,7 +227,7 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 		}
 		else
 		{
-			glBindTexture(GL_TEXTURE_2D, material.texture0);
+			glBindTexture(GL_TEXTURE_2D, material.diffuseMap);
 		}
 
 		glUniform1i(glGetUniformLocation(program, "texture0"), 0);

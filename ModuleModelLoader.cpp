@@ -65,9 +65,21 @@ bool ModuleModelLoader::CleanUp()
 	LOG("Cleaning materials");
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
-		if (materials[i]->texture0 != 0)
+		if (materials[i]->diffuseMap != 0)
 		{
-			App->textures->Unload(materials[i]->texture0);
+			App->textures->Unload(materials[i]->diffuseMap);
+		}
+		if (materials[i]->occlusionMap != 0)
+		{
+			App->textures->Unload(materials[i]->occlusionMap);
+		}
+		if (materials[i]->specularMap != 0)
+		{
+			App->textures->Unload(materials[i]->specularMap);
+		}
+		if (materials[i]->emissiveMap != 0)
+		{
+			App->textures->Unload(materials[i]->emissiveMap);
 		}
 		delete materials[i];
 	}

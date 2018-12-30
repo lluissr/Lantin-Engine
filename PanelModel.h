@@ -3,6 +3,7 @@
 
 #include "Panel.h"
 #include <string>
+#include "ComponentMaterial.h"
 
 class PanelModel : public Panel
 {
@@ -11,8 +12,10 @@ public:
 	~PanelModel();
 
 	void Draw() override;
-	void DrawComboBoxMaterials(const char * id);
-	void DrawComboBoxMeshes(const char * id);
+	void DrawComboBoxMaterials(MaterialType type);
+	void DrawComboBoxMeshes();
+
+	GameObject* go = nullptr;
 };
 
 #endif

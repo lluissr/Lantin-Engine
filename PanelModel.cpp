@@ -14,11 +14,11 @@ PanelModel::PanelModel()
 
 PanelModel::~PanelModel()
 {
+	go = nullptr;
 }
 
 void PanelModel::Draw()
 {
-	
 	ImGui::Begin("Model selected", &show);
 
 	if (App->scene->selectedGO == nullptr)
@@ -27,28 +27,30 @@ void PanelModel::Draw()
 		return;
 	}
 
+	go = App->scene->selectedGO;
+
 	ImGui::Text("Name:");
 	ImGui::SameLine();
-	ImGui::InputText("##", &App->scene->selectedGO->name[0], 40);
-	ImGui::Text("Model selected has %d childs.", App->scene->selectedGO->gameObjects.size());
+	ImGui::InputText("##", &go->name[0], 40);
+	ImGui::Text("Model selected has %d childs.", go->gameObjects.size());
 	ImGui::NewLine();
-	ImGui::Checkbox("Active", &App->scene->selectedGO->isActive);
-	ImGui::Checkbox("Static", &App->scene->selectedGO->isStatic);
+	ImGui::Checkbox("Active", &go->isActive);
+	ImGui::Checkbox("Static", &go->isStatic);
 	ImGui::NewLine();
-	if (App->scene->selectedGO->componentCamera != nullptr)
+	if (go->componentCamera != nullptr)
 	{
 		if (ImGui::Button("Use as game camera"))
 		{
-			App->scene->UseAsGameCamera(App->scene->selectedGO);
+			App->scene->UseAsGameCamera(go);
 		}
 		ImGui::NewLine();
 	}
 
-	if (App->scene->selectedGO->componentMesh == nullptr)
+	if (go->componentMesh == nullptr)
 	{
 		if (ImGui::Button("Add mesh"))
 		{
-			App->scene->selectedGO->CreateComponent(ComponentType::MESH);
+			go->CreateComponent(ComponentType::MESH);
 		}
 	}
 
@@ -57,12 +59,12 @@ void PanelModel::Draw()
 	{
 		if (ImGui::Button("Apply identity matrix"))
 		{
-			App->scene->selectedGO->localMatrix = math::float4x4::identity;
-			App->scene->selectedGO->position = { 0.0f,0.0f,0.0f };
-			App->scene->selectedGO->scale = { 1.0f,1.0f,1.0f };
-			App->scene->selectedGO->rotation = { 0.0f,0.0f,0.0f,1.0f };
-			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
-			App->scene->selectedGO->UpdateBoundingBox();
+			go->localMatrix = math::float4x4::identity;
+			go->position = { 0.0f,0.0f,0.0f };
+			go->scale = { 1.0f,1.0f,1.0f };
+			go->rotation = { 0.0f,0.0f,0.0f,1.0f };
+			App->scene->CalculateGlobalMatrix(go);
+			go->UpdateBoundingBox();
 		}
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
@@ -70,25 +72,25 @@ void PanelModel::Draw()
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("1");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->position.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->position.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("2");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->position.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->position.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("3");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->position.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->position.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::PopID();
 
-		math::float3 rotation = App->scene->selectedGO->rotation.ToEulerXYZ();
+		math::float3 rotation = go->rotation.ToEulerXYZ();
 		rotation *= 57.295779513082320876f;
 		ImGui::Text("Rotation:");
 		ImGui::Text("X:");
@@ -112,181 +114,259 @@ void PanelModel::Draw()
 			changed = true;
 		ImGui::PopID();
 		rotation *= 0.0174532925199432957f;
-		App->scene->selectedGO->rotation = App->scene->selectedGO->rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+		go->rotation = go->rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
 
 		ImGui::Text("Scale:");
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("7");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->scale.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->scale.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("8");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->scale.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->scale.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("9");
-		if (ImGui::InputFloat("", &App->scene->selectedGO->scale.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->scale.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::PopID();
 		ImGui::PopItemWidth();
 
 		if (changed)
 		{
-			App->scene->selectedGO->localMatrix.Set(float4x4::FromTRS(App->scene->selectedGO->position, App->scene->selectedGO->rotation, App->scene->selectedGO->scale));
-			App->scene->CalculateGlobalMatrix(App->scene->selectedGO);
-			App->scene->selectedGO->UpdateBoundingBox();
+			go->localMatrix.Set(float4x4::FromTRS(go->position, go->rotation, go->scale));
+			App->scene->CalculateGlobalMatrix(go);
+			go->UpdateBoundingBox();
 		}
 
 	}
 
-	if (App->scene->selectedGO->componentMesh != NULL)
+	if (go->componentMesh != NULL)
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			DrawComboBoxMeshes("Meshes");
-			if (App->scene->selectedGO->componentMesh->mesh != nullptr)
+			DrawComboBoxMeshes();
+			if (go->componentMesh->mesh != nullptr)
 			{
-				ImGui::Checkbox("Wireframe", &App->scene->selectedGO->componentMesh->mesh->useWireframe);
-				ImGui::Text("Triangles count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices / 3);
-				ImGui::Text("Vertices count: %d", App->scene->selectedGO->componentMesh->mesh->numVertices);
+				ImGui::Checkbox("Wireframe", &go->componentMesh->mesh->useWireframe);
+				ImGui::Text("Triangles count: %d", go->componentMesh->mesh->numVertices / 3);
+				ImGui::Text("Vertices count: %d", go->componentMesh->mesh->numVertices);
 			}
 		}
 	}
 
-	if (App->scene->selectedGO->componentMaterial != NULL)
+	if (go->componentMaterial != NULL)
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
-			if (App->scene->selectedGO->componentMaterial->material->program == 0)
+			if (go->componentMaterial->material->program == 0)
 			{
-				DrawComboBoxMaterials("MainTexture");
-				if (App->scene->selectedGO->componentMaterial->material->texture0 != 0)
+				if (ImGui::CollapsingHeader("Diffuse"))
 				{
-					App->scene->selectedGO->componentMaterial->material;
-					ImGui::Image((ImTextureID)App->scene->selectedGO->componentMaterial->material->texture0, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", App->scene->selectedGO->componentMaterial->material->width, App->scene->selectedGO->componentMaterial->material->height);
+					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->diffuseColor);
+					DrawComboBoxMaterials(MaterialType::DIFFUSE);
+					go->componentMaterial->material;
+					ImGui::Image((ImTextureID)go->componentMaterial->material->diffuseMap, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->diffuseWidth, go->componentMaterial->material->diffuseHeight);
+					ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
 				}
+
+				if (ImGui::CollapsingHeader("Ambient"))
+				{
+					DrawComboBoxMaterials(MaterialType::OCCLUSION);
+					go->componentMaterial->material;
+					ImGui::Image((ImTextureID)go->componentMaterial->material->occlusionMap, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->ambientWidth, go->componentMaterial->material->ambientHeight);
+					ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
+				}
+				if (ImGui::CollapsingHeader("Specular"))
+				{
+					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->specularColor);
+					DrawComboBoxMaterials(MaterialType::SPECULAR);
+					go->componentMaterial->material;
+					ImGui::Image((ImTextureID)go->componentMaterial->material->specularMap, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->specularWidth, go->componentMaterial->material->specularHeight);
+					ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
+					ImGui::SliderFloat("Shininess", &go->componentMaterial->material->shininess, 0, 128);
+				}
+				if (ImGui::CollapsingHeader("Emissive"))
+				{
+					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->emissiveColor);
+					DrawComboBoxMaterials(MaterialType::EMISSIVE);
+					go->componentMaterial->material;
+					ImGui::Image((ImTextureID)go->componentMaterial->material->emissiveMap, ImVec2(200, 200));
+					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->emissiveWidth, go->componentMaterial->material->emissiveHeight);
+					ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
+				}
+
 			}
-			else if (App->scene->selectedGO->componentMaterial->material->program != 0)
+			/*else if (go->componentMaterial->material->program != 0)
 			{
 
 				const char* items[] = { "Flat", "Gouraud", "Phong", "Blinn" };
-				int number = max(0, App->scene->selectedGO->componentMaterial->material->program - 2);
+				int number = max(0, go->componentMaterial->material->program - 2);
 				if (ImGui::Combo("Shading", &number, items, IM_ARRAYSIZE(items)))
 				{
-					App->scene->selectedGO->componentMaterial->material->program = number + 2;
+					go->componentMaterial->material->program = number + 2;
 				}
-				ImVec4 color = ImColor(App->scene->selectedGO->componentMaterial->material->color.x, App->scene->selectedGO->componentMaterial->material->color.y, App->scene->selectedGO->componentMaterial->material->color.z, App->scene->selectedGO->componentMaterial->material->color.w);
+				ImVec4 color = ImColor(go->componentMaterial->material->color.x, go->componentMaterial->material->color.y, go->componentMaterial->material->color.z, go->componentMaterial->material->color.w);
 				if (ImGui::ColorEdit4("Color", (float*)&color))
 				{
-					App->scene->selectedGO->componentMaterial->material->color = math::float4(color.x, color.y, color.z, color.w);
+					go->componentMaterial->material->color = math::float4(color.x, color.y, color.z, color.w);
 				}
-				ImGui::SliderFloat("Shininess", &App->scene->selectedGO->componentMaterial->material->shininess, 0, 128);
-				ImGui::SliderFloat("K ambient", &App->scene->selectedGO->componentMaterial->material->k_ambient, 0, 1);
-				ImGui::SliderFloat("K diffuse", &App->scene->selectedGO->componentMaterial->material->k_diffuse, 0, 1);
-				ImGui::SliderFloat("K specular", &App->scene->selectedGO->componentMaterial->material->k_specular, 0, 1);
-			}
+				ImGui::SliderFloat("Shininess", &go->componentMaterial->material->shininess, 0, 128);
+				ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
+				ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
+				ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
+			}*/
 		}
 	}
 
-	if (App->scene->selectedGO->componentCamera != NULL)
+	if (go->componentCamera != NULL)
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{
-			ImGui::Checkbox("Draw frustum", &App->scene->selectedGO->componentCamera->showFrustum);
+			ImGui::Checkbox("Draw frustum", &go->componentCamera->showFrustum);
 			ImGui::PushItemWidth(75);
 			ImGui::Text("Position:");
 			ImGui::Text("X:");
 			ImGui::SameLine();
 			ImGui::PushID("1");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.pos.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Y:");
 			ImGui::SameLine();
 			ImGui::PushID("2");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.pos.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Z:");
 			ImGui::SameLine();
 			ImGui::PushID("3");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.pos.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.pos.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::PopID();
 			ImGui::Text("Front:");
 			ImGui::Text("X:");
 			ImGui::SameLine();
 			ImGui::PushID("4");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.front.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Y:");
 			ImGui::SameLine();
 			ImGui::PushID("5");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.front.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Z:");
 			ImGui::SameLine();
 			ImGui::PushID("6");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.front.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.front.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::PopID();
 			ImGui::Text("Up:");
 			ImGui::Text("X:");
 			ImGui::SameLine();
 			ImGui::PushID("7");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.up.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Y:");
 			ImGui::SameLine();
 			ImGui::PushID("8");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.up.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::SameLine();
 			ImGui::PopID();
 			ImGui::Text("Z:");
 			ImGui::SameLine();
 			ImGui::PushID("9");
-			ImGui::InputFloat("", &App->scene->selectedGO->componentCamera->frustum.up.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::InputFloat("", &go->componentCamera->frustum.up.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
-			ImGui::InputFloat("Movement Speed", &App->scene->selectedGO->componentCamera->mSpeed);
-			ImGui::InputFloat("Rotation Speed", &App->scene->selectedGO->componentCamera->rSpeed);
-			ImGui::InputFloat("Pitch", &App->scene->selectedGO->componentCamera->pitch);
-			ImGui::InputFloat("Yaw", &App->scene->selectedGO->componentCamera->yaw);
-			ImGui::InputFloat("Near Plane", &App->scene->selectedGO->componentCamera->frustum.nearPlaneDistance);
-			ImGui::InputFloat("Far Plane", &App->scene->selectedGO->componentCamera->frustum.farPlaneDistance);
+			ImGui::InputFloat("Movement Speed", &go->componentCamera->mSpeed);
+			ImGui::InputFloat("Rotation Speed", &go->componentCamera->rSpeed);
+			ImGui::InputFloat("Pitch", &go->componentCamera->pitch);
+			ImGui::InputFloat("Yaw", &go->componentCamera->yaw);
+			ImGui::InputFloat("Near Plane", &go->componentCamera->frustum.nearPlaneDistance);
+			ImGui::InputFloat("Far Plane", &go->componentCamera->frustum.farPlaneDistance);
 		}
 	}
 	ImGui::End();
 }
 
-void PanelModel::DrawComboBoxMaterials(const char * id)
+void PanelModel::DrawComboBoxMaterials(MaterialType type)
 {
-	static const char* labelCurrentFileTextureSelected = "Select a Texture";
-	
+	const char* comboBoxSelected = "Select a Texture";
+	const char* id = nullptr;
+	switch (type)
+	{
+	case MaterialType::DIFFUSE:
+		id = "Diffuse";
+		comboBoxSelected = go->componentMaterial->material->diffuseMapName != nullptr ? go->componentMaterial->material->diffuseMapName : "Select a Texture";
+		break;
+	case MaterialType::OCCLUSION:
+		id = "Occlusion";
+		comboBoxSelected = go->componentMaterial->material->occlusionMapName != nullptr ? go->componentMaterial->material->occlusionMapName : "Select a Texture";
+		break;
+	case MaterialType::SPECULAR:
+		id = "Specular";
+		comboBoxSelected = go->componentMaterial->material->specularMapName != nullptr ? go->componentMaterial->material->specularMapName : "Select a Texture";
+		break;
+	case MaterialType::EMISSIVE:
+		id = "Emissive";
+		comboBoxSelected = go->componentMaterial->material->emissiveMapName != nullptr ? go->componentMaterial->material->emissiveMapName : "Select a Texture";
+		break;
+	}
+
 	if (App->fileSystem->texturesList.size() > 0)
 	{
 		ImGui::PushID(id);
-		if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected))
+		if (ImGui::BeginCombo("##", comboBoxSelected))
 		{
 			for (std::vector<std::string>::iterator iterator = App->fileSystem->texturesList.begin(); iterator != App->fileSystem->texturesList.end(); ++iterator)
 			{
-				bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
+				bool isSelected = (comboBoxSelected == (*iterator).c_str());
 				if (ImGui::Selectable((*iterator).c_str(), isSelected))
 				{
-					labelCurrentFileTextureSelected = (*iterator).c_str();
-					App->textures->Unload(App->scene->selectedGO->componentMaterial->material->texture0);
-					App->scene->selectedGO->componentMaterial->material->texture0 = App->textures->Load(labelCurrentFileTextureSelected);
-					App->scene->selectedGO->componentMaterial->material->width = App->textures->lastImageInfo.Width;
-					App->scene->selectedGO->componentMaterial->material->height = App->textures->lastImageInfo.Height;
+					comboBoxSelected = (*iterator).c_str();
+					switch (type)
+					{
+					case MaterialType::DIFFUSE:
+						App->textures->Unload(go->componentMaterial->material->diffuseMap);
+						go->componentMaterial->material->diffuseMap = App->textures->Load(comboBoxSelected);
+						go->componentMaterial->material->diffuseWidth = App->textures->lastImageInfo.Width;
+						go->componentMaterial->material->diffuseHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->diffuseMapName = comboBoxSelected;
+						break;
+					case MaterialType::OCCLUSION:
+						App->textures->Unload(go->componentMaterial->material->occlusionMap);
+						go->componentMaterial->material->occlusionMap = App->textures->Load(comboBoxSelected);
+						go->componentMaterial->material->ambientWidth = App->textures->lastImageInfo.Width;
+						go->componentMaterial->material->ambientHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->occlusionMapName = comboBoxSelected;
+						break;
+					case MaterialType::SPECULAR:
+						App->textures->Unload(go->componentMaterial->material->specularMap);
+						go->componentMaterial->material->specularMap = App->textures->Load(comboBoxSelected);
+						go->componentMaterial->material->specularWidth = App->textures->lastImageInfo.Width;
+						go->componentMaterial->material->specularHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->specularMapName = comboBoxSelected;
+						break;
+					case MaterialType::EMISSIVE:
+						App->textures->Unload(go->componentMaterial->material->emissiveMap);
+						go->componentMaterial->material->emissiveMap = App->textures->Load(comboBoxSelected);
+						go->componentMaterial->material->emissiveWidth = App->textures->lastImageInfo.Width;
+						go->componentMaterial->material->emissiveHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->emissiveMapName = comboBoxSelected;
+						break;
+					}
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -299,13 +379,13 @@ void PanelModel::DrawComboBoxMaterials(const char * id)
 	}
 }
 
-void PanelModel::DrawComboBoxMeshes(const char * id)
+void PanelModel::DrawComboBoxMeshes()
 {
 	static const char* labelCurrentFileMeshSelected = "Select a Mesh";
 
 	if (App->fileSystem->meshList.size() > 0)
 	{
-		ImGui::PushID(id);
+		ImGui::PushID("Meshes");
 		if (ImGui::BeginCombo("##", labelCurrentFileMeshSelected))
 		{
 			for (std::vector<std::string>::iterator iterator = App->fileSystem->meshList.begin(); iterator != App->fileSystem->meshList.end(); ++iterator)
@@ -317,18 +397,18 @@ void PanelModel::DrawComboBoxMeshes(const char * id)
 					Mesh* mesh = App->modelLoader->Load(labelCurrentFileMeshSelected);
 					if (mesh != nullptr)
 					{
-						if (App->scene->selectedGO->componentMesh->mesh != nullptr)
+						if (go->componentMesh->mesh != nullptr)
 						{
-							delete App->scene->selectedGO->componentMesh->mesh;
+							delete go->componentMesh->mesh;
 						}
-						App->scene->selectedGO->componentMesh->mesh = mesh;
+						go->componentMesh->mesh = mesh;
 						Material * material = new Material();
 						material->program = 0;
 
-						ComponentMaterial* cmaterial = (ComponentMaterial*)App->scene->selectedGO->CreateComponent(ComponentType::MATERIAL);
+						ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
 						cmaterial->material = material;
 						App->scene->CalculateGlobalMatrix(App->scene->root);
-						App->scene->selectedGO->UpdateBoundingBox();
+						go->UpdateBoundingBox();
 					}
 					if (isSelected)
 					{

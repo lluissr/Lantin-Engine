@@ -42,14 +42,36 @@ class Material
 {
 public:
 	unsigned program = 0;
-	unsigned texture0 = 0;
-	unsigned width = 0;
-	unsigned height = 0;
 	math::float4 color = math::float4::zero;
-	float shininess = 0.0f;
-	float k_specular = 0.0f;
-	float k_ambient = 0.0f;
+
+	unsigned diffuseMap = 0u;
+	const char* diffuseMapName = nullptr;
+	math::float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float k_diffuse = 0.0f;
+	int diffuseWidth = 0;
+	int diffuseHeight = 0;
+
+	unsigned occlusionMap = 0u;
+	const char* occlusionMapName = nullptr;
+	float k_ambient = 0.0f;
+	int ambientWidth = 0;
+	int ambientHeight = 0;
+
+	unsigned specularMap = 0u;
+	const char* specularMapName = nullptr;
+	math::float4 specularColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float k_specular = 0.0f;
+	float shininess = 0.0f;
+	int specularWidth = 0;
+	int specularHeight = 0;
+
+	unsigned emissiveMap = 0u;
+	const char* emissiveMapName = nullptr;
+	math::float4 emissiveColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	int emissiveWidth = 0;
+	int emissiveHeight = 0;
+	
+
 };
 
 class ModuleModelLoader : public Module
