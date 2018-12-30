@@ -191,7 +191,7 @@ std::string ModuleFileSystem::NormalizePath(const char * path)
 {
 	std::string str = path;
 
-	for (int i = 0; i < str.length(); i++)
+	for (unsigned int i = 0; i < str.length(); i++)
 	{
 		if (str[i] == '\\')
 			str[i] = '/';

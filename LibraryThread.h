@@ -14,41 +14,62 @@ bool run = true;
 void Watcher()
 {
 	std::map<std::string, std::string> currentFiles;
-	std::map<std::string, std::string> files;
+	std::map<std::string, std::string> oldFiles;
+	currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
+	oldFiles = currentFiles;
+
+	//Do this the first time to check and add files if new files are added while engine was not working. 
+	//TODO:Improve this after integration of JSON and save settings. Now is not completly functional.
+	unsigned int libraryFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/").size();
+	if (libraryFiles < currentFiles.size())
+	{
+		for (std::map<std::string, std::string>::iterator iterator = currentFiles.begin(); iterator != currentFiles.end(); ++iterator)
+		{
+			std::string ext((*iterator).first.substr((*iterator).first.length() - 3));
+
+			std::string fullPath = (*iterator).second;
+			fullPath.append((*iterator).first);
+			if (ext == "png" || ext == "tif" || ext == "jpg")
+			{
+				App->textures->Import(fullPath.c_str());
+			}
+			else if (ext == "fbx" || ext == "FBX")
+			{
+				App->modelLoader->Import(fullPath.c_str());
+			}
+		}
+	}
+
 	while (run)
 	{
-		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
-		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
-		if (files.size() > currentFiles.size())
+		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
+		if (currentFiles.size() > oldFiles.size())
 		{
-			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
+			for (std::map<std::string, std::string>::iterator iterator = currentFiles.begin(); iterator != currentFiles.end(); ++iterator)
 			{
-				if (currentFiles.find((*iterator).first) == currentFiles.end())
+				if (oldFiles.find((*iterator).first) == oldFiles.end())
 				{
 					std::string ext((*iterator).first.substr((*iterator).first.length() - 3));
 
+					std::string fullPath = (*iterator).second;
+					fullPath.append((*iterator).first);
 					if (ext == "png" || ext == "tif" || ext == "jpg")
 					{
-						std::string fullPath = (*iterator).second;
-						fullPath.append((*iterator).first);
-						if (App->textures->Import(fullPath.c_str()))
-						{
-							currentFiles.insert(*iterator);
-						}
+						App->textures->Import(fullPath.c_str());
 					}
 					else if (ext == "fbx" || ext == "FBX")
 					{
-						std::string fullPath = (*iterator).second;
-						fullPath.append((*iterator).first);
-						if (App->modelLoader->Import(fullPath.c_str()))
-						{
-							currentFiles.insert(*iterator);
-						}
+						App->modelLoader->Import(fullPath.c_str());
 					}
 				}
 			}
 
+			oldFiles = currentFiles;
 			App->fileSystem->UpdateFiles();
+		}
+		else if (currentFiles.size() < oldFiles.size())
+		{
+			oldFiles = currentFiles;
 		}
 
 		Sleep(1000);
@@ -61,7 +82,7 @@ public:
 
 	LibraryThread()
 	{
-		
+
 	}
 
 	~LibraryThread()
@@ -77,7 +98,7 @@ public:
 
 		App->fileSystem->UpdateFiles();
 	}
-	
+
 };
 
 #endif

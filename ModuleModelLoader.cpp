@@ -270,7 +270,7 @@ bool ModuleModelLoader::Import(const char* path)
 	{
 		std::string meshName = name;
 		meshName.append("_" + std::to_string(i));
-		ImportMesh(scene->mMeshes[i], meshName.c_str());
+		result = ImportMesh(scene->mMeshes[i], meshName.c_str());
 	}
 
 	return result;
@@ -343,7 +343,7 @@ bool ModuleModelLoader::ImportMesh(const aiMesh* mesh, const char* name)
 		std::string fileName = "Library/Meshes/";
 		fileName += name;
 		fileName += ".pisifai";
-		SaveMesh(newMesh, fileName);
+		ret = SaveMesh(newMesh, fileName);
 	}
 
 	delete newMesh;
