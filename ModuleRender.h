@@ -43,8 +43,6 @@ public:
 	FrameBuffer frameBufferScene;
 	FrameBuffer frameBufferGame;
 	bool renderBoundingBoxes = true;
-	int currentItemSelected = 0;
-	bool useCheckerTexture = false;
 	bool showAxis = true;
 	bool showGrid = true;
 	bool frustumCulling = true;

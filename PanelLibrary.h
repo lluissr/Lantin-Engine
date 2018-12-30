@@ -12,6 +12,10 @@ public:
 
 	void Draw() override;
 	void DrawTreeNode(const char* name, bool isLeaf);
+	void PopupMenu(const char * name);
+
+private:
+	bool updateList = false;
 };
 
 #endif

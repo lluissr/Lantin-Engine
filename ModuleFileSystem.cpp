@@ -261,3 +261,17 @@ void ModuleFileSystem::UpdateFiles()
 	GetFilesFromDirectory("/Library/Meshes/", meshList);
 	GetFilesFromDirectory("/Library/Textures/", texturesList);
 }
+
+bool ModuleFileSystem::Remove(const char * pathAndFileName)
+{
+	bool result = false;
+
+	if (pathAndFileName != nullptr)
+	{
+		PHYSFS_delete(pathAndFileName);
+		LOG("File deleted: [%s]", pathAndFileName);
+		result = true;
+	}
+
+	return result;
+}

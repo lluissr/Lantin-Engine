@@ -37,6 +37,7 @@ void PanelModel::Draw()
 	ImGui::Checkbox("Active", &go->isActive);
 	ImGui::Checkbox("Static", &go->isStatic);
 	ImGui::NewLine();
+
 	if (go->componentCamera != nullptr)
 	{
 		if (ImGui::Button("Use as game camera"))
@@ -148,7 +149,7 @@ void PanelModel::Draw()
 
 	}
 
-	if (go->componentMesh != NULL)
+	if (go->componentMesh != nullptr)
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
@@ -162,7 +163,7 @@ void PanelModel::Draw()
 		}
 	}
 
-	if (go->componentMaterial != NULL)
+	if (go->componentMaterial != nullptr)
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
@@ -215,7 +216,7 @@ void PanelModel::Draw()
 		}
 	}
 
-	if (go->componentCamera != NULL)
+	if (go->componentCamera != nullptr)
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{
@@ -284,6 +285,7 @@ void PanelModel::Draw()
 			ImGui::InputFloat("Far Plane", &go->componentCamera->frustum.farPlaneDistance);
 		}
 	}
+	
 	ImGui::End();
 }
 

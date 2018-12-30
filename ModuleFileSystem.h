@@ -26,6 +26,8 @@ public:
 	std::map<std::string, std::string> GetFilesFromDirectoryRecursive(const char * directory);
 	void GetFilesFromDirectory(const char * directory, std::vector<std::string>& fileList) const;
 	void UpdateFiles();
+	bool Remove(const char * pathAndFileName);
+	
 
 	std::vector<std::string> meshList;
 	std::vector<std::string> texturesList;
