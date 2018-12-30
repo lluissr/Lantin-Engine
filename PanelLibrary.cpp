@@ -17,7 +17,7 @@ void PanelLibrary::Draw()
 {
 	ImGui::Begin("Library", &show);
 	
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_None;
 
 	bool libraryOpen = ImGui::TreeNodeEx("Library", node_flags, "Library");
 
@@ -35,7 +35,7 @@ void PanelLibrary::Draw()
 
 void PanelLibrary::DrawTreeNode(const char* name, bool isLeaf)
 {
-	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_None;
 
 	if (isLeaf)
 	{

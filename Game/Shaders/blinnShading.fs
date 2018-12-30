@@ -1,9 +1,24 @@
-#version 330 core
-
-uniform vec4 newColor;
-uniform mat4 view;
+#version 400 core
 
 out vec4 color;
+
+uniform mat4 view;
+
+uniform int useDiffuseMap;
+uniform sampler2D diffuseMap;
+
+uniform int useEmissiveMap;
+uniform sampler2D emissiveMap;
+
+uniform int useOcclusionMap;
+uniform sampler2D occlusionMap;
+
+uniform int useSpecularMap;
+uniform sampler2D specularMap;
+
+uniform vec4 diffuseColor;
+uniform vec4 emissiveColor;
+uniform vec4 specularColor;
 
 uniform vec3  light_pos;
 uniform float ambient;
@@ -14,23 +29,53 @@ uniform float k_specular;
 
 in vec3 position;
 in vec3 normal; 
+in vec2 uv0;
 
 void main()
 {
+    /*Ambient */
+    vec3 finalAmbient = k_ambient * ambient * vec3(1.0);  
+
+	if(useOcclusionMap == 1)
+	{
+		finalAmbient = k_ambient * ambient * vec3(texture(occlusionMap, uv0)); 
+	}
+	
+    /*Diffuse */
 	vec3 normal = normalize(normal);
-    vec3 light_dir = normalize(light_pos-position);
-    float diffuse = max(0.0, dot(normal, light_dir));
-    float specular = 0.0;
-
-    vec3 view_pos = transpose(mat3(view))*(-view[3].xyz);
-    vec3 view_dir = normalize(view_pos-position);
-	vec3 half_dir = normalize(light_dir + view_dir);
-    float sp = max(dot(normal, half_dir), 0.0);
-
-    specular = pow(sp, shininess); 
-
+    vec3 lightDir = normalize(light_pos - position);
+    float diffuse = max(0.0, dot(normal, lightDir));
+    vec3 finalDiffuse = k_diffuse * diffuse * diffuseColor.rgb;
     
-    float intensity = (k_ambient*ambient+k_diffuse*diffuse+k_specular*specular);
+	if(useDiffuseMap == 1)
+	{
+		finalDiffuse = k_diffuse * diffuse * diffuseColor.rgb * vec3(texture(diffuseMap, uv0));
+	}
+	
+    /*Specular */
+    vec3 viewPos = transpose(mat3(view))*(-view[3].xyz);
+	vec3 viewDir = normalize(viewPos - position);
+	vec3 half_dir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(viewDir, half_dir), 0.0), shininess);
+    vec3 finalSpecular = k_specular * spec * specularColor.rgb;
+	
+	if(useSpecularMap == 1)
+	{
+		vec4 textureSpecularColor = texture(specularMap, uv0);
+		vec4 algo = vec4(textureSpecularColor.rgb*specularColor.rgb, max(textureSpecularColor.a*shininess*128.0f, 8.0f));
+		
+		
+		finalSpecular = algo.rgb * k_specular * spec * specularColor.rgb;
+	}
+    	
+	/*Emission*/
+    vec3 finalEmission = emissiveColor.rgb;
+	
+    if (useEmissiveMap == 1)   
+    {
 
-    color = vec4(intensity*newColor.x, intensity*newColor.y, intensity*newColor.z, 1.0);
+        finalEmission = emissiveColor.rgb * texture(emissiveMap, uv0).rgb;
+    }
+	
+    color = vec4(finalAmbient + finalDiffuse + finalSpecular + finalEmission, 1.0f);
 }

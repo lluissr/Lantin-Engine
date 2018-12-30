@@ -47,7 +47,7 @@ void PanelScene::Draw()
 		ImGui::ColorEdit3("Sphere Color", (float*)&color);
 		if (ImGui::Button("Draw Sphere"))
 		{
-			App->modelLoader->LoadSphere(str0, 1.0f, 30, 30, math::float4(color.x, color.y, color.z, color.w));
+			App->modelLoader->LoadSphere(str0, 100.0f, 30, 30, math::float4(color.x, color.y, color.z, color.w));
 		}
 		ImGui::Separator();
 		static char str1[128] = "Torus";

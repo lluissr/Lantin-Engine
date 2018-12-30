@@ -166,66 +166,52 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
-			if (go->componentMaterial->material->program == 0)
+
+			if (ImGui::CollapsingHeader("Diffuse"))
 			{
-				if (ImGui::CollapsingHeader("Diffuse"))
-				{
-					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->diffuseColor);
-					DrawComboBoxMaterials(MaterialType::DIFFUSE);
-					go->componentMaterial->material;
-					ImGui::Image((ImTextureID)go->componentMaterial->material->diffuseMap, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->diffuseWidth, go->componentMaterial->material->diffuseHeight);
-					ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
-				}
-
-				if (ImGui::CollapsingHeader("Ambient"))
-				{
-					DrawComboBoxMaterials(MaterialType::OCCLUSION);
-					go->componentMaterial->material;
-					ImGui::Image((ImTextureID)go->componentMaterial->material->occlusionMap, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->ambientWidth, go->componentMaterial->material->ambientHeight);
-					ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
-				}
-				if (ImGui::CollapsingHeader("Specular"))
-				{
-					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->specularColor);
-					DrawComboBoxMaterials(MaterialType::SPECULAR);
-					go->componentMaterial->material;
-					ImGui::Image((ImTextureID)go->componentMaterial->material->specularMap, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->specularWidth, go->componentMaterial->material->specularHeight);
-					ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
-					ImGui::SliderFloat("Shininess", &go->componentMaterial->material->shininess, 0, 128);
-				}
-				if (ImGui::CollapsingHeader("Emissive"))
-				{
-					ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->emissiveColor);
-					DrawComboBoxMaterials(MaterialType::EMISSIVE);
-					go->componentMaterial->material;
-					ImGui::Image((ImTextureID)go->componentMaterial->material->emissiveMap, ImVec2(200, 200));
-					ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->emissiveWidth, go->componentMaterial->material->emissiveHeight);
-					ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
-				}
-
+				ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->diffuseColor);
+				DrawComboBoxMaterials(MaterialType::DIFFUSE);
+				go->componentMaterial->material;
+				ImGui::Image((ImTextureID)go->componentMaterial->material->diffuseMap, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->diffuseWidth, go->componentMaterial->material->diffuseHeight);
+				ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
 			}
-			/*else if (go->componentMaterial->material->program != 0)
-			{
 
+			if (ImGui::CollapsingHeader("Ambient"))
+			{
+				DrawComboBoxMaterials(MaterialType::OCCLUSION);
+				go->componentMaterial->material;
+				ImGui::Image((ImTextureID)go->componentMaterial->material->occlusionMap, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->ambientWidth, go->componentMaterial->material->ambientHeight);
+				ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
+			}
+			if (ImGui::CollapsingHeader("Specular"))
+			{
+				ImGui::ColorEdit4("Specular color", (float*)&go->componentMaterial->material->specularColor);
+				DrawComboBoxMaterials(MaterialType::SPECULAR);
+				go->componentMaterial->material;
+				ImGui::Image((ImTextureID)go->componentMaterial->material->specularMap, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->specularWidth, go->componentMaterial->material->specularHeight);
+				ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
+				ImGui::SliderFloat("Shininess", &go->componentMaterial->material->shininess, 0, 128);
+			}
+			if (ImGui::CollapsingHeader("Emissive"))
+			{
+				ImGui::ColorEdit4("Emissive color", (float*)&go->componentMaterial->material->emissiveColor);
+				DrawComboBoxMaterials(MaterialType::EMISSIVE);
+				go->componentMaterial->material;
+				ImGui::Image((ImTextureID)go->componentMaterial->material->emissiveMap, ImVec2(200, 200));
+				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->emissiveWidth, go->componentMaterial->material->emissiveHeight);
+			}
+
+			/*
 				const char* items[] = { "Flat", "Gouraud", "Phong", "Blinn" };
 				int number = max(0, go->componentMaterial->material->program - 2);
 				if (ImGui::Combo("Shading", &number, items, IM_ARRAYSIZE(items)))
 				{
 					go->componentMaterial->material->program = number + 2;
 				}
-				ImVec4 color = ImColor(go->componentMaterial->material->color.x, go->componentMaterial->material->color.y, go->componentMaterial->material->color.z, go->componentMaterial->material->color.w);
-				if (ImGui::ColorEdit4("Color", (float*)&color))
-				{
-					go->componentMaterial->material->color = math::float4(color.x, color.y, color.z, color.w);
-				}
-				ImGui::SliderFloat("Shininess", &go->componentMaterial->material->shininess, 0, 128);
-				ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
-				ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
-				ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
-			}*/
+				*/
 		}
 	}
 

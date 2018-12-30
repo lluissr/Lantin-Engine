@@ -35,7 +35,7 @@ bool ModuleRender::Init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-	
+
 	SDL_GL_SetSwapInterval(1);
 
 	context = SDL_GL_CreateContext(App->window->window);
@@ -162,7 +162,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 		}
 
 		if (gameObject->componentMesh != nullptr && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
-			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive ||(App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
+			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive || (App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
 				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
 			}
 		}
@@ -177,30 +177,7 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 
 void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
-	unsigned program = 0;
-	switch (material.program) {
-	case 0:
-		program = App->program->program;
-		break;
-	case 1:
-		program = App->program->colorProgram;
-		break;
-	case 2:
-		program = App->program->flatProgram;
-		break;
-	case 3:
-		program = App->program->gouraudProgram;
-		break;
-	case 4:
-		program = App->program->phongProgram;
-		break;
-	case 5:
-		program = App->program->blinnProgram;
-		break;
-	default:
-		program = App->program->program;
-		break;
-	}
+	unsigned program = App->program->blinnProgram;
 
 	if (mesh.useWireframe)
 	{
@@ -217,48 +194,66 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
 
-	if (material.program == 0)
+
+	glUniform4f(glGetUniformLocation(program, "diffuseColor"), material.diffuseColor.x, material.diffuseColor.y, material.diffuseColor.z, 1.0f);
+	glUniform4f(glGetUniformLocation(program, "emissiveColor"), material.emissiveColor.x, material.emissiveColor.y, material.emissiveColor.z, 1.0f);
+	glUniform4f(glGetUniformLocation(program, "specularColor"), material.specularColor.x, material.specularColor.y, material.specularColor.z, 1.0f);
+
+
+	glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
+	glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
+	glUniform1f(glGetUniformLocation(program, "shininess"), material.shininess);
+	glUniform1f(glGetUniformLocation(program, "k_ambient"), material.k_ambient);
+	glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
+	glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
+
+
+	if (material.diffuseMap != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
-
-		if (useCheckerTexture)
-		{
-			glBindTexture(GL_TEXTURE_2D, checkersTexture);
-		}
-		else
-		{
-			glBindTexture(GL_TEXTURE_2D, material.diffuseMap);
-		}
-
-		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
-	}
-	else if (material.program == 1)
-	{
-		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.numVertices));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-		glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
+		glBindTexture(GL_TEXTURE_2D, material.diffuseMap);
+		glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
+		glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 1);
 	}
 	else
 	{
-		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, (float*)&App->scene->lightPosition);
-		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
-		glUniform1f(glGetUniformLocation(program, "shininess"), material.shininess);
-		glUniform1f(glGetUniformLocation(program, "k_ambient"), material.k_ambient);
-		glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
-		glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
-		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&material.color);
+		glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 0);
+	}
+
+	if (material.emissiveMap != 0)
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material.emissiveMap);
+		glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
+		glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 1);
+	}
+	else
+	{
+		glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 0);
+	}
+
+	if (material.occlusionMap != 0)
+	{
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, material.occlusionMap);
+		glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
+		glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 1);
+	}
+	else
+	{
+		glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 0);
+	}
+
+	if (material.specularMap != 0)
+	{
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, material.specularMap);
+		glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
+		glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 1);
+	}
+	else
+	{
+		glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 0);
 	}
 
 	glBindVertexArray(mesh.vao);
