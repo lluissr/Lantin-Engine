@@ -37,6 +37,7 @@ public:
 	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	void InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer);
+	unsigned GenerateFallback();
 
 	void* context;
 	FrameBuffer frameBufferScene;
@@ -52,5 +53,5 @@ public:
 	bool enableVSync = true;
 
 private:
-	GLuint checkersTexture;
+	unsigned fallback = 0;
 };

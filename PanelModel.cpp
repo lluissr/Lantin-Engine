@@ -367,20 +367,20 @@ void PanelModel::DrawComboBoxMaterials(MaterialType type)
 
 void PanelModel::DrawComboBoxMeshes()
 {
-	static const char* labelCurrentFileMeshSelected = "Select a Mesh";
+	const char* comboBoxSelected = (go->componentMesh->mesh != nullptr && go->componentMesh->mesh->meshName != nullptr) ? go->componentMesh->mesh->meshName : "Select a Mesh";
 
 	if (App->fileSystem->meshList.size() > 0)
 	{
 		ImGui::PushID("Meshes");
-		if (ImGui::BeginCombo("##", labelCurrentFileMeshSelected))
+		if (ImGui::BeginCombo("##", comboBoxSelected))
 		{
 			for (std::vector<std::string>::iterator iterator = App->fileSystem->meshList.begin(); iterator != App->fileSystem->meshList.end(); ++iterator)
 			{
-				bool isSelected = (labelCurrentFileMeshSelected == (*iterator).c_str());
+				bool isSelected = (comboBoxSelected == (*iterator).c_str());
 				if (ImGui::Selectable((*iterator).c_str(), isSelected))
 				{
-					labelCurrentFileMeshSelected = (*iterator).c_str();
-					Mesh* mesh = App->modelLoader->Load(labelCurrentFileMeshSelected);
+					comboBoxSelected = (*iterator).c_str();
+					Mesh* mesh = App->modelLoader->Load(comboBoxSelected);
 					if (mesh != nullptr)
 					{
 						if (go->componentMesh->mesh != nullptr)
@@ -388,9 +388,7 @@ void PanelModel::DrawComboBoxMeshes()
 							delete go->componentMesh->mesh;
 						}
 						go->componentMesh->mesh = mesh;
-						Material * material = new Material();
-						material->program = 0;
-
+						Material* material = new Material();
 						ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
 						cmaterial->material = material;
 						App->scene->CalculateGlobalMatrix(App->scene->root);

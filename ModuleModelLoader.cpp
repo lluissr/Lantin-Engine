@@ -113,8 +113,8 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 		GenerateVAO(*cmesh->mesh);
 
 		Material* material = new Material();
-		material->program = 5;
-		material->color = color;
+		material->diffuseColor = color;
+		material->specularColor = color;
 		material->shininess = 64.0f;
 		material->k_ambient = 1.0f;
 		material->k_diffuse = 0.5f;
@@ -151,8 +151,8 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 		GenerateVAO(*cmesh->mesh);
 
 		Material* material = new Material();
-		material->program = 5;
-		material->color = color;
+		material->diffuseColor = color;
+		material->specularColor = color;
 		material->shininess = 64.0f;
 		material->k_ambient = 1.0f;
 		material->k_diffuse = 0.5f;
@@ -411,7 +411,7 @@ bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
 Mesh* ModuleModelLoader::Load(const char* path)
 {
 	Mesh* mesh = new Mesh;
-
+	mesh->meshName = path;
 	std::string pathName = "Library/Meshes/";
 	pathName += path;
 	char* buffer = nullptr;

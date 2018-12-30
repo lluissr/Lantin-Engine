@@ -36,14 +36,12 @@ public:
 	unsigned* indices = nullptr;
 	float* vertices = nullptr;
 	float* texCoords = nullptr;
+	const char* meshName = nullptr;
 };
 
 class Material
 {
 public:
-	unsigned program = 0;
-	math::float4 color = math::float4::zero;
-
 	unsigned diffuseMap = 0u;
 	const char* diffuseMapName = nullptr;
 	math::float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);

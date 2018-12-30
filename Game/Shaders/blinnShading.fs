@@ -34,48 +34,28 @@ in vec2 uv0;
 void main()
 {
     /*Ambient */
-    vec3 finalAmbient = k_ambient * ambient * vec3(1.0);  
-
-	if(useOcclusionMap == 1)
-	{
-		finalAmbient = k_ambient * ambient * vec3(texture(occlusionMap, uv0)); 
-	}
+	vec3 finalAmbient = k_ambient * ambient * vec3(texture(occlusionMap, uv0)); 
+	
 	
     /*Diffuse */
 	vec3 normal = normalize(normal);
     vec3 lightDir = normalize(light_pos - position);
     float diffuse = max(0.0, dot(normal, lightDir));
-    vec3 finalDiffuse = k_diffuse * diffuse * diffuseColor.rgb;
-    
-	if(useDiffuseMap == 1)
-	{
-		finalDiffuse = k_diffuse * diffuse * diffuseColor.rgb * vec3(texture(diffuseMap, uv0));
-	}
+	vec3 finalDiffuse = k_diffuse * diffuse * diffuseColor.rgb * vec3(texture(diffuseMap, uv0));
+	
 	
     /*Specular */
     vec3 viewPos = transpose(mat3(view))*(-view[3].xyz);
 	vec3 viewDir = normalize(viewPos - position);
 	vec3 half_dir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(viewDir, half_dir), 0.0), shininess);
-    vec3 finalSpecular = k_specular * spec * specularColor.rgb;
-	
-	if(useSpecularMap == 1)
-	{
-		vec4 textureSpecularColor = texture(specularMap, uv0);
-		vec4 algo = vec4(textureSpecularColor.rgb*specularColor.rgb, max(textureSpecularColor.a*shininess*128.0f, 8.0f));
-		
-		
-		finalSpecular = algo.rgb * k_specular * spec * specularColor.rgb;
-	}
+	vec4 textureSpecularColor = texture(specularMap, uv0);
+	vec4 sp = vec4(textureSpecularColor.rgb*specularColor.rgb, max(textureSpecularColor.a*shininess*128.0f, 8.0f));
+	vec3 finalSpecular = sp.rgb * k_specular * spec * specularColor.rgb;
     	
-	/*Emission*/
-    vec3 finalEmission = emissiveColor.rgb;
-	
-    if (useEmissiveMap == 1)   
-    {
 
-        finalEmission = emissiveColor.rgb * texture(emissiveMap, uv0).rgb;
-    }
+	/*Emission*/
+    vec3 finalEmission = emissiveColor.rgb * texture(emissiveMap, uv0).rgb;
 	
     color = vec4(finalAmbient + finalDiffuse + finalSpecular + finalEmission, 1.0f);
 }

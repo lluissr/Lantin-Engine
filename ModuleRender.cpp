@@ -56,7 +56,7 @@ bool ModuleRender::Init()
 	SDL_GetWindowSize(App->window->window, &width, &height);
 	glViewport(0, 0, width, height);
 
-	checkersTexture = App->textures->Load("Library/Textures/checker.dds");
+	fallback = GenerateFallback();
 
 	frameBufferScene.frameBufferType = FrameBufferType::SCENE;
 	frameBufferGame.frameBufferType = FrameBufferType::GAME;
@@ -194,11 +194,9 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
 
-
-	glUniform4f(glGetUniformLocation(program, "diffuseColor"), material.diffuseColor.x, material.diffuseColor.y, material.diffuseColor.z, 1.0f);
-	glUniform4f(glGetUniformLocation(program, "emissiveColor"), material.emissiveColor.x, material.emissiveColor.y, material.emissiveColor.z, 1.0f);
-	glUniform4f(glGetUniformLocation(program, "specularColor"), material.specularColor.x, material.specularColor.y, material.specularColor.z, 1.0f);
-
+	glUniform4fv(glGetUniformLocation(program, "diffuseColor"), 1, (float*)&material.diffuseColor);
+	glUniform4fv(glGetUniformLocation(program, "emissiveColor"), 1, (float*)&material.emissiveColor);
+	glUniform4fv(glGetUniformLocation(program, "specularColor"), 1, (float*)&material.specularColor);
 
 	glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
 	glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
@@ -207,54 +205,22 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 	glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
 	glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, material.diffuseMap != 0 ? material.diffuseMap : fallback);
+	glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
 
-	if (material.diffuseMap != 0)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.diffuseMap);
-		glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
-		glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 1);
-	}
-	else
-	{
-		glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 0);
-	}
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, material.emissiveMap != 0 ? material.emissiveMap : fallback);
+	glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
 
-	if (material.emissiveMap != 0)
-	{
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, material.emissiveMap);
-		glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
-		glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 1);
-	}
-	else
-	{
-		glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 0);
-	}
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, material.occlusionMap != 0 ? material.occlusionMap : fallback);
+	glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
 
-	if (material.occlusionMap != 0)
-	{
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, material.occlusionMap);
-		glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
-		glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 1);
-	}
-	else
-	{
-		glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 0);
-	}
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, material.specularMap != 0 ? material.specularMap : fallback);
+	glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
 
-	if (material.specularMap != 0)
-	{
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, material.specularMap);
-		glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
-		glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 1);
-	}
-	else
-	{
-		glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 0);
-	}
 
 	glBindVertexArray(mesh.vao);
 	glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);
@@ -321,4 +287,19 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBuffer& frameBuff
 		LOG("Framebuffer mal");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+unsigned ModuleRender::GenerateFallback()
+{
+	char fallbackImage[3] = { GLubyte(255), GLubyte(255), GLubyte(255) };
+	unsigned ImageName = 0;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &ImageName);
+	glBindTexture(GL_TEXTURE_2D, ImageName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, fallbackImage);
+	return ImageName;
 }
