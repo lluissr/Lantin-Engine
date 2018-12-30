@@ -91,16 +91,6 @@ void PanelConfiguration::Draw()
 		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBoxes);
 
 		ImGui::Checkbox("Checkers texture ", &App->renderer->useCheckerTexture);
-
-		const char* items[] = { "Backer House", "T-Rex", "Radioactive Barrel" };
-		if (ImGui::Combo("Models", &App->renderer->currentItemSelected, items, IM_ARRAYSIZE(items)))
-		{
-			if (App->modelLoader->modelRendered != App->renderer->currentItemSelected)
-			{
-				App->modelLoader->CleanModel();
-				App->modelLoader->ChooseModelToRender(App->renderer->currentItemSelected);
-			}
-		}
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

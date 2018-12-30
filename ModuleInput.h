@@ -54,8 +54,6 @@ public:
 	const iPoint& GetMousePosition() const;
 
 private:
-	void HandleDropFile(const char* path) const;
-
 	KeyState* keyboard;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
 	bool windowEvents[WE_COUNT];

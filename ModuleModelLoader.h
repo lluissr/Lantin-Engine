@@ -61,17 +61,10 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void ChooseModelToRender(int num);
-	void ImportModel(const char* path);
 	void CleanModel();
-
-	void GenerateMeshData(const aiMesh* aiMesh);
-	void GenerateMaterialData(const aiMaterial* aiMaterial);
-	GameObject* CreateGameObjects(const aiScene * scene, aiNode* node);
-	void ReplaceMaterial(const char* path);
+	
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
-	void GenerateVAO(Mesh& mesh);
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
 	
 	bool Import(const char* path);
@@ -79,11 +72,10 @@ public:
 	bool SaveMesh(Mesh* mesh, std::string& newpath);
 	Mesh* Load(const char* path);
 	void GenerateVBO(Mesh& mesh);
+	void GenerateVAO(Mesh& mesh);
 
 	std::vector<Mesh*> meshes;
 	std::vector<Material*> materials;
-
-	int modelRendered = -1;
 };
 
 #endif

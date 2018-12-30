@@ -137,9 +137,6 @@ update_status ModuleInput::PreUpdate()
 				mouse_buttons[5 - 1] = KEY_DOWN;
 			}
 			break;
-		case SDL_DROPFILE:
-			HandleDropFile(event.drop.file);
-			break;
 		}
 
 	}
@@ -170,36 +167,4 @@ const iPoint& ModuleInput::GetMousePosition() const
 const iPoint& ModuleInput::GetMouseMotion() const
 {
 	return mouse_motion;
-}
-
-void ModuleInput::HandleDropFile(const char* path) const
-{
-	assert(path != NULL);
-
-	std::string str(path);
-	std::string ext(str.substr(str.length() - 3));
-	if (ext == "fbx" || ext == "FBX")
-	{
-		App->modelLoader->CleanModel();
-
-		std::string str(path);
-		std::stringstream ss(str);
-		std::string token;
-		std::vector<std::string> cont;
-		while (std::getline(ss, token, '\\')) {
-			cont.push_back(token);
-		}
-		std::ostringstream stringStream;
-		stringStream << "Assets/" << cont[cont.size() - 1];
-
-		App->modelLoader->ImportModel(stringStream.str().c_str());
-	}
-	else if (ext == "png" || ext == "jpg" || ext == "dds")
-	{
-		App->modelLoader->ReplaceMaterial(path);
-	}
-	else
-	{
-		LOG("Incorrect file extension: %s", ext.c_str());
-	}
 }
