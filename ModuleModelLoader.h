@@ -75,7 +75,7 @@ public:
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
 	
 	bool Import(const char* path);
-	bool ImportMesh(const aiMesh* aiMesh);
+	bool ImportMesh(const aiMesh* aiMesh, const char* name);
 	bool SaveMesh(Mesh* mesh, std::string& newpath);
 	Mesh* Load(const char* path);
 	void GenerateVBO(Mesh& mesh);

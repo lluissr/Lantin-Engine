@@ -132,11 +132,11 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 
 	if (showGrid)
 	{
-		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+		dd::xzSquareGrid(-40000.0f, 40000.0f, 0.0f, 100.0f, math::float3(0.65f, 0.65f, 0.65f));
 	}
 	if (showAxis)
 	{
-		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+		dd::axisTriad(math::float4x4::identity, 12.5f, 125.0f, 0, false);
 	}
 
 	if (renderBoundingBoxes && App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr && App->scene->selectedGO->componentMesh->mesh != nullptr)

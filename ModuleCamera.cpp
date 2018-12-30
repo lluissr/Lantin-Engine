@@ -22,9 +22,9 @@ bool ModuleCamera::Init()
 {
 	sceneCamera = new ComponentCamera(nullptr, ComponentType::CAMERA);
 	selectedCamera = sceneCamera;
-	sceneCamera->frustum.pos = math::float3(0.0f, 1.0f, 10.0f);
+	sceneCamera->frustum.pos = math::float3(0.0f, 100.0f, 1000.0f);
 	sceneCamera->frustum.front = -float3::unitZ;
-	sceneCamera->frustum.farPlaneDistance = 1000.0f;
+	sceneCamera->frustum.farPlaneDistance = 100000.0f;
 	sceneCamera->yaw = 0;
 
 	return true;

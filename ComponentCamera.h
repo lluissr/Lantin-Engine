@@ -23,7 +23,7 @@ public:
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;
 
-	float mSpeed = 0.5f;
+	float mSpeed = 50.0f;
 	float rSpeed = 1.0f;
 
 	float pitch = 0;

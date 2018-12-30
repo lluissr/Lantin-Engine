@@ -37,8 +37,8 @@ ModuleModelLoader::~ModuleModelLoader()
 bool ModuleModelLoader::Init()
 {
 	//ChooseModelToRender(0);
-	LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
-	LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
+	//LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	//LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	App->scene->CalculateGlobalMatrix(App->scene->root);
 
@@ -501,7 +501,7 @@ bool ModuleModelLoader::Import(const char* path)
 	char* buffer;
 	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &buffer);
 	const aiScene* scene = aiImportFileFromMemory(buffer, lenghtBuffer, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate, "");
-
+	
 	if (scene == NULL)
 	{
 		const char* a = aiGetErrorString();
@@ -512,20 +512,23 @@ bool ModuleModelLoader::Import(const char* path)
 	{
 		LOG("Fbx imported for export: %s", path);
 	}
-
+	std::string name;
+	App->fileSystem->SplitPath(path, nullptr, &name, nullptr);
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
-		ImportMesh(scene->mMeshes[i]);
+		std::string meshName = name;
+		meshName.append("_" + std::to_string(i));
+		ImportMesh(scene->mMeshes[i], meshName.c_str());
 	}
 
 	return result;
 }
 
-bool ModuleModelLoader::ImportMesh(const aiMesh* mesh)
+
+bool ModuleModelLoader::ImportMesh(const aiMesh* mesh, const char* name)
 {
 	bool ret = false;
 	Mesh* newMesh = new Mesh();
-	const char* name = (mesh->mName.length > 0) ? mesh->mName.C_Str() : "Unnamed";
 
 	if (mesh->mNumVertices > 0)
 	{
@@ -585,10 +588,10 @@ bool ModuleModelLoader::ImportMesh(const aiMesh* mesh)
 	}
 
 	if (ret) {
-		std::string name = "Library/Meshes/";
-		name += mesh->mName.C_Str();
-		name += ".pisifai";
-		SaveMesh(newMesh, name);
+		std::string fileName = "Library/Meshes/";
+		fileName += name;
+		fileName += ".pisifai";
+		SaveMesh(newMesh, fileName);
 	}
 
 	delete newMesh;
