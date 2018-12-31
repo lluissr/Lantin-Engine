@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleTime.h"
+#include "ModuleScene.h"
 
 
 
@@ -22,11 +23,14 @@ void PanelEditor::Draw()
 	{
 		if (App->time->gameState == State::STOP) 
 		{
+			App->scene->SaveSceneJSON();
 			App->time->Start();
 		}
 		else 
 		{
 			App->time->Stop();
+			App->scene->cleanScene = true;
+			App->scene->loadScene = true;
 		}
 	}
 	ImGui::SameLine();

@@ -50,7 +50,7 @@ update_status ModuleEditor::PreUpdate()
 {
 	panelConfiguration->fps_log.erase(panelConfiguration->fps_log.begin());
 	panelConfiguration->fps_log.push_back(App->time->fps);
-	   
+
 	return UPDATE_CONTINUE;
 }
 
@@ -107,7 +107,7 @@ update_status ModuleEditor::Update()
 	{
 		panelModel->Draw();
 	}
-	
+
 	if (panelAbout->show)
 	{
 		panelAbout->Draw();
@@ -144,7 +144,7 @@ update_status ModuleEditor::Update()
 	}
 
 	//Menu
-	 if (DrawMenu()) return UPDATE_STOP;
+	if (DrawMenu()) return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
 }
@@ -185,16 +185,37 @@ bool ModuleEditor::DrawMenu()
 	{
 		if (ImGui::MenuItem("Save scene"))
 		{
-			App->scene->SaveSceneJSON();
+			if (App->time->gameState == State::STOP)
+			{
+				App->scene->SaveSceneJSON();
+			}
+			else
+			{
+				LOG("Can save scene when game is running!!!");
+			}
 		}
 		if (ImGui::MenuItem("Load scene"))
 		{
-			App->scene->cleanScene = true;
-			App->scene->loadScene = true;
+			if (App->time->gameState == State::STOP)
+			{
+				App->scene->cleanScene = true;
+				App->scene->loadScene = true;
+			}
+			else
+			{
+				LOG("Can load scene when game is running!!!");
+			}
 		}
 		if (ImGui::MenuItem("Clean scene"))
 		{
-			App->scene->cleanScene = true;
+			if (App->time->gameState == State::STOP)
+			{
+				App->scene->cleanScene = true;
+			}
+			else
+			{
+				LOG("Can clean scene when game is running!!!");
+			}
 		}
 
 		if (ImGui::MenuItem("Exit"))
