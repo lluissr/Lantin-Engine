@@ -1,0 +1,173 @@
+{
+    "scene": {
+        "ambientLight": 0.30000001192092898,
+        "lightPosition": {
+            "x": 0.0,
+            "y": 1000.0,
+            "z": 1000.0
+        },
+        "gameCamera": "5e8c7197-f9df-48c8-8456-bd9cdbe33ec4",
+        "gameObjects": [
+            {
+                "uuid": "58955fd9-86b8-4e54-9474-ee359588bccc",
+                "name": "Scene Root",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": []
+            },
+            {
+                "uuid": "5e8c7197-f9df-48c8-8456-bd9cdbe33ec4",
+                "name": "Game camera",
+                "parent": "58955fd9-86b8-4e54-9474-ee359588bccc",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "aaa5c5ab-997a-4263-aba0-0804d2e1aa04",
+                        "componentType": "CAMERA",
+                        "isActive": true,
+                        "gameObjectParent": "5e8c7197-f9df-48c8-8456-bd9cdbe33ec4",
+                        "frustum.nearPlaneDistance": 0.10000000149011612,
+                        "frustum.farPlaneDistance": 10000.0,
+                        "position": {
+                            "x": 0.0,
+                            "y": 100.0,
+                            "z": -1000.0
+                        },
+                        "front": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        },
+                        "up": {
+                            "x": 0.0,
+                            "y": 1.0,
+                            "z": 0.0
+                        },
+                        "pitch": 0.0,
+                        "yaw": 180.0,
+                        "rSpeed": 1.0,
+                        "mSpeed": 50.0
+                    }
+                ]
+            },
+            {
+                "uuid": "15db7847-802b-4aa0-8a3b-2fbbee92d1c5",
+                "name": "New GameObject",
+                "parent": "58955fd9-86b8-4e54-9474-ee359588bccc",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": []
+            },
+            {
+                "uuid": "2f18f08f-52b4-4a60-9013-72b9506044ec",
+                "name": "New GameObject",
+                "parent": "58955fd9-86b8-4e54-9474-ee359588bccc",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "6b90acdf-7b37-47fa-b85c-4ef3adcce3c7",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "2f18f08f-52b4-4a60-9013-72b9506044ec",
+                        "meshName": "Zombunny_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "6a933108-c709-4b59-898d-6c26ac5caac0",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "2f18f08f-52b4-4a60-9013-72b9506044ec",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
