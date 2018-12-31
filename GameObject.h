@@ -20,6 +20,7 @@ public:
 	void Update();
 	Component* CreateComponent(ComponentType type);
 	void SetIsSelected(bool selected);
+	bool AddChild(GameObject* go, std::string& parentUuid);
 	void RemoveChild();
 	void MarkToDelete();
 	void UpdateBoundingBox();

@@ -221,8 +221,7 @@ void ModuleScene::LoadSceneJSON()
 			{
 				GameObject* go = new GameObject();
 				go->LoadJSON(config, *it);
-				go->parent = root;
-				root->gameObjects.push_back(go);
+				root->AddChild(go, std::string(config->GetString("parent", (*it))));
 				if (gameCamerauuid != nullptr && gameCamera == nullptr && go->uuid == gameCamerauuid)
 				{
 					gameCamera = go;

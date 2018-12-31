@@ -101,7 +101,7 @@ void GameObject::RemoveChild()
 {
 	if (!gameObjects.empty())
 	{
-		gameObjects.remove_if([](GameObject* i) {return i->toDelete;});
+		gameObjects.remove_if([](GameObject* i) {return i->toDelete; });
 
 		for each (GameObject* go in gameObjects)
 		{
@@ -131,6 +131,27 @@ void GameObject::UpdateBoundingBox()
 	{
 		go->UpdateBoundingBox();
 	}
+}
+
+bool GameObject::AddChild(GameObject* go, std::string& parentUuid)
+{
+	if (uuid == parentUuid)
+	{
+		go->parent = this;
+		gameObjects.push_back(go);
+		return true;
+	}
+	else
+	{
+		for each (GameObject* gameObject in gameObjects)
+		{
+			if (gameObject->AddChild(go, parentUuid))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void GameObject::SaveJSON(Config* config)
