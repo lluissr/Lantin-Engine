@@ -1,6 +1,5 @@
 #include "ComponentCamera.h"
-
-
+#include "GameObject.h"
 
 ComponentCamera::ComponentCamera(GameObject* parent, ComponentType type) : Component(parent, type)
 {
@@ -69,4 +68,30 @@ void ComponentCamera::CopyFromComponentCamera(const ComponentCamera& componentCa
 	lastY = componentCamera.lastY;
 	fovY = componentCamera.fovY;
 	fovX = componentCamera.fovX;
+}
+
+void ComponentCamera::SaveJSON(Config * config)
+{
+	config->StartObject();
+
+	config->AddString("uuid", uuid.c_str());
+	config->AddComponentType("componentType", componentType);
+	config->AddBool("isActive", active);
+	
+	if (myGameObject != nullptr)
+	{
+		config->AddString("gameObjectParent", myGameObject->uuid.c_str());
+	}
+
+	config->AddFloat("frustum.nearPlaneDistance", frustum.nearPlaneDistance);
+	config->AddFloat("frustum.farPlaneDistance", frustum.farPlaneDistance);
+	config->AddFloat3("position", frustum.pos);
+	config->AddFloat3("front", frustum.front);
+	config->AddFloat3("up", frustum.up);
+	config->AddFloat("pitch", pitch);
+	config->AddFloat("yaw", yaw);
+	config->AddFloat("rSpeed", rSpeed);
+	config->AddFloat("mSpeed", mSpeed);
+
+	config->EndObject();
 }

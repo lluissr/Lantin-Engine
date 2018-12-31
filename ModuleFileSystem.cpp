@@ -32,6 +32,9 @@ bool ModuleFileSystem::Init()
 		PHYSFS_mkdir("/Library/Textures/");
 	if (PHYSFS_exists("/Library/Meshes/") == 0)
 		PHYSFS_mkdir("/Library/Meshes/");
+	if (PHYSFS_exists("/Library/Scene/") == 0)
+		PHYSFS_mkdir("/Library/Scene/");
+
 	return true;
 }
 

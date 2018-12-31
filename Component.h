@@ -1,6 +1,7 @@
 #ifndef __Component_h__
 #define __Component_h__
 #include <string>
+#include "Config.h"
 
 class GameObject;
 
@@ -31,5 +32,7 @@ public:
 	{
 		active = false;
 	};
+
+	virtual void SaveJSON(Config* config) {};
 };
 #endif

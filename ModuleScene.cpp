@@ -3,6 +3,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 
+
 ModuleScene::ModuleScene()
 {
 }
@@ -131,4 +132,38 @@ GameObject* ModuleScene::CreateCamera()
 	go->parent = root;
 	root->gameObjects.push_back(go);
 	return go;
+}
+
+void ModuleScene::SaveSceneJSON()
+{
+	LOG("Starting saving scene")
+	Config* config = new Config();
+	config->StartObject("scene");
+	config->AddFloat("ambientLight", ambient);
+	config->AddFloat3("lightPosition", lightPosition);
+
+	if (gameCamera != nullptr)
+	{
+		config->AddString("gameCamera", gameCamera->uuid.c_str());
+	}
+	config->StartArray("gameObjects");
+	SaveGameObjectsJSON(config, root);
+	config->EndArray();
+	config->EndObject();
+
+	config->WriteToDisk();
+	LOG("Scene saved succesfully: Library/Scene/scene.json");
+}
+
+void ModuleScene::SaveGameObjectsJSON(Config* config, GameObject* gameObject)
+{
+	gameObject->SaveJSON(config);
+
+	if (gameObject->gameObjects.size() > 0)
+	{
+		for (std::list<GameObject*>::iterator iterator = gameObject->gameObjects.begin(); iterator != gameObject->gameObjects.end(); ++iterator)
+		{
+			SaveGameObjectsJSON(config, (*iterator));
+		}
+	}
 }

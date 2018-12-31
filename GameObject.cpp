@@ -31,8 +31,9 @@ GameObject::GameObject(const GameObject& go)
 	}
 	if (go.componentMaterial != nullptr)
 	{
+		//Fix
 		componentMaterial = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
-		componentMaterial->material = go.componentMaterial->material;
+		componentMaterial->CopyFromComponentMaterial(*go.componentMaterial);
 	}
 	if (go.componentCamera != nullptr)
 	{
@@ -130,4 +131,33 @@ void GameObject::UpdateBoundingBox()
 	{
 		go->UpdateBoundingBox();
 	}
+}
+
+void GameObject::SaveJSON(Config* config)
+{
+	config->StartObject();
+
+	config->AddString("uuid", uuid.c_str());
+	config->AddString("name", name.c_str());
+
+	if (parent != nullptr)
+	{
+		config->AddString("parent", parent->uuid.c_str());
+	}
+
+	config->AddBool("isActive", isActive);
+	config->AddBool("isStatic", isStatic);
+
+	config->AddFloat3("position", position);
+	config->AddFloat3("scale", scale);
+	config->AddQuat("rotation", rotation);
+
+	config->StartArray("components");
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
+	{
+		(*iterator)->SaveJSON(config);
+	}
+	config->EndArray();
+
+	config->EndObject();
 }

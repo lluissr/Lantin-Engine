@@ -208,6 +208,9 @@
     <ClCompile Include="PanelLibrary.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -498,6 +501,7 @@
     <ClInclude Include="LibraryThread.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">

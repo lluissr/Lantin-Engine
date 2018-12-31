@@ -19,6 +19,10 @@ public:
 	ComponentMaterial(GameObject* parent, ComponentType type);
 	~ComponentMaterial();
 
+	void CopyFromComponentMaterial(const ComponentMaterial& componentMaterial);
+
+	void SaveJSON(Config* config) override;
+
 	void Update();
 
 	Material* material = nullptr;

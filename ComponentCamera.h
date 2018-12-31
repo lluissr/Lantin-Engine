@@ -17,6 +17,8 @@ public:
 	void SetHorizontalFOV(float fovX);
 	void CopyFromComponentCamera(const ComponentCamera& componentCamera);
 
+	void SaveJSON(Config* config) override;
+
 	bool showFrustum = true;
 
 	math::Frustum frustum;

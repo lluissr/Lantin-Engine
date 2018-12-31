@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleRender_h__
+#define __ModuleRender_h__
+
 #include "Module.h"
 #include "Globals.h"
 #include "ModuleModelLoader.h"
@@ -53,3 +55,5 @@ public:
 private:
 	unsigned fallback = 0;
 };
+
+#endif

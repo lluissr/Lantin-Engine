@@ -285,7 +285,7 @@ void PanelModel::Draw()
 			ImGui::InputFloat("Far Plane", &go->componentCamera->frustum.farPlaneDistance);
 		}
 	}
-	
+
 	ImGui::End();
 }
 
@@ -390,9 +390,12 @@ void PanelModel::DrawComboBoxMeshes()
 							delete go->componentMesh->mesh;
 						}
 						go->componentMesh->mesh = mesh;
-						Material* material = new Material();
-						ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
-						cmaterial->material = material;
+						if (go->componentMaterial == nullptr)
+						{
+							Material* material = new Material();
+							ComponentMaterial* cmaterial = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
+							cmaterial->material = material;
+						}
 						App->scene->CalculateGlobalMatrix(App->scene->root);
 						go->UpdateBoundingBox();
 					}

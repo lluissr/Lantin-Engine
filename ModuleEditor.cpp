@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleTime.h"
+#include "ModuleScene.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
@@ -182,6 +183,11 @@ bool ModuleEditor::DrawMenu()
 
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem("Save scene"))
+		{
+			App->scene->SaveSceneJSON();
+		}
+
 		if (ImGui::MenuItem("Exit"))
 		{
 			return true;

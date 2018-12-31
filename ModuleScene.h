@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "MathGeoLib.h"
 #include <list>
+#include "Config.h"
 
 class GameObject;
 
@@ -24,6 +25,8 @@ public:
 	void SelectGameObject(GameObject* go);
 	void CalculateGlobalMatrix(GameObject* go);
 	void UseAsGameCamera(GameObject* go);
+	void SaveSceneJSON();
+	void SaveGameObjectsJSON(Config* config, GameObject* gameObject);
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;

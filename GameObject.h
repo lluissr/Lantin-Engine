@@ -8,6 +8,7 @@
 #include "MathGeoLib.h"
 #include <list>
 #include "Utils/crossguid/guid.hpp"
+#include "Config.h"
 
 class GameObject
 {
@@ -22,6 +23,8 @@ public:
 	void RemoveChild();
 	void MarkToDelete();
 	void UpdateBoundingBox();
+
+	void SaveJSON(Config* config);
 
 	std::string name = "";
 	std::string uuid = "";

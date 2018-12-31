@@ -13,6 +13,7 @@ public:
 
 	void Update();
 	void CopyFromComponentMesh(const ComponentMesh& componentMesh);
+	void SaveJSON(Config* config) override;
 
 	Mesh* mesh = nullptr;
 };
