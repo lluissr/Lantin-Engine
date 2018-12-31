@@ -83,8 +83,8 @@ void ComponentCamera::SaveJSON(Config * config)
 		config->AddString("gameObjectParent", myGameObject->uuid.c_str());
 	}
 
-	config->AddFloat("frustum.nearPlaneDistance", frustum.nearPlaneDistance);
-	config->AddFloat("frustum.farPlaneDistance", frustum.farPlaneDistance);
+	config->AddFloat("nearPlaneDistance", frustum.nearPlaneDistance);
+	config->AddFloat("farPlaneDistance", frustum.farPlaneDistance);
 	config->AddFloat3("position", frustum.pos);
 	config->AddFloat3("front", frustum.front);
 	config->AddFloat3("up", frustum.up);
@@ -95,3 +95,20 @@ void ComponentCamera::SaveJSON(Config * config)
 
 	config->EndObject();
 }
+
+void ComponentCamera::LoadJSON(Config* config, rapidjson::Value& value)
+{
+	uuid = std::string(config->GetString("uuid", value));
+	active = config->GetBool("isActive", value);
+
+	frustum.nearPlaneDistance = config->GetFloat("nearPlaneDistance", value);
+	frustum.farPlaneDistance = config->GetFloat("farPlaneDistance", value);
+	frustum.pos = config->GetFloat3("position", value);
+	frustum.front = config->GetFloat3("front", value);
+	frustum.up = config->GetFloat3("up", value);
+	pitch = config->GetFloat("pitch", value);
+	yaw = config->GetFloat("yaw", value);
+	rSpeed = config->GetFloat("rSpeed", value);
+	mSpeed = config->GetFloat("mSpeed", value);
+}
+

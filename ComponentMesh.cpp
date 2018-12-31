@@ -51,11 +51,34 @@ void ComponentMesh::SaveJSON(Config * config)
 		config->AddString("gameObjectParent", myGameObject->uuid.c_str());
 	}
 
-	if (mesh->meshName != nullptr)
+	if (mesh != nullptr)
 	{
-		config->AddString("meshName", mesh->meshName);
+		if (!mesh->meshName.empty())
+		{
+			config->AddString("meshName", mesh->meshName.c_str());
+		}
+		config->AddBool("useWireframe", mesh->useWireframe);
 	}
-	config->AddBool("useWireframe", mesh->useWireframe);
 
 	config->EndObject();
+}
+
+void ComponentMesh::LoadJSON(Config* config, rapidjson::Value& value)
+{
+	uuid = std::string(config->GetString("uuid", value));
+	active = config->GetBool("isActive", value);
+
+	if (value.HasMember("useWireframe"))
+	{
+		if (value.HasMember("meshName"))
+		{
+			mesh = App->modelLoader->Load(config->GetString("meshName",value));
+			mesh->useWireframe = config->GetBool("useWireframe", value);
+		}
+		else 
+		{
+			mesh = new Mesh();
+			mesh->useWireframe = config->GetBool("useWireframe", value);
+		}
+	}
 }

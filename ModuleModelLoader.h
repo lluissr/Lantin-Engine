@@ -36,27 +36,27 @@ public:
 	unsigned* indices = nullptr;
 	float* vertices = nullptr;
 	float* texCoords = nullptr;
-	const char* meshName = nullptr;
+	std::string meshName;
 };
 
 class Material
 {
 public:
 	unsigned diffuseMap = 0u;
-	const char* diffuseMapName = nullptr;
+	std::string diffuseMapName;
 	math::float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float k_diffuse = 0.0f;
 	int diffuseWidth = 0;
 	int diffuseHeight = 0;
 
 	unsigned occlusionMap = 0u;
-	const char* occlusionMapName = nullptr;
+	std::string occlusionMapName;
 	float k_ambient = 0.0f;
 	int ambientWidth = 0;
 	int ambientHeight = 0;
 
 	unsigned specularMap = 0u;
-	const char* specularMapName = nullptr;
+	std::string specularMapName;
 	math::float4 specularColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float k_specular = 0.0f;
 	float shininess = 0.0f;
@@ -64,7 +64,7 @@ public:
 	int specularHeight = 0;
 
 	unsigned emissiveMap = 0u;
-	const char* emissiveMapName = nullptr;
+	std::string emissiveMapName;
 	math::float4 emissiveColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	int emissiveWidth = 0;
 	int emissiveHeight = 0;

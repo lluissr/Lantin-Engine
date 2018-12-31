@@ -26,6 +26,32 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::PreUpdate()
 {
+	if (cleanScene)
+	{
+		selectedGO = nullptr;
+		if (gameCamera != nullptr)
+		{
+			if (gameCamera->componentCamera->uuid == App->camera->selectedCamera->uuid)
+			{
+				App->camera->selectedCamera = nullptr;
+			}
+			gameCamera = nullptr;
+		}
+		delete root;
+		root = new GameObject();
+		root->name = "Scene Root";
+
+		cleanScene = false;
+	}
+
+	if (loadScene && !cleanScene)
+	{
+		LoadSceneJSON();
+		CalculateGlobalMatrix(root);
+		root->UpdateBoundingBox();
+		loadScene = false;
+	}
+
 	root->RemoveChild();
 
 	if (selectedGO != nullptr && selectedGO->toDelete)
@@ -136,7 +162,7 @@ GameObject* ModuleScene::CreateCamera()
 
 void ModuleScene::SaveSceneJSON()
 {
-	LOG("Starting saving scene")
+	LOG("Starting saving scene");
 	Config* config = new Config();
 	config->StartObject("scene");
 	config->AddFloat("ambientLight", ambient);
@@ -146,6 +172,7 @@ void ModuleScene::SaveSceneJSON()
 	{
 		config->AddString("gameCamera", gameCamera->uuid.c_str());
 	}
+
 	config->StartArray("gameObjects");
 	SaveGameObjectsJSON(config, root);
 	config->EndArray();
@@ -153,6 +180,7 @@ void ModuleScene::SaveSceneJSON()
 
 	config->WriteToDisk();
 	LOG("Scene saved succesfully: Library/Scene/scene.json");
+	delete config;
 }
 
 void ModuleScene::SaveGameObjectsJSON(Config* config, GameObject* gameObject)
@@ -166,4 +194,52 @@ void ModuleScene::SaveGameObjectsJSON(Config* config, GameObject* gameObject)
 			SaveGameObjectsJSON(config, (*iterator));
 		}
 	}
+}
+
+void ModuleScene::LoadSceneJSON()
+{
+	LOG("Starting scene loading: Library/Scene/scene.json");
+	Config* config = new Config();
+	rapidjson::Document document = config->LoadFromDisk();
+
+	if (!document.HasParseError())
+	{
+		rapidjson::Value& scene = document["scene"];
+		ambient = config->GetFloat("ambientLight", scene);
+		lightPosition = config->GetFloat3("lightPosition", scene);
+
+		const char* gameCamerauuid = nullptr;
+		if (scene.HasMember("gameCamera"))
+		{
+			gameCamerauuid = config->GetString("gameCamera", scene);
+		}
+
+		rapidjson::Value gameObjects = scene["gameObjects"].GetArray();
+		for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
+		{
+			if ((*it).HasMember("parent"))
+			{
+				GameObject* go = new GameObject();
+				go->LoadJSON(config, *it);
+				go->parent = root;
+				root->gameObjects.push_back(go);
+				if (gameCamerauuid != nullptr && gameCamera == nullptr && go->uuid == gameCamerauuid)
+				{
+					gameCamera = go;
+				}
+			}
+			else
+			{
+				root->uuid = std::string(config->GetString("uuid", (*it)));
+			}
+		}
+
+		LOG("Scene loaded succesfully");
+	}
+	else
+	{
+		LOG("Error loading scene");
+	}
+
+	delete config;
 }

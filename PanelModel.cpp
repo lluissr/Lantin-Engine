@@ -297,19 +297,19 @@ void PanelModel::DrawComboBoxMaterials(MaterialType type)
 	{
 	case MaterialType::DIFFUSE:
 		id = "Diffuse";
-		comboBoxSelected = go->componentMaterial->material->diffuseMapName != nullptr ? go->componentMaterial->material->diffuseMapName : "Select a Texture";
+		comboBoxSelected = !go->componentMaterial->material->diffuseMapName.empty() ? go->componentMaterial->material->diffuseMapName.c_str() : "Select a Texture";
 		break;
 	case MaterialType::OCCLUSION:
 		id = "Occlusion";
-		comboBoxSelected = go->componentMaterial->material->occlusionMapName != nullptr ? go->componentMaterial->material->occlusionMapName : "Select a Texture";
+		comboBoxSelected = !go->componentMaterial->material->occlusionMapName.empty() ? go->componentMaterial->material->occlusionMapName.c_str() : "Select a Texture";
 		break;
 	case MaterialType::SPECULAR:
 		id = "Specular";
-		comboBoxSelected = go->componentMaterial->material->specularMapName != nullptr ? go->componentMaterial->material->specularMapName : "Select a Texture";
+		comboBoxSelected = !go->componentMaterial->material->specularMapName.empty() ? go->componentMaterial->material->specularMapName.c_str() : "Select a Texture";
 		break;
 	case MaterialType::EMISSIVE:
 		id = "Emissive";
-		comboBoxSelected = go->componentMaterial->material->emissiveMapName != nullptr ? go->componentMaterial->material->emissiveMapName : "Select a Texture";
+		comboBoxSelected = !go->componentMaterial->material->emissiveMapName.empty() ? go->componentMaterial->material->emissiveMapName.c_str() : "Select a Texture";
 		break;
 	}
 
@@ -369,7 +369,7 @@ void PanelModel::DrawComboBoxMaterials(MaterialType type)
 
 void PanelModel::DrawComboBoxMeshes()
 {
-	const char* comboBoxSelected = (go->componentMesh->mesh != nullptr && go->componentMesh->mesh->meshName != nullptr) ? go->componentMesh->mesh->meshName : "Select a Mesh";
+	const char* comboBoxSelected = (go->componentMesh->mesh != nullptr && !go->componentMesh->mesh->meshName.empty()) ? go->componentMesh->mesh->meshName.c_str() : "Select a Mesh";
 
 	if (App->fileSystem->meshList.size() > 0)
 	{

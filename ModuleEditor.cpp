@@ -187,6 +187,15 @@ bool ModuleEditor::DrawMenu()
 		{
 			App->scene->SaveSceneJSON();
 		}
+		if (ImGui::MenuItem("Load scene"))
+		{
+			App->scene->cleanScene = true;
+			App->scene->loadScene = true;
+		}
+		if (ImGui::MenuItem("Clean scene"))
+		{
+			App->scene->cleanScene = true;
+		}
 
 		if (ImGui::MenuItem("Exit"))
 		{

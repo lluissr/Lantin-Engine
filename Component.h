@@ -34,5 +34,6 @@ public:
 	};
 
 	virtual void SaveJSON(Config* config) {};
+	virtual void LoadJSON(Config* config, rapidjson::Value& value) {};
 };
 #endif

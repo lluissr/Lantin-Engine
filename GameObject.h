@@ -25,6 +25,8 @@ public:
 	void UpdateBoundingBox();
 
 	void SaveJSON(Config* config);
+	void LoadJSON(Config* config, rapidjson::Value& value);
+
 
 	std::string name = "";
 	std::string uuid = "";

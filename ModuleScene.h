@@ -27,6 +27,7 @@ public:
 	void UseAsGameCamera(GameObject* go);
 	void SaveSceneJSON();
 	void SaveGameObjectsJSON(Config* config, GameObject* gameObject);
+	void LoadSceneJSON();
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;
@@ -34,6 +35,9 @@ public:
 
 	math::float3 lightPosition = math::float3(0.0f, 1000.0f, 1000.0f);
 	float ambient = 0.3f;
+
+	bool cleanScene = false;
+	bool loadScene = false;
 };
 
 #endif

@@ -161,3 +161,29 @@ void GameObject::SaveJSON(Config* config)
 
 	config->EndObject();
 }
+
+void GameObject::LoadJSON(Config* config, rapidjson::Value& value)
+{
+	uuid = std::string(config->GetString("uuid", value));
+	name = std::string(config->GetString("name", value));
+
+	isActive = config->GetBool("isActive", value);
+	isStatic = config->GetBool("isStatic", value);
+
+	position = config->GetFloat3("position", value);
+	scale = config->GetFloat3("scale", value);
+	rotation = config->GetQuat("rotation", value);
+	localMatrix.Set(float4x4::FromTRS(position, rotation, scale));
+
+	rapidjson::Value components = value["components"].GetArray();
+	for (rapidjson::Value::ValueIterator it = components.Begin(); it != components.End(); it++)
+	{
+		Component* component = CreateComponent(config->GetComponentType("componentType", (*it)));
+
+		if (component != nullptr)
+		{
+			component->LoadJSON(config, (*it));
+		}
+	}
+
+}

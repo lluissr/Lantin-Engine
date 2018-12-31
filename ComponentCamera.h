@@ -18,6 +18,7 @@ public:
 	void CopyFromComponentCamera(const ComponentCamera& componentCamera);
 
 	void SaveJSON(Config* config) override;
+	void LoadJSON(Config* config, rapidjson::Value& value) override;
 
 	bool showFrustum = true;
 

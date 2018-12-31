@@ -411,7 +411,7 @@ bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
 Mesh* ModuleModelLoader::Load(const char* path)
 {
 	Mesh* mesh = new Mesh;
-	mesh->meshName = path;
+	mesh->meshName = std::string(path);
 	std::string pathName = "Library/Meshes/";
 	pathName += path;
 	char* buffer = nullptr;
