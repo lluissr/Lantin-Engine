@@ -54,6 +54,25 @@ void PanelModel::Draw()
 			go->CreateComponent(ComponentType::MESH);
 		}
 	}
+	ImGui::SameLine();
+	if (go->componentMaterial == nullptr)
+	{
+		if (ImGui::Button("Add material"))
+		{
+			ComponentMaterial* material = (ComponentMaterial*)go->CreateComponent(ComponentType::MATERIAL);
+			material->material = new Material();
+		}
+	}
+	ImGui::SameLine();
+	if (go->componentCamera == nullptr)
+	{
+		if (ImGui::Button("Add camera"))
+		{
+			go->CreateComponent(ComponentType::CAMERA);
+		}
+	}
+
+	ImGui::NewLine();
 
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
@@ -153,8 +172,21 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
+			if (ImGui::Button("Remove mesh component"))
+			{
+				go->componentMesh->toDelete = true;
+			}
 			ImGui::Checkbox("Component mesh active", &go->componentMesh->active);
-			DrawComboBoxMeshes();
+			DrawComboBoxMeshes(); 
+			ImGui::SameLine();
+			if (ImGui::Button("Without mesh"))
+			{
+				if (go->componentMesh->mesh != nullptr)
+				{
+					delete go->componentMesh->mesh;
+					go->componentMesh->mesh = nullptr;
+				}
+			}
 			if (go->componentMesh->mesh != nullptr)
 			{
 				ImGui::Checkbox("Wireframe", &go->componentMesh->mesh->useWireframe);
@@ -168,12 +200,27 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
+			if (ImGui::Button("Remove material component"))
+			{
+				go->componentMaterial->toDelete = true;
+			}
 			ImGui::Checkbox("Component material active", &go->componentMaterial->active);
 			if (ImGui::CollapsingHeader("Diffuse"))
 			{
 				ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->diffuseColor);
 				DrawComboBoxMaterials(MaterialType::DIFFUSE);
-				go->componentMaterial->material;
+				ImGui::SameLine();
+				if (ImGui::Button("Without diffuse"))
+				{
+					if (go->componentMaterial->material->diffuseMap != 0)
+					{
+						App->textures->Unload(go->componentMaterial->material->diffuseMap);
+						go->componentMaterial->material->diffuseMap = 0u;
+						go->componentMaterial->material->diffuseWidth = 0;
+						go->componentMaterial->material->diffuseHeight = 0;
+						go->componentMaterial->material->diffuseMapName = "";
+					}
+				}
 				ImGui::Image((ImTextureID)go->componentMaterial->material->diffuseMap, ImVec2(200, 200));
 				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->diffuseWidth, go->componentMaterial->material->diffuseHeight);
 				ImGui::SliderFloat("K diffuse", &go->componentMaterial->material->k_diffuse, 0, 1);
@@ -182,7 +229,18 @@ void PanelModel::Draw()
 			if (ImGui::CollapsingHeader("Ambient"))
 			{
 				DrawComboBoxMaterials(MaterialType::OCCLUSION);
-				go->componentMaterial->material;
+				ImGui::SameLine();
+				if (ImGui::Button("Without ambient"))
+				{
+					if (go->componentMaterial->material->occlusionMap != 0)
+					{
+						App->textures->Unload(go->componentMaterial->material->occlusionMap);
+						go->componentMaterial->material->occlusionMap = 0u;
+						go->componentMaterial->material->ambientWidth = 0;
+						go->componentMaterial->material->ambientHeight = 0;
+						go->componentMaterial->material->occlusionMapName = "";
+					}
+				}
 				ImGui::Image((ImTextureID)go->componentMaterial->material->occlusionMap, ImVec2(200, 200));
 				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->ambientWidth, go->componentMaterial->material->ambientHeight);
 				ImGui::SliderFloat("K ambient", &go->componentMaterial->material->k_ambient, 0, 1);
@@ -191,7 +249,18 @@ void PanelModel::Draw()
 			{
 				ImGui::ColorEdit4("Specular color", (float*)&go->componentMaterial->material->specularColor);
 				DrawComboBoxMaterials(MaterialType::SPECULAR);
-				go->componentMaterial->material;
+				ImGui::SameLine();
+				if (ImGui::Button("Without specular"))
+				{
+					if (go->componentMaterial->material->specularMap != 0)
+					{
+						App->textures->Unload(go->componentMaterial->material->specularMap);
+						go->componentMaterial->material->specularMap = 0u;
+						go->componentMaterial->material->specularWidth = 0;
+						go->componentMaterial->material->specularHeight = 0;
+						go->componentMaterial->material->specularMapName = "";
+					}
+				}
 				ImGui::Image((ImTextureID)go->componentMaterial->material->specularMap, ImVec2(200, 200));
 				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->specularWidth, go->componentMaterial->material->specularHeight);
 				ImGui::SliderFloat("K specular", &go->componentMaterial->material->k_specular, 0, 1);
@@ -201,19 +270,21 @@ void PanelModel::Draw()
 			{
 				ImGui::ColorEdit4("Emissive color", (float*)&go->componentMaterial->material->emissiveColor);
 				DrawComboBoxMaterials(MaterialType::EMISSIVE);
-				go->componentMaterial->material;
+				ImGui::SameLine();
+				if (ImGui::Button("Without emissive"))
+				{
+					if (go->componentMaterial->material->emissiveMap != 0)
+					{
+						App->textures->Unload(go->componentMaterial->material->emissiveMap);
+						go->componentMaterial->material->emissiveMap = 0u;
+						go->componentMaterial->material->emissiveWidth = 0;
+						go->componentMaterial->material->emissiveHeight = 0;
+						go->componentMaterial->material->emissiveMapName = "";
+					}
+				}
 				ImGui::Image((ImTextureID)go->componentMaterial->material->emissiveMap, ImVec2(200, 200));
 				ImGui::Text("Dimensions: %dx%d", go->componentMaterial->material->emissiveWidth, go->componentMaterial->material->emissiveHeight);
 			}
-
-			/*
-				const char* items[] = { "Flat", "Gouraud", "Phong", "Blinn" };
-				int number = max(0, go->componentMaterial->material->program - 2);
-				if (ImGui::Combo("Shading", &number, items, IM_ARRAYSIZE(items)))
-				{
-					go->componentMaterial->material->program = number + 2;
-				}
-				*/
 		}
 	}
 
@@ -221,6 +292,10 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{
+			if (ImGui::Button("Remove camera component"))
+			{
+				go->componentCamera->toDelete = true;
+			}
 			ImGui::Checkbox("Component camera active", &go->componentCamera->active);
 			ImGui::Checkbox("Draw frustum", &go->componentCamera->showFrustum);
 			ImGui::PushItemWidth(75);

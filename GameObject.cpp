@@ -98,13 +98,45 @@ void GameObject::SetIsSelected(bool selected)
 
 void GameObject::RemoveChild()
 {
+	RemoveComponent();
+
 	if (!childrens.empty())
 	{
-		childrens.remove_if([](GameObject* i) {return i->toDelete; });
+		childrens.remove_if([](GameObject* i) { return i->toDelete; });
 
 		for each (GameObject* go in childrens)
 		{
 			go->RemoveChild();
+		}
+	}
+}
+
+void GameObject::RemoveComponent()
+{
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
+	{
+		if ((*iterator)->toDelete)
+		{
+			switch ((*iterator)->componentType)
+			{
+			case ComponentType::MESH:
+				componentMesh = nullptr;
+				break;
+			case ComponentType::MATERIAL:
+				componentMaterial = nullptr;
+				break;
+			case ComponentType::CAMERA:
+				componentCamera = nullptr;
+				break;
+			default:
+				break;
+			}
+			delete *iterator;
+			iterator = components.erase(iterator);
+		}
+		else
+		{
+			++iterator;
 		}
 	}
 }

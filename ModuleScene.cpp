@@ -53,7 +53,7 @@ update_status ModuleScene::PreUpdate()
 	}
 
 	root->RemoveChild();
-
+	
 	if (selectedGO != nullptr && selectedGO->toDelete)
 	{
 		if (selectedGO->uuid == gameCamera->uuid)
@@ -78,6 +78,11 @@ update_status ModuleScene::PreUpdate()
 			delete gameCamera;
 			gameCamera = nullptr;
 		}
+	}
+
+	if (gameCamera != nullptr && gameCamera->componentCamera == nullptr)
+	{
+		gameCamera = nullptr;
 	}
 
 	return UPDATE_CONTINUE;

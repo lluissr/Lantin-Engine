@@ -20,6 +20,7 @@ public:
 	bool active = true;
 	GameObject* myGameObject = nullptr;
 	ComponentType componentType = ComponentType::EMPTY;
+	bool toDelete = false;
 
 	virtual void Enable()
 	{

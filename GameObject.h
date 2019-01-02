@@ -22,6 +22,7 @@ public:
 	void SetIsSelected(bool selected);
 	bool AddChild(GameObject* go, std::string& parentUuid);
 	void RemoveChild();
+	void RemoveComponent();
 	void MarkToDelete();
 	void UpdateBoundingBox();
 	bool CheckIfIsDecendent(const GameObject& children);
