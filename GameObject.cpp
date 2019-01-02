@@ -31,7 +31,6 @@ GameObject::GameObject(const GameObject& go)
 	}
 	if (go.componentMaterial != nullptr)
 	{
-		//Fix
 		componentMaterial = (ComponentMaterial*)CreateComponent(ComponentType::MATERIAL);
 		componentMaterial->CopyFromComponentMaterial(*go.componentMaterial);
 	}

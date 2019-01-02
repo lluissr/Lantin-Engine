@@ -129,6 +129,13 @@ void PanelScene::DrawTreeNode(GameObject* go)
 				App->scene->UseAsGameCamera(go);
 			}
 		}
+		if (ImGui::Button("Add game object children"))
+		{
+			GameObject* newGo = new GameObject();
+			newGo->name = "New GameObject";
+			newGo->parent = go;
+			go->childrens.push_back(newGo);
+		}
 		if (ImGui::Button("Duplicar"))
 		{
 			GameObject* newGameObject = new GameObject(*go);

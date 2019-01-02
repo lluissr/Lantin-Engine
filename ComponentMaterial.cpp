@@ -20,6 +20,7 @@ ComponentMaterial::~ComponentMaterial()
 
 void ComponentMaterial::CopyFromComponentMaterial(const ComponentMaterial& componentMaterial)
 {
+	active = componentMaterial.active;
 	material = new Material();
 	material->diffuseMapName = componentMaterial.material->diffuseMapName;
 	if (!material->diffuseMapName.empty())

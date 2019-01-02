@@ -23,6 +23,7 @@ void ComponentMesh::Update()
 
 void ComponentMesh::CopyFromComponentMesh(const ComponentMesh& componentMesh)
 {
+	active = componentMesh.active;
 	mesh = new Mesh();
 	mesh->vbo = componentMesh.mesh->vbo;
 	mesh->ibo = componentMesh.mesh->ibo;

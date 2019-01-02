@@ -79,7 +79,7 @@ update_status ModuleRender::Update()
 {
 
 	DrawInFrameBuffer(frameBufferScene);
-	if (App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive)
+	if (App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive && App->scene->gameCamera->componentCamera->active)
 	{
 		DrawInFrameBuffer(frameBufferGame);
 	}
@@ -161,9 +161,9 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 			}
 		}
 
-		if (gameObject->componentMesh != nullptr && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
+		if (gameObject->componentMesh != nullptr && gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
 			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive || (App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
-				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix);
+				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
 			}
 		}
 
@@ -175,10 +175,8 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 	}
 }
 
-void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, bool active)
 {
-	unsigned program = App->program->blinnProgram;
-
 	if (mesh.useWireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -188,39 +186,54 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	glUseProgram(program);
+	if (active)
+	{
+		unsigned program = App->program->blinnProgram;
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
+		glUseProgram(program);
 
-	glUniform4fv(glGetUniformLocation(program, "diffuseColor"), 1, (float*)&material.diffuseColor);
-	glUniform4fv(glGetUniformLocation(program, "emissiveColor"), 1, (float*)&material.emissiveColor);
-	glUniform4fv(glGetUniformLocation(program, "specularColor"), 1, (float*)&material.specularColor);
+		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
 
-	glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
-	glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
-	glUniform1f(glGetUniformLocation(program, "shininess"), material.shininess);
-	glUniform1f(glGetUniformLocation(program, "k_ambient"), material.k_ambient);
-	glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
-	glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
+		glUniform4fv(glGetUniformLocation(program, "diffuseColor"), 1, (float*)&material.diffuseColor);
+		glUniform4fv(glGetUniformLocation(program, "emissiveColor"), 1, (float*)&material.emissiveColor);
+		glUniform4fv(glGetUniformLocation(program, "specularColor"), 1, (float*)&material.specularColor);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material.diffuseMap != 0 ? material.diffuseMap : fallback);
-	glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
+		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
+		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
+		glUniform1f(glGetUniformLocation(program, "shininess"), material.shininess);
+		glUniform1f(glGetUniformLocation(program, "k_ambient"), material.k_ambient);
+		glUniform1f(glGetUniformLocation(program, "k_diffuse"), material.k_diffuse);
+		glUniform1f(glGetUniformLocation(program, "k_specular"), material.k_specular);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, material.emissiveMap != 0 ? material.emissiveMap : fallback);
-	glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, material.diffuseMap != 0 ? material.diffuseMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, material.occlusionMap != 0 ? material.occlusionMap : fallback);
-	glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material.emissiveMap != 0 ? material.emissiveMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
 
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, material.specularMap != 0 ? material.specularMap : fallback);
-	glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, material.occlusionMap != 0 ? material.occlusionMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
 
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, material.specularMap != 0 ? material.specularMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
+
+	}
+	else
+	{
+		unsigned program = App->program->colorProgram;
+		glUseProgram(program);
+		glUniform4fv(glGetUniformLocation(program, "newColor"), 1, (float*)&math::float4(0, 0, 0, 0));
+		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &modelMatrix[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &viewMatrix[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &projectionMatrix[0][0]);
+
+	}
 
 	glBindVertexArray(mesh.vao);
 	glDrawElements(GL_TRIANGLES, mesh.numIndices, GL_UNSIGNED_INT, nullptr);

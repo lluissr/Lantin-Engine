@@ -153,6 +153,7 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
+			ImGui::Checkbox("Component mesh active", &go->componentMesh->active);
 			DrawComboBoxMeshes();
 			if (go->componentMesh->mesh != nullptr)
 			{
@@ -167,7 +168,7 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Material"))
 		{
-
+			ImGui::Checkbox("Component material active", &go->componentMaterial->active);
 			if (ImGui::CollapsingHeader("Diffuse"))
 			{
 				ImGui::ColorEdit4("Diffuse color", (float*)&go->componentMaterial->material->diffuseColor);
@@ -220,6 +221,7 @@ void PanelModel::Draw()
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{
+			ImGui::Checkbox("Component camera active", &go->componentCamera->active);
 			ImGui::Checkbox("Draw frustum", &go->componentCamera->showFrustum);
 			ImGui::PushItemWidth(75);
 			ImGui::Text("Position:");

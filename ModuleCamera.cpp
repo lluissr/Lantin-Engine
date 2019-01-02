@@ -120,30 +120,33 @@ void ModuleCamera::Orbit()
 
 void ModuleCamera::Focus()
 {
-	math::float3 center = math::float3(0.0f, 1.0f, 10.0f);
-	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+	if (selectedCamera == sceneCamera)
 	{
-		center = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
-	}
-
-	//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
-	selectedCamera->frustum.pos = center;
-	selectedCamera->frustum.front = math::float3(0.0f, 0.0f, -1.0f);
-	selectedCamera->frustum.up = math::float3(0.0f, 1.0f, 0.0f);
-	selectedCamera->frustum.verticalFov = math::pi / 4.0f;
-	selectedCamera->frustum.horizontalFov = 2.f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
-	selectedCamera->fovY = 45.0f;
-	selectedCamera->fovX = 45.0f;
-	selectedCamera->pitch = 0;
-	selectedCamera->yaw = 0;
-	selectedCamera->firstMouse = true;
-
-	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
-	{
-		//Add distance still we can see all the bounding box
-		while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox))
+		math::float3 center = math::float3(0.0f, 1.0f, 10.0f);
+		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
 		{
-			selectedCamera->frustum.pos.z += 10;
+			center = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
+		}
+
+		//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
+		selectedCamera->frustum.pos = center;
+		selectedCamera->frustum.front = math::float3(0.0f, 0.0f, -1.0f);
+		selectedCamera->frustum.up = math::float3(0.0f, 1.0f, 0.0f);
+		selectedCamera->frustum.verticalFov = math::pi / 4.0f;
+		selectedCamera->frustum.horizontalFov = 2.f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
+		selectedCamera->fovY = 45.0f;
+		selectedCamera->fovX = 45.0f;
+		selectedCamera->pitch = 0;
+		selectedCamera->yaw = 0;
+		selectedCamera->firstMouse = true;
+
+		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
+		{
+			//Add distance still we can see all the bounding box
+			while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox))
+			{
+				selectedCamera->frustum.pos.z += 10;
+			}
 		}
 	}
 }

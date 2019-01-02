@@ -57,6 +57,7 @@ void ComponentCamera::SetVerticalFOV(float fovY) {
 
 void ComponentCamera::CopyFromComponentCamera(const ComponentCamera& componentCamera)
 {
+	active = componentCamera.active;
 	frustum = componentCamera.frustum;
 	active = componentCamera.active;
 	rSpeed = componentCamera.rSpeed;
