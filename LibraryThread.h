@@ -29,7 +29,7 @@ void Watcher()
 
 			std::string fullPath = (*iterator).second;
 			fullPath.append((*iterator).first);
-			if (ext == "png" || ext == "tif" || ext == "jpg")
+			if (ext == "png" || ext == "tif" || ext == "jpg" || ext == "tga")
 			{
 				App->textures->Import(fullPath.c_str());
 			}

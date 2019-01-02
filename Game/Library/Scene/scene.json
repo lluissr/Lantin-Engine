@@ -1,15 +1,15 @@
 {
     "scene": {
-        "ambientLight": 0.30000001192092898,
+        "ambientLight": 0.05400000140070915,
         "lightPosition": {
-            "x": 0.0,
+            "x": 10000.0,
             "y": 1000.0,
-            "z": 1000.0
+            "z": -10000.0
         },
-        "gameCamera": "01e3d4f2-3be5-4b53-8ba9-8691cb8baccc",
+        "gameCamera": "45109ce5-10fa-46b6-9f56-622371115426",
         "gameObjects": [
             {
-                "uuid": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
+                "uuid": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "name": "Scene Root",
                 "isActive": true,
                 "isStatic": false,
@@ -32,9 +32,9 @@
                 "components": []
             },
             {
-                "uuid": "01e3d4f2-3be5-4b53-8ba9-8691cb8baccc",
-                "name": "Game camera",
-                "parent": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
+                "uuid": "5d039ba2-1b44-4680-b4a6-31b340bedc05",
+                "name": "Wall",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
@@ -55,42 +55,54 @@
                 },
                 "components": [
                     {
-                        "uuid": "7f12281b-1ba7-4f10-a270-251b780fa500",
-                        "componentType": "CAMERA",
+                        "uuid": "c5e98362-10c2-4c5f-91ef-a4b093584658",
+                        "componentType": "MESH",
                         "isActive": true,
-                        "gameObjectParent": "01e3d4f2-3be5-4b53-8ba9-8691cb8baccc",
-                        "nearPlaneDistance": 0.10000000149011612,
-                        "farPlaneDistance": 10000.0,
-                        "position": {
-                            "x": 0.0,
-                            "y": 100.0,
-                            "z": -1000.0
-                        },
-                        "front": {
-                            "x": 0.2334364801645279,
-                            "y": -0.008726535364985466,
-                            "z": 0.9723328948020935
-                        },
-                        "up": {
-                            "x": 0.0,
+                        "gameObjectParent": "5d039ba2-1b44-4680-b4a6-31b340bedc05",
+                        "meshName": "Wall_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "66e21640-a527-4669-aa0c-67f625a17f4f",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "5d039ba2-1b44-4680-b4a6-31b340bedc05",
+                        "diffuseMapName": "WallDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
                             "y": 1.0,
-                            "z": 0.0
+                            "z": 1.0,
+                            "w": 1.0
                         },
-                        "pitch": -0.5,
-                        "yaw": 166.5,
-                        "rSpeed": 1.0,
-                        "mSpeed": 50.0
+                        "k_diffuse": 0.7620000243186951,
+                        "occlusionMapName": "WallOcclusion.dds",
+                        "k_ambient": 0.5339999794960022,
+                        "specularMapName": "WallSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.722000002861023,
+                        "shininess": 85.5250015258789,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
                     }
                 ]
             },
             {
-                "uuid": "4d12a375-e270-4f97-b6a4-23264e8e9f90",
-                "name": "Bunny",
-                "parent": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
+                "uuid": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
+                "name": "Floor",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
-                    "x": -100.0,
+                    "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 },
@@ -107,18 +119,657 @@
                 },
                 "components": [
                     {
-                        "uuid": "5d82a96a-df8a-4152-8eba-89acf2b13063",
+                        "uuid": "71cc925f-f7c3-4988-9c08-b19c72a91502",
                         "componentType": "MESH",
                         "isActive": true,
-                        "gameObjectParent": "4d12a375-e270-4f97-b6a4-23264e8e9f90",
+                        "gameObjectParent": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
+                        "meshName": "Floor_2.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "4538be81-710e-46db-93f3-89df3b40d3f2",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
+                        "diffuseMapName": "PlanksDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.6909999847412109,
+                        "occlusionMapName": "PlanksOcclusion.dds",
+                        "k_ambient": 0.8389999866485596,
+                        "specularMapName": "PlanksSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.7710000276565552,
+                        "shininess": 35.58700180053711,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "c7881dc9-2ee4-4ac7-a59b-f8a65dc9e1c9",
+                "name": "Drawer",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 400.0,
+                    "y": 0.0,
+                    "z": -700.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.7071068286895752,
+                    "z": 0.0,
+                    "w": 0.7071068286895752
+                },
+                "components": [
+                    {
+                        "uuid": "f3a01d60-572c-45b2-aabb-1d507c7201cc",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "c7881dc9-2ee4-4ac7-a59b-f8a65dc9e1c9",
+                        "meshName": "Drawers_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "14142850-73dd-40ac-81e4-55d0cc81b576",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "c7881dc9-2ee4-4ac7-a59b-f8a65dc9e1c9",
+                        "diffuseMapName": "DrawersDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.7850000262260437,
+                        "occlusionMapName": "DrawersOcclusion.dds",
+                        "k_ambient": 0.6050000190734863,
+                        "specularMapName": "DrawersSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.09399999678134918,
+                        "shininess": 122.83399963378906,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "dcb339a3-f989-4003-bdc7-149b14feb92b",
+                "name": "DollHouse",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 3500.0,
+                    "y": 0.0,
+                    "z": -350.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "74b1175d-7f12-4e11-b2c8-712cef0af8de",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "dcb339a3-f989-4003-bdc7-149b14feb92b",
+                        "meshName": "Dollhouse_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "9be7cc6e-7f37-4ba4-8fd4-da876ffc3c91",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "dcb339a3-f989-4003-bdc7-149b14feb92b",
+                        "diffuseMapName": "DollhouseDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.7039999961853027,
+                        "occlusionMapName": "DollhouseOcclusion.dds",
+                        "k_ambient": 0.6859999895095825,
+                        "specularMapName": "DollhouseSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.5519999861717224,
+                        "shininess": 99.30000305175781,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "3e9e5bf2-0447-4495-a91c-bc886f80252c",
+                "name": "Clock",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "54c41b54-bf25-4f37-a252-b339f26ce1ea",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "3e9e5bf2-0447-4495-a91c-bc886f80252c",
+                        "meshName": "Clock_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "0e57de4f-693d-441e-8773-9ce4bbe8232e",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "3e9e5bf2-0447-4495-a91c-bc886f80252c",
+                        "diffuseMapName": "ClockDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.5429999828338623,
+                        "occlusionMapName": "ClockOcclusion.dds",
+                        "k_ambient": 0.7940000295639038,
+                        "specularMapName": "ClockSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.7260000109672546,
+                        "shininess": 107.33599853515625,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "133cf1a4-1a83-4882-863a-63ea0b455fd1",
+                "name": "FireTruck",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "b6c0812b-f965-4282-bc7e-730116251dcf",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "133cf1a4-1a83-4882-863a-63ea0b455fd1",
+                        "meshName": "Firetruck_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "5f4b4151-cb90-495d-ac95-98a07b9310ac",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "133cf1a4-1a83-4882-863a-63ea0b455fd1",
+                        "diffuseMapName": "FiretruckDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.6769999861717224,
+                        "occlusionMapName": "FiretruckOcclusion.dds",
+                        "k_ambient": 0.23800000548362733,
+                        "specularMapName": "FiretruckSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.13899999856948853,
+                        "shininess": 67.15699768066406,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "872d0369-1f4a-4d6e-998a-895835af1125",
+                "name": "Hearse",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 1000.0,
+                    "y": 0.0,
+                    "z": -3000.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "835aa410-533d-4e01-a465-5a75e69e6f01",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "872d0369-1f4a-4d6e-998a-895835af1125",
+                        "meshName": "Hearse_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "f9c1c731-325d-448f-99f2-924c81a31e74",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "872d0369-1f4a-4d6e-998a-895835af1125",
+                        "diffuseMapName": "HearseDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.5960000157356262,
+                        "occlusionMapName": "HearseOcclusion.dds",
+                        "k_ambient": 0.25600001215934756,
+                        "specularMapName": "HearseSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.3409999907016754,
+                        "shininess": 97.00399780273438,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "7c2d78c6-4edd-44fe-bb8f-5937cf52453c",
+                "name": "Robot",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 1500.0,
+                    "y": 0.0,
+                    "z": -2000.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "9259eaa2-085d-480a-abad-f7baa77e269f",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "7c2d78c6-4edd-44fe-bb8f-5937cf52453c",
+                        "meshName": "Robot_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "5aa3db89-9646-4a1b-86ca-6f077b253467",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "7c2d78c6-4edd-44fe-bb8f-5937cf52453c",
+                        "diffuseMapName": "RobotDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.4440000057220459,
+                        "occlusionMapName": "RobotOcclusion.dds",
+                        "k_ambient": 0.5429999828338623,
+                        "specularMapName": "RobotSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.19699999690055848,
+                        "shininess": 45.345001220703128,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "981b1bd5-f98f-4b23-9a12-5e0c7ba9994a",
+                "name": "Spinning",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 2000.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "f9ca5d86-0b7d-4069-9995-f3717931aaf8",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "981b1bd5-f98f-4b23-9a12-5e0c7ba9994a",
+                        "meshName": "SpinningTop_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "3c77d070-8d67-45cc-9d3f-82f6c22ea6f7",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "981b1bd5-f98f-4b23-9a12-5e0c7ba9994a",
+                        "diffuseMapName": "SpinningTopDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.6589999794960022,
+                        "occlusionMapName": "SpinningTopOcclusion.dds",
+                        "k_ambient": 0.722000002861023,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 25.256000518798829,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                "name": "PlayerGun",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 3000.0,
+                    "y": 0.0,
+                    "z": -3000.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.4999999701976776,
+                    "z": 0.0,
+                    "w": 0.866025447845459
+                },
+                "components": [
+                    {
+                        "uuid": "7a5f4c30-1d3c-4274-a1d3-33304613d239",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                        "meshName": "Player_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "c26605c8-08fb-4c50-9f10-17d650949a3f",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                        "diffuseMapName": "GunDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.5379999876022339,
+                        "occlusionMapName": "GunOcclusion.dds",
+                        "k_ambient": 0.6639999747276306,
+                        "specularMapName": "GunSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.25600001215934756,
+                        "shininess": 128.0,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "0e3925cf-d3c8-4492-a2fc-916ca7e01621",
+                "name": "Player",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 3000.0,
+                    "y": 0.0,
+                    "z": -3000.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 2.4614111679313427e-14,
+                    "y": 0.4999999701976776,
+                    "z": 1.421090553717884e-14,
+                    "w": 0.866025447845459
+                },
+                "components": [
+                    {
+                        "uuid": "6e081f5d-1d96-43f5-ad10-f46a2770d6b0",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "0e3925cf-d3c8-4492-a2fc-916ca7e01621",
+                        "meshName": "Player_1.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "bca6d224-75ab-4f39-b263-b66a84ec239e",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "0e3925cf-d3c8-4492-a2fc-916ca7e01621",
+                        "diffuseMapName": "PlayerDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.6460000276565552,
+                        "occlusionMapName": "PlayerOcclusion.dds",
+                        "k_ambient": 0.6140000224113464,
+                        "specularMapName": "PlayerSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.7710000276565552,
+                        "shininess": 18.941999435424806,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "976b31c9-ca59-4599-bdc4-304cbda6d294",
+                "name": "Bunny",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 3000.0,
+                    "y": 0.0,
+                    "z": -2700.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.7071068286895752,
+                    "z": 0.0,
+                    "w": 0.7071068286895752
+                },
+                "components": [
+                    {
+                        "uuid": "c1a99194-aca6-4005-8394-a280574f0960",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "976b31c9-ca59-4599-bdc4-304cbda6d294",
                         "meshName": "Zombunny_0.pisifai",
                         "useWireframe": false
                     },
                     {
-                        "uuid": "a1388996-2800-415a-9fd4-fbfc515e51d3",
+                        "uuid": "c6eafe07-61ac-4105-9d2b-7d0a1bc34647",
                         "componentType": "MATERIAL",
                         "isActive": true,
-                        "gameObjectParent": "4d12a375-e270-4f97-b6a4-23264e8e9f90",
+                        "gameObjectParent": "976b31c9-ca59-4599-bdc4-304cbda6d294",
                         "diffuseMapName": "ZomBunnyDiffuse.dds",
                         "diffuseColor": {
                             "x": 1.0,
@@ -126,9 +777,9 @@
                             "z": 1.0,
                             "w": 1.0
                         },
-                        "k_diffuse": 0.7089999914169312,
+                        "k_diffuse": 0.7580000162124634,
                         "occlusionMapName": "ZomBunnyOcclusion.dds",
-                        "k_ambient": 0.5519999861717224,
+                        "k_ambient": 0.7400000095367432,
                         "specularMapName": "ZomBunnySpecular.dds",
                         "specularColor": {
                             "x": 1.0,
@@ -136,8 +787,8 @@
                             "z": 1.0,
                             "w": 1.0
                         },
-                        "k_specular": 0.5830000042915344,
-                        "shininess": 76.91500091552735,
+                        "k_specular": 0.6460000276565552,
+                        "shininess": 57.972999572753909,
                         "emissiveMapName": "ZomBunnyEmissive.dds",
                         "emissiveColor": {
                             "x": 1.0,
@@ -149,15 +800,15 @@
                 ]
             },
             {
-                "uuid": "64aeb96d-a464-415f-bbcf-83babba4a2b6",
-                "name": "Bunny",
-                "parent": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
+                "uuid": "2f40bca9-14f8-4f01-9b92-9ef531d4de57",
+                "name": "BunnyEyes",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
-                    "x": 150.0,
+                    "x": 3000.0,
                     "y": 0.0,
-                    "z": 0.0
+                    "z": -2700.0
                 },
                 "scale": {
                     "x": 1.0,
@@ -166,109 +817,40 @@
                 },
                 "rotation": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 0.7071068286895752,
                     "z": 0.0,
-                    "w": 1.0
+                    "w": 0.7071068286895752
                 },
                 "components": [
                     {
-                        "uuid": "db5d0f8b-04cd-4662-904a-5a2b3354d472",
+                        "uuid": "f7659620-72dc-47d3-a893-75c23f6eb3c9",
                         "componentType": "MESH",
                         "isActive": true,
-                        "gameObjectParent": "64aeb96d-a464-415f-bbcf-83babba4a2b6",
-                        "meshName": "Zombunny_0.pisifai",
-                        "useWireframe": false
-                    },
-                    {
-                        "uuid": "4f67291e-dfb2-4892-9c5c-557e57d36764",
-                        "componentType": "MATERIAL",
-                        "isActive": true,
-                        "gameObjectParent": "64aeb96d-a464-415f-bbcf-83babba4a2b6",
-                        "diffuseMapName": "ZomBunnyDiffuse.dds",
-                        "diffuseColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_diffuse": 0.7089999914169312,
-                        "occlusionMapName": "ZomBunnyOcclusion.dds",
-                        "k_ambient": 0.5519999861717224,
-                        "specularMapName": "ZomBunnySpecular.dds",
-                        "specularColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_specular": 0.5830000042915344,
-                        "shininess": 76.91500091552735,
-                        "emissiveMapName": "ZomBunnyEmissive.dds",
-                        "emissiveColor": {
-                            "x": 1.0,
-                            "y": 0.9999899864196777,
-                            "z": 0.9999899864196777,
-                            "w": 0.0
-                        }
-                    }
-                ]
-            },
-            {
-                "uuid": "d3a40661-cbf0-420b-86e4-1cef9e26863e",
-                "name": "Eyes",
-                "parent": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
-                "isActive": true,
-                "isStatic": false,
-                "position": {
-                    "x": 0.0,
-                    "y": 59.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                },
-                "components": [
-                    {
-                        "uuid": "ce206195-3e30-4e78-a55f-e677506fb139",
-                        "componentType": "MESH",
-                        "isActive": true,
-                        "gameObjectParent": "d3a40661-cbf0-420b-86e4-1cef9e26863e",
+                        "gameObjectParent": "2f40bca9-14f8-4f01-9b92-9ef531d4de57",
                         "meshName": "Zombunny_1.pisifai",
                         "useWireframe": false
                     },
                     {
-                        "uuid": "644fa722-a294-4316-8e05-816bd2bbc128",
+                        "uuid": "10115c14-918e-4d57-9137-7b47082ef417",
                         "componentType": "MATERIAL",
                         "isActive": true,
-                        "gameObjectParent": "d3a40661-cbf0-420b-86e4-1cef9e26863e",
-                        "diffuseMapName": "ZomBunnyDiffuse.dds",
+                        "gameObjectParent": "2f40bca9-14f8-4f01-9b92-9ef531d4de57",
                         "diffuseColor": {
                             "x": 1.0,
                             "y": 1.0,
                             "z": 1.0,
                             "w": 1.0
                         },
-                        "k_diffuse": 0.7089999914169312,
-                        "occlusionMapName": "ZomBunnyOcclusion.dds",
-                        "k_ambient": 0.5519999861717224,
-                        "specularMapName": "ZomBunnySpecular.dds",
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
                         "specularColor": {
                             "x": 1.0,
                             "y": 1.0,
                             "z": 1.0,
                             "w": 1.0
                         },
-                        "k_specular": 0.5830000042915344,
-                        "shininess": 76.91500091552735,
-                        "emissiveMapName": "ZomBunnyEmissive.dds",
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
                         "emissiveColor": {
                             "x": 1.0,
                             "y": 0.9999899864196777,
@@ -279,9 +861,9 @@
                 ]
             },
             {
-                "uuid": "154fe1cd-a4f1-4538-91c6-bdbf15d0f37f",
-                "name": "Game camera",
-                "parent": "fc847e19-618a-4b77-b9b5-5f401c2379d7",
+                "uuid": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                "name": "WallStars",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
@@ -302,29 +884,151 @@
                 },
                 "components": [
                     {
-                        "uuid": "e9de118c-ecb8-4f5a-9fd0-8fc10d3b6a87",
+                        "uuid": "9df6fd88-db61-45bd-815c-07dbcc426a26",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                        "meshName": "Wall_1.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "329aeb55-3d04-447b-89e9-93a904a76f9e",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
+                        "emissiveColor": {
+                            "x": 0.8169645071029663,
+                            "y": 0.8970588445663452,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "1166174b-6826-4aaf-b951-fd421509c31b",
+                "name": "Floor_under",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "a59cb01d-0b07-4721-9c94-e779daa98103",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
+                        "meshName": "Floor_1.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "a689ea96-9abe-44cd-ae54-a8140cf8208b",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "45109ce5-10fa-46b6-9f56-622371115426",
+                "name": "Game camera",
+                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "41e03742-f6a8-475a-960a-4e63cf511927",
                         "componentType": "CAMERA",
                         "isActive": true,
-                        "gameObjectParent": "154fe1cd-a4f1-4538-91c6-bdbf15d0f37f",
+                        "gameObjectParent": "45109ce5-10fa-46b6-9f56-622371115426",
                         "nearPlaneDistance": 0.10000000149011612,
                         "farPlaneDistance": 10000.0,
                         "position": {
-                            "x": -795.4051513671875,
-                            "y": 100.0,
-                            "z": -937.4351806640625
+                            "x": 5166.4345703125,
+                            "y": 293.048095703125,
+                            "z": -3911.6591796875
                         },
                         "front": {
-                            "x": 0.8702232241630554,
-                            "y": 0.017452405765652658,
-                            "z": 0.49234846234321597
+                            "x": -0.8366276025772095,
+                            "y": 0.06975647062063217,
+                            "z": 0.5433124303817749
                         },
                         "up": {
                             "x": 0.0,
                             "y": 1.0,
                             "z": 0.0
                         },
-                        "pitch": 1.0,
-                        "yaw": 119.5,
+                        "pitch": 4.0,
+                        "yaw": 237.0,
                         "rSpeed": 1.0,
                         "mSpeed": 50.0
                     }
