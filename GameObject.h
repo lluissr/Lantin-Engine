@@ -24,6 +24,7 @@ public:
 	void RemoveChild();
 	void MarkToDelete();
 	void UpdateBoundingBox();
+	bool CheckIfIsDecendent(const GameObject& children);
 
 	void SaveJSON(Config* config);
 	void LoadJSON(Config* config, rapidjson::Value& value);
@@ -33,7 +34,7 @@ public:
 	std::string uuid = "";
 	std::list<Component*> components;
 	GameObject* parent = nullptr;
-	std::list<GameObject*> gameObjects;
+	std::list<GameObject*> childrens;
 	bool isActive = true;
 	bool isStatic = false;
 	bool isSelected = false;

@@ -113,7 +113,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (GameObject* gameObject : App->scene->root->gameObjects)
+	for (GameObject* gameObject : App->scene->root->childrens)
 	{
 		if (gameObject->isActive)
 		{
@@ -153,9 +153,9 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 	if (gameObject->isActive)
 	{
 
-		if (gameObject->gameObjects.size() > 0)
+		if (gameObject->childrens.size() > 0)
 		{
-			for (GameObject* go : gameObject->gameObjects)
+			for (GameObject* go : gameObject->childrens)
 			{
 				RenderGameObject(go, viewMatrix, projectionMatrix, frameBuffer);
 			}

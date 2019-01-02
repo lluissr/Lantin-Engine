@@ -32,7 +32,7 @@ void PanelModel::Draw()
 	ImGui::Text("Name:");
 	ImGui::SameLine();
 	ImGui::InputText("##", &go->name[0], 40);
-	ImGui::Text("Model selected has %d childs.", go->gameObjects.size());
+	ImGui::Text("Model selected has %d childs.", go->childrens.size());
 	ImGui::NewLine();
 	ImGui::Checkbox("Active", &go->isActive);
 	ImGui::Checkbox("Static", &go->isStatic);

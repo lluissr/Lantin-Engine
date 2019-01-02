@@ -41,10 +41,10 @@ GameObject::GameObject(const GameObject& go)
 		componentCamera->CopyFromComponentCamera(*go.componentCamera);
 	}
 
-	for each (GameObject* gameObject in go.gameObjects)
+	for each (GameObject* gameObject in go.childrens)
 	{
 		GameObject* childCopy = new GameObject(*gameObject);
-		gameObjects.push_back(childCopy);
+		childrens.push_back(childCopy);
 	}
 }
 
@@ -55,10 +55,10 @@ GameObject::~GameObject()
 
 	components.clear();
 
-	for (std::list<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::list<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); ++it)
 		delete *it;
 
-	gameObjects.clear();
+	childrens.clear();
 }
 
 void GameObject::Update()
@@ -99,11 +99,11 @@ void GameObject::SetIsSelected(bool selected)
 
 void GameObject::RemoveChild()
 {
-	if (!gameObjects.empty())
+	if (!childrens.empty())
 	{
-		gameObjects.remove_if([](GameObject* i) {return i->toDelete; });
+		childrens.remove_if([](GameObject* i) {return i->toDelete; });
 
-		for each (GameObject* go in gameObjects)
+		for each (GameObject* go in childrens)
 		{
 			go->RemoveChild();
 		}
@@ -113,7 +113,7 @@ void GameObject::RemoveChild()
 void GameObject::MarkToDelete()
 {
 	toDelete = true;
-	for each (GameObject* go in gameObjects)
+	for each (GameObject* go in childrens)
 	{
 		go->MarkToDelete();
 	}
@@ -127,7 +127,7 @@ void GameObject::UpdateBoundingBox()
 		componentMesh->mesh->globalBoundingBox.TransformAsAABB(globalMatrix);
 	}
 
-	for each (GameObject* go in gameObjects)
+	for each (GameObject* go in childrens)
 	{
 		go->UpdateBoundingBox();
 	}
@@ -138,12 +138,12 @@ bool GameObject::AddChild(GameObject* go, std::string& parentUuid)
 	if (uuid == parentUuid)
 	{
 		go->parent = this;
-		gameObjects.push_back(go);
+		childrens.push_back(go);
 		return true;
 	}
 	else
 	{
-		for each (GameObject* gameObject in gameObjects)
+		for each (GameObject* gameObject in childrens)
 		{
 			if (gameObject->AddChild(go, parentUuid))
 			{
@@ -152,6 +152,26 @@ bool GameObject::AddChild(GameObject* go, std::string& parentUuid)
 		}
 	}
 	return false;
+}
+
+
+bool GameObject::CheckIfIsDecendent(const GameObject& children)
+{
+	bool result = false;
+
+	if (children.parent != nullptr)
+	{
+		if (children.parent == this)
+		{
+			result = true;
+		}
+		else
+		{
+			result = CheckIfIsDecendent(*children.parent);
+		}
+	}
+
+	return result;
 }
 
 void GameObject::SaveJSON(Config* config)
@@ -206,5 +226,4 @@ void GameObject::LoadJSON(Config* config, rapidjson::Value& value)
 			component->LoadJSON(config, (*it));
 		}
 	}
-
 }

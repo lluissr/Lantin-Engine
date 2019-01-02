@@ -105,10 +105,10 @@ GameObject* ModuleScene::CreateGameObject()
 
 void ModuleScene::CleanRootGameObjects()
 {
-	for (std::list<GameObject*>::iterator it = root->gameObjects.begin(); it != root->gameObjects.end(); ++it)
+	for (std::list<GameObject*>::iterator it = root->childrens.begin(); it != root->childrens.end(); ++it)
 		delete *it;
 
-	root->gameObjects.clear();
+	root->childrens.clear();
 }
 
 void ModuleScene::SelectGameObject(GameObject* go)
@@ -134,7 +134,7 @@ void ModuleScene::CalculateGlobalMatrix(GameObject* go)
 		go->globalMatrix = go->parent->globalMatrix*go->localMatrix;
 	}
 
-	for each (GameObject* gameObject in go->gameObjects)
+	for each (GameObject* gameObject in go->childrens)
 	{
 		CalculateGlobalMatrix(gameObject);
 	}
@@ -156,8 +156,40 @@ GameObject* ModuleScene::CreateCamera()
 	go->name = "Game camera";
 	go->CreateComponent(ComponentType::CAMERA);
 	go->parent = root;
-	root->gameObjects.push_back(go);
+	root->childrens.push_back(go);
 	return go;
+}
+
+GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, const std::string& uuid)
+{
+	GameObject* result = nullptr;
+
+	if (result == nullptr && gameObject->uuid == uuid)
+	{
+		result = gameObject;
+	}
+	else
+	{
+		for (GameObject* gameObjectChild : gameObject->childrens)
+		{
+			if (gameObjectChild->childrens.size() > 0)
+			{
+				result = GetGameObjectByUUID(gameObjectChild, uuid);
+			}
+
+			if (result == nullptr && gameObjectChild->uuid == uuid)
+			{
+				result = gameObjectChild;
+				break;
+			}
+			else if (result != nullptr)
+			{
+				break;
+			}
+		}
+	}
+
+	return result;
 }
 
 void ModuleScene::SaveSceneJSON()
@@ -187,9 +219,9 @@ void ModuleScene::SaveGameObjectsJSON(Config* config, GameObject* gameObject)
 {
 	gameObject->SaveJSON(config);
 
-	if (gameObject->gameObjects.size() > 0)
+	if (gameObject->childrens.size() > 0)
 	{
-		for (std::list<GameObject*>::iterator iterator = gameObject->gameObjects.begin(); iterator != gameObject->gameObjects.end(); ++iterator)
+		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
 		{
 			SaveGameObjectsJSON(config, (*iterator));
 		}
@@ -242,3 +274,4 @@ void ModuleScene::LoadSceneJSON()
 
 	delete config;
 }
+

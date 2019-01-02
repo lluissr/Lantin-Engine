@@ -124,7 +124,7 @@ bool ModuleModelLoader::LoadSphere(const char* name, float size, unsigned slices
 
 		go->parent = App->scene->root;
 		go->UpdateBoundingBox();
-		App->scene->root->gameObjects.push_back(go);
+		App->scene->root->childrens.push_back(go);
 
 		par_shapes_free_mesh(parMesh);
 
@@ -162,7 +162,7 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 
 		go->parent = App->scene->root;
 		go->UpdateBoundingBox();
-		App->scene->root->gameObjects.push_back(go);
+		App->scene->root->childrens.push_back(go);
 
 		par_shapes_free_mesh(parMesh);
 

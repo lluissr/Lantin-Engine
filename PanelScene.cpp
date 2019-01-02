@@ -71,11 +71,13 @@ void PanelScene::Draw()
 			GameObject* go = new GameObject();
 			go->name = "New GameObject";
 			go->parent = App->scene->root;
-			App->scene->root->gameObjects.push_back(go);
+			App->scene->root->childrens.push_back(go);
 		}
 		if (ImGui::TreeNode(App->scene->root->name.c_str()))
 		{
-			for (GameObject* gameObject : App->scene->root->gameObjects)
+			DragAndDrop(App->scene->root);
+
+			for (GameObject* gameObject : App->scene->root->childrens)
 			{
 				DrawTreeNode(gameObject);
 			}
@@ -93,7 +95,7 @@ void PanelScene::DrawTreeNode(GameObject* go)
 	{
 		flags = ImGuiTreeNodeFlags_Selected;
 	}
-	if (go->gameObjects.size() == 0)
+	if (go->childrens.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
@@ -130,7 +132,7 @@ void PanelScene::DrawTreeNode(GameObject* go)
 		if (ImGui::Button("Duplicar"))
 		{
 			GameObject* newGameObject = new GameObject(*go);
-			go->parent->gameObjects.push_back(newGameObject);
+			go->parent->childrens.push_back(newGameObject);
 		}
 		if (ImGui::Button("Eliminar"))
 		{
@@ -138,9 +140,12 @@ void PanelScene::DrawTreeNode(GameObject* go)
 		}
 		ImGui::EndPopup();
 	}
+
+	DragAndDrop(go);
+
 	if (opened)
 	{
-		for (GameObject* gameObject : go->gameObjects)
+		for (GameObject* gameObject : go->childrens)
 		{
 			DrawTreeNode(gameObject);
 		}
@@ -152,3 +157,38 @@ void PanelScene::DrawTreeNode(GameObject* go)
 	}
 }
 
+void PanelScene::DragAndDrop(GameObject* go)
+{
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+	{
+		ImGui::SetDragDropPayload("uuid", go->uuid.c_str(), 37);
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("uuid"))
+		{
+			std::string uuid((char*)payload->Data);
+
+			GameObject* gameObjectToMove = App->scene->GetGameObjectByUUID(App->scene->root, uuid);
+
+			if (gameObjectToMove != nullptr)
+			{
+				bool areParentAndChild = gameObjectToMove->CheckIfIsDecendent(*go);
+
+				if (!areParentAndChild)
+				{
+					gameObjectToMove->parent->childrens.remove(gameObjectToMove);
+
+					gameObjectToMove->parent = go;
+					go->childrens.push_back(gameObjectToMove);
+				}
+				else
+				{
+					LOG("Is not possible to drop a gameObject into one of is decendants");
+				}
+			}
+		}
+	}
+}

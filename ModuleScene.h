@@ -28,6 +28,7 @@ public:
 	void SaveSceneJSON();
 	void SaveGameObjectsJSON(Config* config, GameObject* gameObject);
 	void LoadSceneJSON();
+	GameObject* GetGameObjectByUUID(GameObject* gameObject, const std::string& uuid);
 
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;

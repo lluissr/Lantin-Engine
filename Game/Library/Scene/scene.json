@@ -96,6 +96,67 @@
                 ]
             },
             {
+                "uuid": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                "name": "WallStars",
+                "parent": "5d039ba2-1b44-4680-b4a6-31b340bedc05",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "9df6fd88-db61-45bd-815c-07dbcc426a26",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                        "meshName": "Wall_1.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "329aeb55-3d04-447b-89e9-93a904a76f9e",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
+                        "emissiveColor": {
+                            "x": 0.8169645071029663,
+                            "y": 0.8970588445663452,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
                 "uuid": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
                 "name": "Floor",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
@@ -150,6 +211,67 @@
                         },
                         "k_specular": 0.7710000276565552,
                         "shininess": 35.58700180053711,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "1166174b-6826-4aaf-b951-fd421509c31b",
+                "name": "Floor_under",
+                "parent": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "a59cb01d-0b07-4721-9c94-e779daa98103",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
+                        "meshName": "Floor_1.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "a689ea96-9abe-44cd-ae54-a8140cf8208b",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.0,
+                        "k_ambient": 0.0,
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.0,
+                        "shininess": 0.0,
                         "emissiveColor": {
                             "x": 0.0,
                             "y": 0.0,
@@ -607,77 +729,13 @@
                 ]
             },
             {
-                "uuid": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
-                "name": "PlayerGun",
-                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
-                "isActive": true,
-                "isStatic": false,
-                "position": {
-                    "x": 3000.0,
-                    "y": 0.0,
-                    "z": -3000.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": 0.4999999701976776,
-                    "z": 0.0,
-                    "w": 0.866025447845459
-                },
-                "components": [
-                    {
-                        "uuid": "7a5f4c30-1d3c-4274-a1d3-33304613d239",
-                        "componentType": "MESH",
-                        "isActive": true,
-                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
-                        "meshName": "Player_0.pisifai",
-                        "useWireframe": false
-                    },
-                    {
-                        "uuid": "c26605c8-08fb-4c50-9f10-17d650949a3f",
-                        "componentType": "MATERIAL",
-                        "isActive": true,
-                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
-                        "diffuseMapName": "GunDiffuse.dds",
-                        "diffuseColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_diffuse": 0.5379999876022339,
-                        "occlusionMapName": "GunOcclusion.dds",
-                        "k_ambient": 0.6639999747276306,
-                        "specularMapName": "GunSpecular.dds",
-                        "specularColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_specular": 0.25600001215934756,
-                        "shininess": 128.0,
-                        "emissiveColor": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                        }
-                    }
-                ]
-            },
-            {
                 "uuid": "0e3925cf-d3c8-4492-a2fc-916ca7e01621",
                 "name": "Player",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
-                    "x": 3000.0,
+                    "x": 3060.0,
                     "y": 0.0,
                     "z": -3000.0
                 },
@@ -725,6 +783,70 @@
                         },
                         "k_specular": 0.7710000276565552,
                         "shininess": 18.941999435424806,
+                        "emissiveColor": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 0.0
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                "name": "PlayerGun",
+                "parent": "0e3925cf-d3c8-4492-a2fc-916ca7e01621",
+                "isActive": true,
+                "isStatic": false,
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "components": [
+                    {
+                        "uuid": "7a5f4c30-1d3c-4274-a1d3-33304613d239",
+                        "componentType": "MESH",
+                        "isActive": true,
+                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                        "meshName": "Player_0.pisifai",
+                        "useWireframe": false
+                    },
+                    {
+                        "uuid": "c26605c8-08fb-4c50-9f10-17d650949a3f",
+                        "componentType": "MATERIAL",
+                        "isActive": true,
+                        "gameObjectParent": "3ceb4e68-9fff-421b-9b7f-dffb0478b571",
+                        "diffuseMapName": "GunDiffuse.dds",
+                        "diffuseColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_diffuse": 0.5379999876022339,
+                        "occlusionMapName": "GunOcclusion.dds",
+                        "k_ambient": 0.6639999747276306,
+                        "specularMapName": "GunSpecular.dds",
+                        "specularColor": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0,
+                            "w": 1.0
+                        },
+                        "k_specular": 0.25600001215934756,
+                        "shininess": 128.0,
                         "emissiveColor": {
                             "x": 0.0,
                             "y": 0.0,
@@ -802,13 +924,13 @@
             {
                 "uuid": "2f40bca9-14f8-4f01-9b92-9ef531d4de57",
                 "name": "BunnyEyes",
-                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
+                "parent": "976b31c9-ca59-4599-bdc4-304cbda6d294",
                 "isActive": true,
                 "isStatic": false,
                 "position": {
-                    "x": 3000.0,
+                    "x": 0.0,
                     "y": 0.0,
-                    "z": -2700.0
+                    "z": 0.0
                 },
                 "scale": {
                     "x": 1.0,
@@ -817,9 +939,9 @@
                 },
                 "rotation": {
                     "x": 0.0,
-                    "y": 0.7071068286895752,
+                    "y": 0.0,
                     "z": 0.0,
-                    "w": 0.7071068286895752
+                    "w": 1.0
                 },
                 "components": [
                     {
@@ -861,128 +983,6 @@
                 ]
             },
             {
-                "uuid": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
-                "name": "WallStars",
-                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
-                "isActive": true,
-                "isStatic": false,
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                },
-                "components": [
-                    {
-                        "uuid": "9df6fd88-db61-45bd-815c-07dbcc426a26",
-                        "componentType": "MESH",
-                        "isActive": true,
-                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
-                        "meshName": "Wall_1.pisifai",
-                        "useWireframe": false
-                    },
-                    {
-                        "uuid": "329aeb55-3d04-447b-89e9-93a904a76f9e",
-                        "componentType": "MATERIAL",
-                        "isActive": true,
-                        "gameObjectParent": "d45a5e56-2172-400f-a4cf-33a954a84ad1",
-                        "diffuseColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_diffuse": 0.0,
-                        "k_ambient": 0.0,
-                        "specularColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_specular": 0.0,
-                        "shininess": 0.0,
-                        "emissiveColor": {
-                            "x": 0.8169645071029663,
-                            "y": 0.8970588445663452,
-                            "z": 0.0,
-                            "w": 0.0
-                        }
-                    }
-                ]
-            },
-            {
-                "uuid": "1166174b-6826-4aaf-b951-fd421509c31b",
-                "name": "Floor_under",
-                "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
-                "isActive": true,
-                "isStatic": false,
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                },
-                "components": [
-                    {
-                        "uuid": "a59cb01d-0b07-4721-9c94-e779daa98103",
-                        "componentType": "MESH",
-                        "isActive": true,
-                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
-                        "meshName": "Floor_1.pisifai",
-                        "useWireframe": false
-                    },
-                    {
-                        "uuid": "a689ea96-9abe-44cd-ae54-a8140cf8208b",
-                        "componentType": "MATERIAL",
-                        "isActive": true,
-                        "gameObjectParent": "1166174b-6826-4aaf-b951-fd421509c31b",
-                        "diffuseColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_diffuse": 0.0,
-                        "k_ambient": 0.0,
-                        "specularColor": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0,
-                            "w": 1.0
-                        },
-                        "k_specular": 0.0,
-                        "shininess": 0.0,
-                        "emissiveColor": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                        }
-                    }
-                ]
-            },
-            {
                 "uuid": "45109ce5-10fa-46b6-9f56-622371115426",
                 "name": "Game camera",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
@@ -1013,22 +1013,22 @@
                         "nearPlaneDistance": 0.10000000149011612,
                         "farPlaneDistance": 10000.0,
                         "position": {
-                            "x": 5166.4345703125,
-                            "y": 293.048095703125,
-                            "z": -3911.6591796875
+                            "x": 4440.986328125,
+                            "y": 509.7893371582031,
+                            "z": -4590.02783203125
                         },
                         "front": {
-                            "x": -0.8366276025772095,
-                            "y": 0.06975647062063217,
-                            "z": 0.5433124303817749
+                            "x": -0.6306365132331848,
+                            "y": 0.13052619993686677,
+                            "z": 0.7650232315063477
                         },
                         "up": {
                             "x": 0.0,
                             "y": 1.0,
                             "z": 0.0
                         },
-                        "pitch": 4.0,
-                        "yaw": 237.0,
+                        "pitch": 7.5,
+                        "yaw": -140.5,
                         "rSpeed": 1.0,
                         "mSpeed": 50.0
                     }

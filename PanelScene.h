@@ -11,6 +11,7 @@ public:
 
 	void Draw() override;
 	void DrawTreeNode(GameObject* go);
+	void DragAndDrop(GameObject* go);
 };
 
 #endif
