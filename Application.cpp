@@ -47,6 +47,8 @@ Application::~Application()
 
 	if (debugTimer != nullptr)
 		delete debugTimer;
+
+	delete libraryThread;
 	
 }
 

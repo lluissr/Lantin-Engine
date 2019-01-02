@@ -37,6 +37,31 @@ public:
 	float* vertices = nullptr;
 	float* texCoords = nullptr;
 	std::string meshName;
+
+	Mesh() {}
+	~Mesh()
+	{
+		if (normals != nullptr)
+		{
+			delete[] normals;
+			normals = nullptr;
+		}
+		if (indices != nullptr)
+		{
+			delete[] indices;
+			indices = nullptr;
+		}
+		if (vertices != nullptr)
+		{
+			delete[] vertices;
+			vertices = nullptr;
+		}
+		if (texCoords != nullptr)
+		{
+			delete[] texCoords;
+			texCoords = nullptr;
+		}
+	}
 };
 
 class Material
@@ -44,7 +69,7 @@ class Material
 public:
 	unsigned diffuseMap = 0u;
 	std::string diffuseMapName;
-	math::float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	math::float4 diffuseColor = math::float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float k_diffuse = 0.0f;
 	int diffuseWidth = 0;
 	int diffuseHeight = 0;
@@ -57,7 +82,7 @@ public:
 
 	unsigned specularMap = 0u;
 	std::string specularMapName;
-	math::float4 specularColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	math::float4 specularColor = math::float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float k_specular = 0.0f;
 	float shininess = 0.0f;
 	int specularWidth = 0;
@@ -65,7 +90,7 @@ public:
 
 	unsigned emissiveMap = 0u;
 	std::string emissiveMapName;
-	math::float4 emissiveColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	math::float4 emissiveColor = math::float4(0.0f, 0.0f, 0.0f, 0.0f);
 	int emissiveWidth = 0;
 	int emissiveHeight = 0;
 	

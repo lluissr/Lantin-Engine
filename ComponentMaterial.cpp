@@ -11,7 +11,11 @@ ComponentMaterial::ComponentMaterial(GameObject* parent, ComponentType type) : C
 
 ComponentMaterial::~ComponentMaterial()
 {
-	material = nullptr;
+	if (material != nullptr)
+	{
+		delete material;
+		material = nullptr;
+	}
 }
 
 void ComponentMaterial::CopyFromComponentMaterial(const ComponentMaterial& componentMaterial)
@@ -143,7 +147,7 @@ void ComponentMaterial::LoadJSON(Config* config, rapidjson::Value& value)
 		material->emissiveWidth = App->textures->lastImageInfo.Width;
 		material->emissiveHeight = App->textures->lastImageInfo.Height;
 	}
-	
+
 
 }
 
