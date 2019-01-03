@@ -6,6 +6,8 @@
 
 #define MEMORY_LOG_SIZE 100
 
+class QuadtreeNode;
+
 class PanelConfiguration : public Panel
 {
 public:
@@ -15,6 +17,7 @@ public:
 	void Draw() override;
 
 	void addMemory(float memory);
+	void DrawQuadtree(QuadtreeNode * node);
 
 	std::vector<float> fps_log;
 	std::vector<float> memory_log;

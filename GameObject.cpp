@@ -2,6 +2,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ModuleModelLoader.h"
+#include "ModuleScene.h"
 
 
 GameObject::GameObject()
@@ -49,6 +50,11 @@ GameObject::GameObject(const GameObject& go)
 
 GameObject::~GameObject()
 {
+	if (isStatic)
+	{
+		App->scene->quadTree.RemoveGameObject(this);
+	}
+
 	for (std::list<Component*>::iterator it = components.begin(); it != components.end(); ++it)
 		delete *it;
 

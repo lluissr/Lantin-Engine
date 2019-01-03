@@ -44,6 +44,8 @@ update_status ModuleScene::PreUpdate()
 		root->name = "Scene Root";
 
 		cleanScene = false;
+		quadTree.Clear();
+		quadTree.InitQuadTree(math::AABB(math::float3(-5000, 0, -5000), math::float3(5000, 5000, 5000)));
 	}
 
 	if (loadScene && !cleanScene)

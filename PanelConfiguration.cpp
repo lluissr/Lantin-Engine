@@ -91,6 +91,7 @@ void PanelConfiguration::Draw()
 	{
 		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBoxes);
 		ImGui::Checkbox("Draw Quadtree", &App->scene->drawQuadTree);
+		DrawQuadtree(App->scene->quadTree.root);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -111,4 +112,34 @@ void PanelConfiguration::addMemory(float memory)
 	}
 
 	memory_log[MEMORY_LOG_SIZE - 1] = memory;
+}
+
+void PanelConfiguration::DrawQuadtree(QuadtreeNode* node)
+{
+	unsigned flags = ImGuiTreeNodeFlags_None;
+
+	if (node->childs[0] == nullptr && node->gameObjects.size() == 0)
+	{
+		flags = ImGuiTreeNodeFlags_Leaf;
+	}
+
+	if (ImGui::TreeNodeEx(node, flags, "Quadtree Node"))
+	{
+		for (std::list<GameObject*>::const_iterator it = node->gameObjects.begin(); it != node->gameObjects.end(); ++it)
+		{
+			ImGui::TreeNodeEx((*it)->uuid.c_str(), ImGuiTreeNodeFlags_Leaf, (*it)->name.c_str());
+			ImGui::TreePop();
+		}
+
+		for (unsigned i = 0; i < 4; ++i)
+		{
+			if (node->childs[i] != nullptr)
+			{
+				DrawQuadtree(node->childs[i]);
+			}
+		}
+
+		ImGui::TreePop();
+	}
+
 }

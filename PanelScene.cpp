@@ -140,6 +140,10 @@ void PanelScene::DrawTreeNode(GameObject* go)
 		{
 			GameObject* newGameObject = new GameObject(*go);
 			go->parent->childrens.push_back(newGameObject);
+			if (newGameObject->isStatic)
+			{
+				App->scene->quadTree.InsertGameObject(newGameObject);
+			}
 		}
 		if (ImGui::Button("Eliminar"))
 		{
