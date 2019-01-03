@@ -18,9 +18,11 @@ bool ModuleScene::Init()
 	root = new GameObject();
 	root->name = "Scene Root";
 
-	gameCamera = CreateCamera();
+	//gameCamera = CreateCamera();
 
-	quadTree.InitQuadTree(math::AABB(math::float3(-5000, 0, -5000), math::float3(5000, 5000, 5000)));
+	quadTree.InitQuadTree(math::AABB(math::float3(-5000, -1000, -5000), math::float3(5000, 5000, 5000)));
+
+	LoadSceneJSON();
 
 	return true;
 }

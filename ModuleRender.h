@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "ModuleModelLoader.h"
+#include <vector>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -56,6 +57,7 @@ public:
 
 private:
 	unsigned fallback = 0;
+	std::vector<GameObject*> gameObjectsCollide;
 };
 
 #endif

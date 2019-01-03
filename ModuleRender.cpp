@@ -113,6 +113,9 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	gameObjectsCollide.clear();
+	App->scene->quadTree.CollectIntersections(gameObjectsCollide, App->scene->gameCamera->componentCamera->frustum);
+
 	for (GameObject* gameObject : App->scene->root->childrens)
 	{
 		if (gameObject->isActive)

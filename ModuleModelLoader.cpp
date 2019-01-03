@@ -39,7 +39,7 @@ bool ModuleModelLoader::Init()
 	//LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
 	//LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
 
-	App->scene->CalculateGlobalMatrix(App->scene->root);
+	//App->scene->CalculateGlobalMatrix(App->scene->root);
 
 	return true;
 }
