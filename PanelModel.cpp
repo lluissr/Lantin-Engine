@@ -5,6 +5,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleFileSystem.h"
 #include "ModuleTextures.h"
+#include "ModuleTime.h"
 
 PanelModel::PanelModel()
 {
@@ -37,13 +38,23 @@ void PanelModel::Draw()
 	ImGui::Checkbox("Active", &go->isActive);
 	if (ImGui::Checkbox("Static", &go->isStatic))
 	{
-		if (go->isStatic)
+		if (App->time->gameState == State::STOP)
 		{
-			App->scene->quadTree.InsertGameObject(go);
+			if (go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
+			{
+				if (go->isStatic)
+				{
+					App->scene->quadTree.InsertGameObject(go);
+				}
+				else
+				{
+					App->scene->quadTree.RemoveGameObject(go);
+				}
+			}
 		}
 		else
 		{
-			App->scene->quadTree.RemoveGameObject(go);
+			go->isStatic = !go->isStatic;
 		}
 	}
 	ImGui::NewLine();
@@ -87,7 +98,7 @@ void PanelModel::Draw()
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-		if (ImGui::Button("Apply identity matrix"))
+		if (ImGui::Button("Apply identity matrix") && App->time->gameState == State::STOP)
 		{
 			go->localMatrix = math::float4x4::identity;
 			go->position = { 0.0f,0.0f,0.0f };
@@ -95,6 +106,11 @@ void PanelModel::Draw()
 			go->rotation = { 0.0f,0.0f,0.0f,1.0f };
 			App->scene->CalculateGlobalMatrix(go);
 			go->UpdateBoundingBox();
+			if (go->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
+			{
+				App->scene->quadTree.RemoveGameObject(go);
+				App->scene->quadTree.InsertGameObject(go);
+			}
 		}
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
@@ -169,11 +185,16 @@ void PanelModel::Draw()
 		ImGui::PopID();
 		ImGui::PopItemWidth();
 
-		if (changed)
+		if (changed && App->time->gameState == State::STOP)
 		{
 			go->localMatrix.Set(float4x4::FromTRS(go->position, go->rotation, go->scale));
 			App->scene->CalculateGlobalMatrix(go);
 			go->UpdateBoundingBox();
+			if (go->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
+			{
+				App->scene->quadTree.RemoveGameObject(go);
+				App->scene->quadTree.InsertGameObject(go);
+			}
 		}
 
 	}

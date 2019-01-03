@@ -140,7 +140,7 @@ void PanelScene::DrawTreeNode(GameObject* go)
 		{
 			GameObject* newGameObject = new GameObject(*go);
 			go->parent->childrens.push_back(newGameObject);
-			if (newGameObject->isStatic)
+			if (newGameObject->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
 			{
 				App->scene->quadTree.InsertGameObject(newGameObject);
 			}

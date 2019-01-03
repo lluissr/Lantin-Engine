@@ -264,7 +264,7 @@ void ModuleScene::LoadSceneJSON()
 				{
 					gameCamera = go;
 				}
-				if (go->isStatic)
+				if (go->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
 				{
 					CalculateGlobalMatrix(go);
 					go->UpdateBoundingBox();
