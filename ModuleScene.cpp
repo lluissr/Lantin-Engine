@@ -262,6 +262,12 @@ void ModuleScene::LoadSceneJSON()
 				{
 					gameCamera = go;
 				}
+				if (go->isStatic)
+				{
+					CalculateGlobalMatrix(go);
+					go->UpdateBoundingBox();
+					quadTree.InsertGameObject(go);
+				}
 			}
 			else
 			{

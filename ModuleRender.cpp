@@ -131,7 +131,7 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 {
 	if (frameBuffer.frameBufferType == FrameBufferType::SCENE && App->scene->drawQuadTree)
 	{
-		dd::aabb(App->scene->quadTree.root->aabb.minPoint, App->scene->quadTree.root->aabb.maxPoint, dd::colors::Red);
+		DrawQuadTreeNode(App->scene->quadTree.root);
 	}
 
 	if (showGrid)
@@ -151,6 +151,18 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight, viewMatrix, projectionMatrix);
 }
 
+void ModuleRender::DrawQuadTreeNode(QuadtreeNode* node)
+{
+	dd::aabb(node->aabb.minPoint, node->aabb.maxPoint, dd::colors::Red);
+
+	if (node->childs[0] != nullptr)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			DrawQuadTreeNode(node->childs[i]);
+		}
+	}
+}
 
 void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer)
 {

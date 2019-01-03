@@ -8,6 +8,7 @@
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
+class QuadtreeNode;
 
 enum class FrameBufferType
 {
@@ -32,12 +33,13 @@ public:
 	bool Init();
 	update_status PreUpdate();
 	update_status Update();
-	void DrawInFrameBuffer(FrameBuffer& frameBuffer);
-	void UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	update_status PostUpdate();
 	bool CleanUp();
 	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, bool active);
+	void DrawInFrameBuffer(FrameBuffer& frameBuffer);
+	void UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
+	void DrawQuadTreeNode(QuadtreeNode* node);
 	void InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer);
 	unsigned GenerateFallback();
 

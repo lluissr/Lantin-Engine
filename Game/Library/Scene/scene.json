@@ -36,7 +36,7 @@
                 "name": "Wall",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -100,7 +100,7 @@
                 "name": "WallStars",
                 "parent": "5d039ba2-1b44-4680-b4a6-31b340bedc05",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -161,7 +161,7 @@
                 "name": "Floor",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -225,7 +225,7 @@
                 "name": "Floor_under",
                 "parent": "46f886af-cfbd-405e-ad61-3bc13a0a27a1",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -286,7 +286,7 @@
                 "name": "Drawer",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 400.0,
                     "y": 0.0,
@@ -350,7 +350,7 @@
                 "name": "DollHouse",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 3500.0,
                     "y": 0.0,
@@ -414,7 +414,7 @@
                 "name": "Clock",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -478,7 +478,7 @@
                 "name": "FireTruck",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 0.0,
                     "y": 0.0,
@@ -542,7 +542,7 @@
                 "name": "Hearse",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 1000.0,
                     "y": 0.0,
@@ -606,7 +606,7 @@
                 "name": "Robot",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 1500.0,
                     "y": 0.0,
@@ -670,7 +670,7 @@
                 "name": "Spinning",
                 "parent": "27c21d7a-e824-4d8e-9295-d5d65cf607d0",
                 "isActive": true,
-                "isStatic": false,
+                "isStatic": true,
                 "position": {
                     "x": 2000.0,
                     "y": 0.0,

@@ -35,7 +35,17 @@ void PanelModel::Draw()
 	ImGui::Text("Model selected has %d childs.", go->childrens.size());
 	ImGui::NewLine();
 	ImGui::Checkbox("Active", &go->isActive);
-	ImGui::Checkbox("Static", &go->isStatic);
+	if (ImGui::Checkbox("Static", &go->isStatic))
+	{
+		if (go->isStatic)
+		{
+			App->scene->quadTree.InsertGameObject(go);
+		}
+		else
+		{
+			App->scene->quadTree.RemoveGameObject(go);
+		}
+	}
 	ImGui::NewLine();
 
 	if (go->componentCamera != nullptr)

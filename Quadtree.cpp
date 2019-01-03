@@ -157,7 +157,6 @@ void QuadtreeNode::RedistributeGameObjects()
 			}
 			else
 			{
-				it = gameObjects.erase(it);
 				for (int i = 0; i < 4; ++i)
 				{
 					if (intersects[i])
@@ -165,6 +164,7 @@ void QuadtreeNode::RedistributeGameObjects()
 						childs[i]->InsertGameObject(*it);
 					}
 				}
+				it = gameObjects.erase(it);
 			}
 		}
 	}
