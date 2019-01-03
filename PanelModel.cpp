@@ -183,8 +183,7 @@ void PanelModel::Draw()
 			{
 				if (go->componentMesh->mesh != nullptr)
 				{
-					delete go->componentMesh->mesh;
-					go->componentMesh->mesh = nullptr;
+					RELEASE(go->componentMesh->mesh)
 				}
 			}
 			if (go->componentMesh->mesh != nullptr)
@@ -464,7 +463,7 @@ void PanelModel::DrawComboBoxMeshes()
 					{
 						if (go->componentMesh->mesh != nullptr)
 						{
-							delete go->componentMesh->mesh;
+							RELEASE(go->componentMesh->mesh)
 						}
 						go->componentMesh->mesh = mesh;
 						if (go->componentMaterial == nullptr)

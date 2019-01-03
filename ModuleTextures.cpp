@@ -163,8 +163,7 @@ bool ModuleTextures::Import(const char* path)
 					result = App->fileSystem->WriteFile(fileName.c_str(), data, size, false);
 				}
 
-				delete[] data;
-				data = nullptr;
+				RELEASE_ARRAY(data)
 			}
 			ilDeleteImages(1, &ImageName);
 		}

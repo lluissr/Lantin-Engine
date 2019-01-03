@@ -155,7 +155,7 @@ void ModuleCamera::Focus()
 bool ModuleCamera::CleanUp()
 {
 	selectedCamera = nullptr;
-	delete sceneCamera;
+	RELEASE(sceneCamera);
 	return true;
 }
 

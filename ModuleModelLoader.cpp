@@ -402,7 +402,8 @@ bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
 	{
 		LOG("Mesh saved as %s", path.c_str());
 	}
-	delete[] buffer;
+
+	RELEASE_ARRAY(buffer);
 
 	return ret;
 }
@@ -460,7 +461,7 @@ Mesh* ModuleModelLoader::Load(const char* path)
 		cursor += bytes;
 	}
 
-	delete[] buffer;
+	RELEASE_ARRAY(buffer);
 	
 	GenerateVBO(*mesh);
 	GenerateVAO(*mesh);

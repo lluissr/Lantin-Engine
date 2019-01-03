@@ -20,6 +20,8 @@ bool ModuleScene::Init()
 
 	gameCamera = CreateCamera();
 
+	quadTree.InitQuadTree(math::AABB(math::float3(-5000, 0, -5000), math::float3(5000, 5000, 5000)));
+
 	return true;
 }
 
@@ -37,7 +39,7 @@ update_status ModuleScene::PreUpdate()
 			}
 			gameCamera = nullptr;
 		}
-		delete root;
+		RELEASE(root);
 		root = new GameObject();
 		root->name = "Scene Root";
 
@@ -64,8 +66,7 @@ update_status ModuleScene::PreUpdate()
 			}
 			gameCamera = nullptr;
 		}
-		delete selectedGO;
-		selectedGO = nullptr;
+		RELEASE(selectedGO)
 	}
 	else
 	{
@@ -75,8 +76,7 @@ update_status ModuleScene::PreUpdate()
 			{
 				App->camera->selectedCamera = nullptr;
 			}
-			delete gameCamera;
-			gameCamera = nullptr;
+			RELEASE(gameCamera)
 		}
 	}
 
@@ -97,8 +97,7 @@ update_status ModuleScene::Update()
 bool ModuleScene::CleanUp()
 {
 	selectedGO = nullptr;
-	delete root;
-	root = nullptr;
+	RELEASE(root)
 
 	return true;
 }
@@ -217,7 +216,7 @@ void ModuleScene::SaveSceneJSON()
 
 	config->WriteToDisk();
 	LOG("Scene saved succesfully: Library/Scene/scene.json");
-	delete config;
+	RELEASE(config)
 }
 
 void ModuleScene::SaveGameObjectsJSON(Config* config, GameObject* gameObject)
@@ -277,6 +276,6 @@ void ModuleScene::LoadSceneJSON()
 		LOG("Error loading scene");
 	}
 
-	delete config;
+	RELEASE(config)
 }
 

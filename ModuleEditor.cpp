@@ -161,17 +161,16 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-	delete panelConfiguration;
-	delete panelModel;
-	delete panelAbout;
-	delete panelHardware;
-	delete panelScene;
-	delete panelViewport;
-	delete panelViewportGame;
-	delete panelEditor;
-	delete panelLibrary;
-	delete panelConsole;
-	panelConsole = nullptr;
+	RELEASE(panelConfiguration);
+	RELEASE(panelModel);
+	RELEASE(panelAbout);
+	RELEASE(panelHardware);
+	RELEASE(panelScene);
+	RELEASE(panelViewport);
+	RELEASE(panelViewportGame);
+	RELEASE(panelEditor);
+	RELEASE(panelLibrary);
+	RELEASE(panelConsole);
 
 	return true;
 }

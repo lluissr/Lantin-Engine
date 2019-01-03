@@ -41,26 +41,10 @@ public:
 	Mesh() {}
 	~Mesh()
 	{
-		if (normals != nullptr)
-		{
-			delete[] normals;
-			normals = nullptr;
-		}
-		if (indices != nullptr)
-		{
-			delete[] indices;
-			indices = nullptr;
-		}
-		if (vertices != nullptr)
-		{
-			delete[] vertices;
-			vertices = nullptr;
-		}
-		if (texCoords != nullptr)
-		{
-			delete[] texCoords;
-			texCoords = nullptr;
-		}
+		RELEASE_ARRAY(normals)
+		RELEASE_ARRAY(indices)
+		RELEASE_ARRAY(vertices)
+		RELEASE_ARRAY(texCoords)
 	}
 };
 
@@ -93,7 +77,7 @@ public:
 	math::float4 emissiveColor = math::float4(0.0f, 0.0f, 0.0f, 0.0f);
 	int emissiveWidth = 0;
 	int emissiveHeight = 0;
-	
+
 
 };
 
@@ -107,11 +91,11 @@ public:
 	bool CleanUp();
 
 	void CleanModel();
-	
+
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
-	
+
 	bool Import(const char* path);
 	bool ImportMesh(const aiMesh* aiMesh, const char* name);
 	bool SaveMesh(Mesh* mesh, std::string& newpath);

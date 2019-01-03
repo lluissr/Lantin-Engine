@@ -5,6 +5,7 @@
 #include "MathGeoLib.h"
 #include <list>
 #include "Config.h"
+#include "QuadTree.h"
 
 class GameObject;
 
@@ -33,6 +34,9 @@ public:
 	GameObject* root = nullptr;
 	GameObject* selectedGO = nullptr;
 	GameObject* gameCamera = nullptr;
+
+	Quadtree quadTree;
+	bool drawQuadTree = true;
 
 	math::float3 lightPosition = math::float3(0.0f, 1000.0f, 1000.0f);
 	float ambient = 0.3f;

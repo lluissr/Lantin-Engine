@@ -5,6 +5,7 @@
 #include "ModuleCamera.h"
 #include "ModuleInput.h"
 #include "ModuleTime.h"
+#include "ModuleScene.h"
 #include "mmgr/mmgr.h"
 
 
@@ -89,6 +90,7 @@ void PanelConfiguration::Draw()
 	if (ImGui::CollapsingHeader("Render"))
 	{
 		ImGui::Checkbox("Bounding Box", &App->renderer->renderBoundingBoxes);
+		ImGui::Checkbox("Draw Quadtree", &App->scene->drawQuadTree);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

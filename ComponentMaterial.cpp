@@ -11,11 +11,7 @@ ComponentMaterial::ComponentMaterial(GameObject* parent, ComponentType type) : C
 
 ComponentMaterial::~ComponentMaterial()
 {
-	if (material != nullptr)
-	{
-		delete material;
-		material = nullptr;
-	}
+	RELEASE(material)
 }
 
 void ComponentMaterial::CopyFromComponentMaterial(const ComponentMaterial& componentMaterial)

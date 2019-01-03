@@ -171,6 +171,7 @@
     <ClInclude Include="PanelViewport.h" />
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utils\crossguid\guid.hpp" />
   </ItemGroup>
@@ -244,6 +245,7 @@
     <ClCompile Include="PanelModel.cpp" />
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="PanelViewport.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>

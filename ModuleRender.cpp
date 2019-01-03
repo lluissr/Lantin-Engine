@@ -129,6 +129,10 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 
 void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
+	if (frameBuffer.frameBufferType == FrameBufferType::SCENE && App->scene->drawQuadTree)
+	{
+		dd::aabb(App->scene->quadTree.root->aabb.minPoint, App->scene->quadTree.root->aabb.maxPoint, dd::colors::Red);
+	}
 
 	if (showGrid)
 	{

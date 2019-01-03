@@ -14,8 +14,8 @@ Config::Config()
 
 Config::~Config()
 {
-	delete writer;
-	delete stringBuffer;
+	RELEASE(writer);
+	RELEASE(stringBuffer);
 }
 
 void Config::AddComponentType(const char * name, ComponentType componentType)

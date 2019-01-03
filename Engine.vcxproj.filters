@@ -211,6 +211,9 @@
     <ClCompile Include="Config.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -501,7 +504,12 @@
     <ClInclude Include="LibraryThread.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h" />
+    <ClInclude Include="Config.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
