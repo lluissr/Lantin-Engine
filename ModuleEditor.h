@@ -40,6 +40,10 @@ public:
 	PanelEditor* panelEditor = nullptr;
 	PanelLibrary* panelLibrary = nullptr;
 
+	float editorViewportX = 0.0f;
+	float editorViewportY = 0.0f;
+	bool overEditorViewport = false;
+
 private:
 	const char* glsl_version = "#version 130";
 

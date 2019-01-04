@@ -4,6 +4,8 @@
 #include "ModuleInput.h"
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
+#include "ModuleEditor.h"
+#include "ModuleRender.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -102,6 +104,35 @@ update_status ModuleCamera::PreUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 	{
 		Orbit();
+	}
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		if (App->editor->overEditorViewport)
+		{
+			iPoint mousePosition = App->input->GetMousePosition();
+
+			float normalizedX = -(1.0f - (float(mousePosition.x - App->editor->editorViewportX) * 2.0f) / sceneCamera->screenWidth);
+			float normalizedY = 1.0f - (float(mousePosition.y - App->editor->editorViewportY) * 2.0f) / sceneCamera->screenHeight;
+
+			pickingLine = sceneCamera->frustum.UnProjectLineSegment(normalizedX, normalizedY);
+
+			objects.clear();
+			App->scene->quadTree.CollectIntersections(objects, pickingLine);
+
+			for (std::vector<ComponentMesh*>::iterator it =  App->renderer->meshes.begin(); it != App->renderer->meshes.end(); ++it)
+			{
+				if (!(*it)->myGameObject->isStatic && (*it)->mesh != nullptr && pickingLine.Intersects((*it)->mesh->globalBoundingBox))
+				{
+					objects.push_back((*it)->myGameObject);
+				}
+			}
+
+			if (objects.size() > 0)
+			{
+				App->scene->selectedGO = objects.back();
+			}
+		}
 	}
 
 

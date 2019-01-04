@@ -124,8 +124,8 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			mouse_motion.x = event.motion.xrel / 2;
 			mouse_motion.y = event.motion.yrel / 2;
-			mouse.x = event.motion.x / 2;
-			mouse.y = event.motion.y / 2;
+			mouse.x = event.motion.x / 1;
+			mouse.y = event.motion.y / 1;
 			break;
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y > 0) 

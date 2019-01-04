@@ -5,7 +5,9 @@
 #include "MathGeoLib.h"
 #include "Point.h"
 #include "GL/glew.h"
+#include <vector>
 
+class GameObject;
 class ComponentCamera;
 
 enum class Directions {
@@ -36,12 +38,16 @@ public:
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;
 
+	LineSegment pickingLine;
+
 private:
 
 	void Move(Directions dir);
 	void MouseUpdate();
 	void Orbit();
 	void SetPlaneDistances(float nearDist, float farDist);
+
+	std::vector<GameObject*> objects;
 };
 
 #endif /* __ModuleCamera_h__ */

@@ -36,7 +36,7 @@ public:
 	GameObject* gameCamera = nullptr;
 
 	Quadtree quadTree;
-	bool drawQuadTree = true;
+	bool drawQuadTree = false;
 
 	math::float3 lightPosition = math::float3(0.0f, 1000.0f, 1000.0f);
 	float ambient = 0.3f;
