@@ -22,7 +22,7 @@ void PanelViewport::Draw()
 	{
 		switch (frameBuffer->frameBufferType)
 		{
-		case FrameBufferType::SCENE:
+		case FrameBufferType::EDITOR:
 			App->camera->selectedCamera = App->camera->sceneCamera;
 			App->renderer->sceneFocused = true;
 			break;
@@ -41,7 +41,7 @@ void PanelViewport::Draw()
 	ImVec2 size = ImGui::GetWindowSize();
 	switch (frameBuffer->frameBufferType)
 	{
-	case FrameBufferType::SCENE:
+	case FrameBufferType::EDITOR:
 		App->camera->sceneCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
 		break;
 	case FrameBufferType::GAME:

@@ -1,6 +1,7 @@
 #include "ComponentMesh.h"
 #include "ModuleModelLoader.h"
 #include "GameObject.h"
+#include "ModuleRender.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent, ComponentType type) : Component(parent, type)
 {
@@ -10,6 +11,11 @@ ComponentMesh::ComponentMesh(GameObject* parent, ComponentType type) : Component
 ComponentMesh::~ComponentMesh()
 {
 	RELEASE(mesh)
+	std::vector<ComponentMesh*>::iterator it = std::find(App->renderer->meshes.begin(), App->renderer->meshes.end(), this);
+	if (it != App->renderer->meshes.end())
+	{
+		App->renderer->meshes.erase(it);
+	}
 }
 
 void ComponentMesh::Update()

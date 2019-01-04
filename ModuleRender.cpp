@@ -58,7 +58,7 @@ bool ModuleRender::Init()
 
 	fallback = GenerateFallback();
 
-	frameBufferScene.frameBufferType = FrameBufferType::SCENE;
+	frameBufferScene.frameBufferType = FrameBufferType::EDITOR;
 	frameBufferGame.frameBufferType = FrameBufferType::GAME;
 	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight, frameBufferScene);
 	InitFrameBuffer(App->camera->screenWidth, App->camera->screenHeight, frameBufferGame);
@@ -100,7 +100,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	math::float4x4 projectionMatrix = math::float4x4::identity;
 	switch (frameBuffer.frameBufferType)
 	{
-	case  FrameBufferType::SCENE:
+	case  FrameBufferType::EDITOR:
 		viewMatrix = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
 		projectionMatrix = App->camera->sceneCamera->frustum.ProjectionMatrix();
 		break;
@@ -113,15 +113,35 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	gameObjectsCollide.clear();
-	App->scene->quadTree.CollectIntersections(gameObjectsCollide, App->scene->gameCamera->componentCamera->frustum);
-
-	for (GameObject* gameObject : App->scene->root->childrens)
+	if (frustumCulling && App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive && App->scene->gameCamera->componentCamera->active)
 	{
-		if (gameObject->isActive)
+		gameObjectsCollideQuadtree.clear();
+		App->scene->quadTree.CollectIntersections(gameObjectsCollideQuadtree, App->scene->gameCamera->componentCamera->frustum);
+
+		for (std::vector<GameObject*>::iterator it = gameObjectsCollideQuadtree.begin(); it != gameObjectsCollideQuadtree.end(); ++it)
 		{
-			RenderGameObject(gameObject, viewMatrix, projectionMatrix, frameBuffer);
+			RenderGameObject(*it, viewMatrix, projectionMatrix, frameBuffer);
 		}
+
+		for (std::vector<ComponentMesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
+		{
+			if (!(*it)->myGameObject->isStatic && (*it)->mesh != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects((*it)->mesh->globalBoundingBox))
+			{
+				RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix, frameBuffer);
+			}
+		}
+	}
+	else
+	{
+		for (std::vector<ComponentMesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
+		{
+			RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix, frameBuffer);
+		}
+	}
+
+	if (frameBuffer.frameBufferType == FrameBufferType::EDITOR && App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera != nullptr && App->scene->gameCamera->componentCamera->showFrustum)
+	{
+		dd::frustum((App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix() * App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up)).Inverted(), dd::colors::LightGreen);
 	}
 
 	UpdateDrawDebug(frameBuffer, viewMatrix, projectionMatrix);
@@ -132,7 +152,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 
 void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
-	if (frameBuffer.frameBufferType == FrameBufferType::SCENE && App->scene->drawQuadTree)
+	if (frameBuffer.frameBufferType == FrameBufferType::EDITOR && App->scene->drawQuadTree)
 	{
 		DrawQuadTreeNode(App->scene->quadTree.root);
 	}
@@ -171,25 +191,8 @@ void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 view
 {
 	if (gameObject->isActive)
 	{
-
-		if (gameObject->childrens.size() > 0)
-		{
-			for (GameObject* go : gameObject->childrens)
-			{
-				RenderGameObject(go, viewMatrix, projectionMatrix, frameBuffer);
-			}
-		}
-
-		if (gameObject->componentMesh != nullptr && gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
-			if (App->scene->gameCamera == nullptr || !frustumCulling || !App->scene->gameCamera->isActive || (App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects(gameObject->componentMesh->mesh->globalBoundingBox))) {
-				RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
-			}
-		}
-
-		if (frameBuffer.frameBufferType == FrameBufferType::SCENE && gameObject->componentCamera != nullptr && gameObject->componentCamera->showFrustum)
-		{
-			ddVec3 color = App->scene->gameCamera != nullptr && App->scene->gameCamera->uuid == gameObject->uuid ? dd::colors::LightGreen : dd::colors::Blue;
-			dd::frustum((gameObject->componentCamera->frustum.ProjectionMatrix() * gameObject->componentCamera->LookAt(gameObject->componentCamera->frustum.pos, gameObject->componentCamera->frustum.front, gameObject->componentCamera->frustum.up)).Inverted(), color);
+		if (gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
+			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
 		}
 	}
 }

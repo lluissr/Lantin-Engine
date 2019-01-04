@@ -3,6 +3,7 @@
 #include "ComponentMaterial.h"
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
+#include "ModuleRender.h"
 
 
 GameObject::GameObject()
@@ -55,8 +56,20 @@ GameObject::~GameObject()
 		App->scene->quadTree.RemoveGameObject(this);
 	}
 
+	if (componentMesh != nullptr)
+	{
+		std::vector<ComponentMesh*>::iterator it = std::find(App->renderer->meshes.begin(), App->renderer->meshes.end(), componentMesh);
+		if (it != App->renderer->meshes.end())
+		{
+			App->renderer->meshes.erase(it);
+		}
+	}
+
 	for (std::list<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+
 		delete *it;
+	}
 
 	components.clear();
 
@@ -78,6 +91,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	{
 	case ComponentType::MESH:
 		componentMesh = new ComponentMesh(this, type);
+		App->renderer->meshes.push_back(componentMesh);
 		ret = componentMesh;
 		break;
 	case ComponentType::MATERIAL:

@@ -23,6 +23,8 @@ bool ModuleScene::Init()
 	quadTree.InitQuadTree(math::AABB(math::float3(-5000, -1000, -5000), math::float3(5000, 5000, 5000)));
 
 	LoadSceneJSON();
+	CalculateGlobalMatrix(root);
+	root->UpdateBoundingBox();
 
 	return true;
 }

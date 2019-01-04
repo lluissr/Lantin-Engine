@@ -46,53 +46,7 @@ bool ModuleModelLoader::Init()
 
 bool ModuleModelLoader::CleanUp()
 {
-	LOG("Cleaning meshes");
-	for (unsigned i = 0; i < meshes.size(); ++i)
-	{
-		if (meshes[i]->vbo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i]->vbo);
-		}
-
-		if (meshes[i]->ibo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i]->ibo);
-		}
-		delete meshes[i];
-	}
-	meshes.clear();
-
-	LOG("Cleaning materials");
-	for (unsigned i = 0; i < materials.size(); ++i)
-	{
-		if (materials[i]->diffuseMap != 0)
-		{
-			App->textures->Unload(materials[i]->diffuseMap);
-		}
-		if (materials[i]->occlusionMap != 0)
-		{
-			App->textures->Unload(materials[i]->occlusionMap);
-		}
-		if (materials[i]->specularMap != 0)
-		{
-			App->textures->Unload(materials[i]->specularMap);
-		}
-		if (materials[i]->emissiveMap != 0)
-		{
-			App->textures->Unload(materials[i]->emissiveMap);
-		}
-		delete materials[i];
-	}
-	materials.clear();
-
 	return true;
-}
-
-void ModuleModelLoader::CleanModel()
-{
-	meshes.clear();
-
-	materials.clear();
 }
 
 

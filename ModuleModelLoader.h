@@ -11,6 +11,7 @@
 #include <vector>
 #include "GameObject.h"
 #include <string>
+#include "ModuleTextures.h"
 
 struct aiScene;
 struct aiNode;
@@ -41,10 +42,10 @@ public:
 	Mesh() {}
 	~Mesh()
 	{
-		RELEASE_ARRAY(normals)
-		RELEASE_ARRAY(indices)
-		RELEASE_ARRAY(vertices)
-		RELEASE_ARRAY(texCoords)
+		RELEASE_ARRAY(normals);
+		RELEASE_ARRAY(indices);
+		RELEASE_ARRAY(vertices);
+		RELEASE_ARRAY(texCoords);
 	}
 };
 
@@ -78,7 +79,14 @@ public:
 	int emissiveWidth = 0;
 	int emissiveHeight = 0;
 
-
+	Material() {}
+	~Material()
+	{
+		App->textures->Unload(diffuseMap);
+		App->textures->Unload(occlusionMap);
+		App->textures->Unload(specularMap);
+		App->textures->Unload(emissiveMap);
+	}
 };
 
 class ModuleModelLoader : public Module
@@ -90,8 +98,6 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void CleanModel();
-
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
 	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
@@ -102,9 +108,6 @@ public:
 	Mesh* Load(const char* path);
 	void GenerateVBO(Mesh& mesh);
 	void GenerateVAO(Mesh& mesh);
-
-	std::vector<Mesh*> meshes;
-	std::vector<Material*> materials;
 };
 
 #endif

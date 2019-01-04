@@ -13,7 +13,7 @@ class QuadtreeNode;
 
 enum class FrameBufferType
 {
-	SCENE,
+	EDITOR,
 	GAME
 };
 
@@ -52,12 +52,13 @@ public:
 	bool showGrid = true;
 	bool frustumCulling = true;
 	bool sceneFocused = true;
-
 	bool enableVSync = true;
+
+	std::vector<ComponentMesh*> meshes;
 
 private:
 	unsigned fallback = 0;
-	std::vector<GameObject*> gameObjectsCollide;
+	std::vector<GameObject*> gameObjectsCollideQuadtree;
 };
 
 #endif
