@@ -26,7 +26,6 @@ void PanelViewport::Draw()
 		{
 		case FrameBufferType::EDITOR:
 			App->camera->selectedCamera = App->camera->sceneCamera;
-			App->renderer->sceneFocused = true;
 			App->editor->editorViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
 			App->editor->editorViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
 			App->editor->overEditorViewport = ImGui::IsMouseHoveringWindow();
@@ -35,7 +34,6 @@ void PanelViewport::Draw()
 			if (App->scene->gameCamera != nullptr)
 			{
 				App->camera->selectedCamera = App->scene->gameCamera->componentCamera;
-				App->renderer->sceneFocused = false;
 			}
 			App->editor->overEditorViewport = false;
 			break;
@@ -48,10 +46,13 @@ void PanelViewport::Draw()
 	switch (frameBuffer->frameBufferType)
 	{
 	case FrameBufferType::EDITOR:
-		App->camera->sceneCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
+		if (size.x != App->camera->sceneCamera->screenWidth || size.y != App->camera->sceneCamera->screenHeight)
+		{
+			App->camera->sceneCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
+		}
 		break;
 	case FrameBufferType::GAME:
-		if (App->scene->gameCamera != nullptr)
+		if (App->scene->gameCamera != nullptr && (size.x != App->scene->gameCamera->componentCamera->screenWidth || size.y != App->scene->gameCamera->componentCamera->screenHeight))
 		{
 			App->scene->gameCamera->componentCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
 		}

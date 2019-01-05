@@ -78,6 +78,7 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 
+
 	DrawInFrameBuffer(frameBufferScene);
 	if (App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive && App->scene->gameCamera->componentCamera->active)
 	{
@@ -110,7 +111,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 		break;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, msaa ? frameBuffer.msfbo : frameBuffer.fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (frustumCulling && App->scene->gameCamera != nullptr && App->scene->gameCamera->isActive && App->scene->gameCamera->componentCamera->active)
@@ -147,6 +148,14 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	UpdateDrawDebug(frameBuffer, viewMatrix, projectionMatrix);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	if (msaa)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer.msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer.fbo);
+		glBlitFramebuffer(0, 0, App->camera->screenWidth, App->camera->screenHeight, 0, 0, App->camera->screenWidth, App->camera->screenHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 }
 
 
@@ -289,39 +298,52 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer)
 {
-	glDeleteFramebuffers(1, &frameBuffer.fbo);
-	glDeleteRenderbuffers(1, &frameBuffer.rbo);
 
 	glGenFramebuffers(1, &frameBuffer.fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.fbo);
-
 	glGenTextures(1, &frameBuffer.renderTexture);
 	glBindTexture(GL_TEXTURE_2D, frameBuffer.renderTexture);
 
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
-	);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBuffer.renderTexture, 0
-	);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glGenRenderbuffers(1, &frameBuffer.rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer.rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, frameBuffer.rbo);
-
+	glGenRenderbuffers(1, &frameBuffer.fboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer.fboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBuffer.fboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		LOG("Framebuffer mal");
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBuffer.renderTexture, 0);
+
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//msfbo
+	glGenFramebuffers(1, &frameBuffer.msfbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.msfbo);
+
+	glGenRenderbuffers(1, &frameBuffer.msfbDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer.msfbDepth);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBuffer.msfbDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glGenRenderbuffers(1, &frameBuffer.msfboColor);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer.msfboColor);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, frameBuffer.msfboColor);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 }
 
 unsigned ModuleRender::GenerateFallback()

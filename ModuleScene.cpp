@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
+#include "ModuleRender.h"
 
 
 ModuleScene::ModuleScene()
@@ -209,6 +210,7 @@ void ModuleScene::SaveSceneJSON()
 	config->StartObject("scene");
 	config->AddFloat("ambientLight", ambient);
 	config->AddFloat3("lightPosition", lightPosition);
+	config->AddBool("msaa", App->renderer->msaa);
 
 	if (gameCamera != nullptr)
 	{
@@ -249,6 +251,7 @@ void ModuleScene::LoadSceneJSON()
 		rapidjson::Value& scene = document["scene"];
 		ambient = config->GetFloat("ambientLight", scene);
 		lightPosition = config->GetFloat3("lightPosition", scene);
+		App->renderer->msaa = config->GetBool("msaa", scene);
 
 		const char* gameCamerauuid = nullptr;
 		if (scene.HasMember("gameCamera"))

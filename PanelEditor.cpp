@@ -52,6 +52,8 @@ void PanelEditor::Draw()
 	ImGui::SameLine();
 	ImGui::Checkbox("Frustum culling", &App->renderer->frustumCulling);
 	ImGui::SameLine();
+	ImGui::Checkbox("MSAA", &App->renderer->msaa);
+	ImGui::SameLine();
 	if (ImGui::Checkbox("VSync", &App->renderer->enableVSync)) 
 	{
 		if (App->renderer->enableVSync) 

@@ -21,8 +21,14 @@ struct FrameBuffer
 {
 	unsigned fbo = 0u;
 	unsigned rbo = 0u;
+	unsigned fboDepth = 0u;
 	unsigned renderTexture = 0u;
 	FrameBufferType frameBufferType;
+
+	unsigned msfbo = 0u;
+	unsigned msfboColor = 0u;
+	unsigned msfbDepth = 0u;
+
 };
 
 class ModuleRender : public Module
@@ -51,8 +57,8 @@ public:
 	bool showAxis = true;
 	bool showGrid = true;
 	bool frustumCulling = true;
-	bool sceneFocused = true;
 	bool enableVSync = true;
+	bool msaa = true;
 
 	std::vector<ComponentMesh*> meshes;
 

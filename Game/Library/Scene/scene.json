@@ -6,6 +6,7 @@
             "y": 1000.0,
             "z": -10000.0
         },
+        "msaa": true,
         "gameCamera": "45109ce5-10fa-46b6-9f56-622371115426",
         "gameObjects": [
             {
