@@ -27,6 +27,7 @@ public:
 
 	bool            Init();
 	update_status   PreUpdate();
+	void PickGameObject();
 	update_status   Update();
 	bool            CleanUp();
 
@@ -38,8 +39,6 @@ public:
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;
 
-	LineSegment pickingLine;
-
 private:
 
 	void Move(Directions dir);
@@ -47,7 +46,7 @@ private:
 	void Orbit();
 	void SetPlaneDistances(float nearDist, float farDist);
 
-	std::vector<GameObject*> objects;
+	std::vector<GameObject*> objectsPossiblePick;
 };
 
 #endif /* __ModuleCamera_h__ */

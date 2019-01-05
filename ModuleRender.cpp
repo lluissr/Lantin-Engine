@@ -144,8 +144,6 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 		dd::frustum((App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix() * App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up)).Inverted(), dd::colors::LightGreen);
 	}
 
-	dd::line(App->camera->pickingLine.a, App->camera->pickingLine.b, dd::colors::Blue);
-
 	UpdateDrawDebug(frameBuffer, viewMatrix, projectionMatrix);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

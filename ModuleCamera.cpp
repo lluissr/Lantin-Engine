@@ -106,43 +106,81 @@ update_status ModuleCamera::PreUpdate()
 		Orbit();
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && App->editor->overEditorViewport)
 	{
-		if (App->editor->overEditorViewport)
-		{
-			iPoint mousePosition = App->input->GetMousePosition();
 
-			float normalizedX = -(1.0f - (float(mousePosition.x - App->editor->editorViewportX) * 2.0f) / sceneCamera->screenWidth);
-			float normalizedY = 1.0f - (float(mousePosition.y - App->editor->editorViewportY) * 2.0f) / sceneCamera->screenHeight;
-
-			pickingLine = sceneCamera->frustum.UnProjectLineSegment(normalizedX, normalizedY);
-
-			objects.clear();
-			App->scene->quadTree.CollectIntersections(objects, pickingLine);
-
-			for (std::vector<ComponentMesh*>::iterator it =  App->renderer->meshes.begin(); it != App->renderer->meshes.end(); ++it)
-			{
-				if (!(*it)->myGameObject->isStatic && (*it)->mesh != nullptr && pickingLine.Intersects((*it)->mesh->globalBoundingBox))
-				{
-					objects.push_back((*it)->myGameObject);
-				}
-			}
-
-			if (objects.size() > 0)
-			{
-				App->scene->selectedGO = objects.back();
-			}
-		}
+		PickGameObject();
 	}
 
 
 	return UPDATE_CONTINUE;
 }
 
+
+
 update_status ModuleCamera::Update()
 {
 	return UPDATE_CONTINUE;
 }
+
+
+void ModuleCamera::PickGameObject()
+{
+	iPoint mousePosition = App->input->GetMousePosition();
+
+	float normalizedX = -(1.0f - (float(mousePosition.x - App->editor->editorViewportX) * 2.0f) / sceneCamera->screenWidth);
+	float normalizedY = 1.0f - (float(mousePosition.y - App->editor->editorViewportY) * 2.0f) / sceneCamera->screenHeight;
+
+	math::LineSegment pickingLine = sceneCamera->frustum.UnProjectLineSegment(normalizedX, normalizedY);
+
+	objectsPossiblePick.clear();
+	App->scene->quadTree.CollectIntersections(objectsPossiblePick, pickingLine);
+
+	for (std::vector<ComponentMesh*>::iterator it = App->renderer->meshes.begin(); it != App->renderer->meshes.end(); ++it)
+	{
+		if (!(*it)->myGameObject->isStatic && (*it)->mesh != nullptr && pickingLine.Intersects((*it)->mesh->globalBoundingBox))
+		{
+			objectsPossiblePick.push_back((*it)->myGameObject);
+		}
+	}
+
+	float minDistance = -100.0f;
+	GameObject* gameObjectHit = nullptr;
+	if (objectsPossiblePick.size() > 0)
+	{
+		for (std::vector<GameObject*>::iterator it = objectsPossiblePick.begin(); it != objectsPossiblePick.end(); ++it)
+		{
+			Mesh* mesh = (*it)->componentMesh->mesh;
+			math::LineSegment localTransformPikingLine(pickingLine);
+			localTransformPikingLine.Transform((*it)->globalMatrix.Inverted());
+
+			math::Triangle triangle;
+			for (unsigned i = 0; i < mesh->numIndices; i += 3)
+			{
+				triangle.a = { mesh->vertices[mesh->indices[i] * 3], mesh->vertices[mesh->indices[i] * 3 + 1], mesh->vertices[mesh->indices[i] * 3 + 2] };
+				triangle.b = { mesh->vertices[mesh->indices[i + 1] * 3], mesh->vertices[mesh->indices[i + 1] * 3 + 1], mesh->vertices[mesh->indices[i + 1] * 3 + 2] };
+				triangle.c = { mesh->vertices[mesh->indices[i + 2] * 3], mesh->vertices[mesh->indices[i + 2] * 3 + 1], mesh->vertices[mesh->indices[i + 2] * 3 + 2] };
+
+				float triangleDistance;
+				float3 hitPoint;
+				if (localTransformPikingLine.Intersects(triangle, &triangleDistance, &hitPoint))
+				{
+					if (minDistance == -100.0f || triangleDistance < minDistance)
+					{
+						minDistance = triangleDistance;
+						gameObjectHit = *it;
+					}
+				}
+			}
+		}
+	}
+
+	if (gameObjectHit != nullptr)
+	{
+		App->scene->selectedGO = gameObjectHit;
+	}
+}
+
 
 void ModuleCamera::Orbit()
 {
