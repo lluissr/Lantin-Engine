@@ -65,7 +65,7 @@ update_status ModuleScene::PreUpdate()
 	
 	if (selectedGO != nullptr && selectedGO->toDelete)
 	{
-		if (selectedGO->uuid == gameCamera->uuid)
+		if (gameCamera != nullptr && selectedGO->uuid == gameCamera->uuid)
 		{
 			if (gameCamera->componentCamera->uuid == App->camera->selectedCamera->uuid)
 			{

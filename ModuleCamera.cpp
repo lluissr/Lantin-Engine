@@ -212,9 +212,11 @@ void ModuleCamera::Focus()
 		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
 		{
 			//Add distance still we can see all the bounding box
-			while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox))
+			int count = 0;
+			while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox) && count < 100)
 			{
-				selectedCamera->frustum.pos.z += 10;
+				selectedCamera->frustum.pos.z += 100;
+				count++;
 			}
 		}
 	}

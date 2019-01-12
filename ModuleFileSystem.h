@@ -23,7 +23,7 @@ public:
 	void SplitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
 	void GetExtension(const char* full_path, std::string* extension);
 	std::string NormalizePath(const char * path);
-	std::map<std::string, std::string> GetFilesFromDirectoryRecursive(const char * directory);
+	void GetFilesFromDirectoryRecursive(const char * directory, std::map<std::string, std::string>& result);
 	void GetFilesFromDirectory(const char * directory, std::vector<std::string>& fileList) const;
 	void UpdateFiles();
 	bool Remove(const char * pathAndFileName);

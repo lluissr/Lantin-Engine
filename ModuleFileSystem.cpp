@@ -203,9 +203,8 @@ std::string ModuleFileSystem::NormalizePath(const char * path)
 	return str.c_str();
 }
 
-std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory)
+void ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory, std::map<std::string, std::string>& result)
 {
-	std::map<std::string, std::string> result;
 	char **enumeratedFiles = PHYSFS_enumerateFiles(directory);
 	char **iterator;
 
@@ -230,11 +229,8 @@ std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecurs
 	{
 		(*iterator).insert(0, directory);
 		(*iterator).append("/");
-		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str());
-		result.insert(partialResult.begin(), partialResult.end());
+		GetFilesFromDirectoryRecursive((*iterator).c_str(), result);
 	}
-
-	return result;
 }
 
 

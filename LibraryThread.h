@@ -15,13 +15,14 @@ void Watcher()
 {
 	std::map<std::string, std::string> currentFiles;
 	std::map<std::string, std::string> oldFiles;
-	currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
+	std::map<std::string, std::string> libraryFiles;
+	App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", currentFiles);
 	oldFiles = currentFiles;
 
 	//Do this the first time to check and add files if new files are added while engine was not working. 
 	//TODO:Improve this after integration of JSON and save settings. Now is not completly functional.
-	unsigned int libraryFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/").size();
-	if (libraryFiles < currentFiles.size())
+	App->fileSystem->GetFilesFromDirectoryRecursive("/Library/", libraryFiles);
+	if (libraryFiles.size() < currentFiles.size())
 	{
 		for (std::map<std::string, std::string>::iterator iterator = currentFiles.begin(); iterator != currentFiles.end(); ++iterator)
 		{
@@ -42,7 +43,8 @@ void Watcher()
 
 	while (run)
 	{
-		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
+		currentFiles.clear();
+		App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", currentFiles);
 		if (currentFiles.size() > oldFiles.size())
 		{
 			for (std::map<std::string, std::string>::iterator iterator = currentFiles.begin(); iterator != currentFiles.end(); ++iterator)

@@ -377,27 +377,37 @@ void ModuleRender::DrawImGuizmo(float width, float height)
 		ImGuizmo::Enable(true);
 
 		math::float4x4 model = selectedGO->globalMatrix;
-		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
-		math::float4x4 projectionScene = App->camera->sceneCamera->frustum.ProjectionMatrix();
+		math::float4x4 view = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		math::float4x4 projection = App->camera->sceneCamera->frustum.ProjectionMatrix();
 
 		ImGuizmo::SetOrthographic(false);
 
 		model.Transpose();
-		viewScene.Transpose();
-		projectionScene.Transpose();
-		ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
+		view.Transpose();
+		projection.Transpose();
+		ImGuizmo::Manipulate((float*)&view, (float*)&projection, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
 
 		if (ImGuizmo::IsUsing())
 		{
 			model.Transpose();
+
+			if (selectedGO->parent != nullptr)
+			{
+				selectedGO->localMatrix = selectedGO->parent->globalMatrix.Inverted() * model;
+			}
+			else
+			{
+				selectedGO->localMatrix = model;
+			}
+
 			model.Decompose(selectedGO->position, selectedGO->rotation, selectedGO->scale);
 			selectedGO->eulerRotation = selectedGO->rotation.ToEulerXYZ();
 			selectedGO->eulerRotation.x = math::RadToDeg(selectedGO->eulerRotation.x);
 			selectedGO->eulerRotation.y = math::RadToDeg(selectedGO->eulerRotation.y);
 			selectedGO->eulerRotation.z = math::RadToDeg(selectedGO->eulerRotation.z);
-			selectedGO->localMatrix.Set(float4x4::FromTRS(selectedGO->position, selectedGO->rotation, selectedGO->scale));
 			App->scene->CalculateGlobalMatrix(selectedGO);
 			selectedGO->UpdateBoundingBox();
+
 			if (selectedGO->isStatic)
 			{
 				App->scene->quadTree.RemoveGameObject(selectedGO);
