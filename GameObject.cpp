@@ -243,6 +243,7 @@ void GameObject::SaveJSON(Config* config)
 	config->AddFloat3("position", position);
 	config->AddFloat3("scale", scale);
 	config->AddQuat("rotation", rotation);
+	config->AddFloat3("eulerRotation", eulerRotation);
 
 	config->StartArray("components");
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
@@ -265,6 +266,7 @@ void GameObject::LoadJSON(Config* config, rapidjson::Value& value)
 	position = config->GetFloat3("position", value);
 	scale = config->GetFloat3("scale", value);
 	rotation = config->GetQuat("rotation", value);
+	eulerRotation = config->GetFloat3("eulerRotation", value);
 	localMatrix.Set(float4x4::FromTRS(position, rotation, scale));
 
 	rapidjson::Value components = value["components"].GetArray();

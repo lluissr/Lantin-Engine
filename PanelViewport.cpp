@@ -50,6 +50,7 @@ void PanelViewport::Draw()
 		{
 			App->camera->sceneCamera->WindowResized((unsigned)size.x, (unsigned)size.y);
 		}
+		
 		break;
 	case FrameBufferType::GAME:
 		if (App->scene->gameCamera != nullptr && (size.x != App->scene->gameCamera->componentCamera->screenWidth || size.y != App->scene->gameCamera->componentCamera->screenHeight))
@@ -59,5 +60,11 @@ void PanelViewport::Draw()
 		break;
 	}
 	ImGui::Image((ImTextureID)frameBuffer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+
+	if (frameBuffer->frameBufferType == FrameBufferType::EDITOR)
+	{
+		App->renderer->DrawImGuizmo(size.x, size.y);
+	}
+
 	ImGui::End();
 }

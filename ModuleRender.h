@@ -42,13 +42,13 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
-	void  RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer);
+	void RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	void RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, bool active);
 	void DrawInFrameBuffer(FrameBuffer& frameBuffer);
 	void UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix);
 	void DrawQuadTreeNode(QuadtreeNode* node);
 	void InitFrameBuffer(int width, int height, FrameBuffer& frameBuffer);
-	unsigned GenerateFallback();
+	void DrawImGuizmo(float width, float height);
 
 	void* context;
 	FrameBuffer frameBufferScene;
@@ -63,6 +63,8 @@ public:
 	std::vector<ComponentMesh*> meshes;
 
 private:
+	unsigned GenerateFallback();
+	
 	unsigned fallback = 0;
 	std::vector<GameObject*> gameObjectsCollideQuadtree;
 };

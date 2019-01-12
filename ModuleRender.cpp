@@ -12,6 +12,7 @@
 #include "SDL.h"
 #include "debugdraw.h"
 #include "GL/glew.h"
+#include "ImGuizmo.h"
 
 
 ModuleRender::ModuleRender()
@@ -121,14 +122,14 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 
 		for (std::vector<GameObject*>::iterator it = gameObjectsCollideQuadtree.begin(); it != gameObjectsCollideQuadtree.end(); ++it)
 		{
-			RenderGameObject(*it, viewMatrix, projectionMatrix, frameBuffer);
+			RenderGameObject(*it, viewMatrix, projectionMatrix);
 		}
 
 		for (std::vector<ComponentMesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
 		{
 			if (!(*it)->myGameObject->isStatic && (*it)->mesh != nullptr && App->scene->gameCamera->componentCamera->frustum.Intersects((*it)->mesh->globalBoundingBox))
 			{
-				RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix, frameBuffer);
+				RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix);
 			}
 		}
 	}
@@ -136,7 +137,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	{
 		for (std::vector<ComponentMesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
 		{
-			RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix, frameBuffer);
+			RenderGameObject((*it)->myGameObject, viewMatrix, projectionMatrix);
 		}
 	}
 
@@ -196,13 +197,10 @@ void ModuleRender::DrawQuadTreeNode(QuadtreeNode* node)
 	}
 }
 
-void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, FrameBuffer& frameBuffer)
+void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
 {
-	if (gameObject->isActive)
-	{
-		if (gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
-			RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
-		}
+	if (gameObject->isActive && gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
+		RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
 	}
 }
 
@@ -349,16 +347,62 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBuffer& frameBuff
 unsigned ModuleRender::GenerateFallback()
 {
 	char fallbackImage[3] = { GLubyte(255), GLubyte(255), GLubyte(255) };
-	unsigned ImageName = 0;
+	unsigned imageName = 0;
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &ImageName);
-	glBindTexture(GL_TEXTURE_2D, ImageName);
+	glGenTextures(1, &imageName);
+	glBindTexture(GL_TEXTURE_2D, imageName);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, fallbackImage);
 
-	return ImageName;
+	return imageName;
+}
+
+void ModuleRender::DrawImGuizmo(float width, float height)
+{
+	ImVec2 pos = ImGui::GetWindowPos();
+	ImGuizmo::SetRect(pos.x, pos.y, width, height);
+	ImGuizmo::SetDrawlist();
+
+	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+
+	GameObject* selectedGO = App->scene->selectedGO;
+
+	if (selectedGO != nullptr)
+	{
+		ImGuizmo::Enable(true);
+
+		math::float4x4 model = selectedGO->globalMatrix;
+		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		math::float4x4 projectionScene = App->camera->sceneCamera->frustum.ProjectionMatrix();
+
+		ImGuizmo::SetOrthographic(false);
+
+		model.Transpose();
+		viewScene.Transpose();
+		projectionScene.Transpose();
+		ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
+
+		if (ImGuizmo::IsUsing())
+		{
+			model.Transpose();
+			model.Decompose(selectedGO->position, selectedGO->rotation, selectedGO->scale);
+			selectedGO->eulerRotation = selectedGO->rotation.ToEulerXYZ();
+			selectedGO->eulerRotation.x = math::RadToDeg(selectedGO->eulerRotation.x);
+			selectedGO->eulerRotation.y = math::RadToDeg(selectedGO->eulerRotation.y);
+			selectedGO->eulerRotation.z = math::RadToDeg(selectedGO->eulerRotation.z);
+			selectedGO->localMatrix.Set(float4x4::FromTRS(selectedGO->position, selectedGO->rotation, selectedGO->scale));
+			App->scene->CalculateGlobalMatrix(selectedGO);
+			selectedGO->UpdateBoundingBox();
+			if (selectedGO->isStatic)
+			{
+				App->scene->quadTree.RemoveGameObject(selectedGO);
+				App->scene->quadTree.InsertGameObject(selectedGO);
+			}
+		}
+	}
 }

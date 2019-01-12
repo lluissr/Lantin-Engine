@@ -7,6 +7,7 @@
 #include "ModuleScene.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
+#include "ImGuizmo.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -59,6 +60,7 @@ void ModuleEditor::InitImGuiFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	CreateDockSpace();
 }

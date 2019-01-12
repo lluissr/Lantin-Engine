@@ -214,6 +214,9 @@
     <ClCompile Include="Quadtree.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuizmo.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -508,6 +511,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Quadtree.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

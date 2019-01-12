@@ -104,6 +104,7 @@ void PanelModel::Draw()
 			go->position = { 0.0f,0.0f,0.0f };
 			go->scale = { 1.0f,1.0f,1.0f };
 			go->rotation = { 0.0f,0.0f,0.0f,1.0f };
+			go->eulerRotation = { 0.0f, 0.0f, 0.0f };
 			App->scene->CalculateGlobalMatrix(go);
 			go->UpdateBoundingBox();
 			if (go->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
@@ -136,31 +137,29 @@ void PanelModel::Draw()
 			changed = true;
 		ImGui::PopID();
 
-		math::float3 rotation = go->rotation.ToEulerXYZ();
-		rotation *= 57.295779513082320876f;
 		ImGui::Text("Rotation:");
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("4");
-		if (ImGui::InputFloat("", &rotation.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->eulerRotation.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("5");
-		if (ImGui::InputFloat("", &rotation.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->eulerRotation.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("6");
-		if (ImGui::InputFloat("", &rotation.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("", &go->eulerRotation.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 			changed = true;
 		ImGui::PopID();
-		rotation *= 0.0174532925199432957f;
-		go->rotation = go->rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+		go->rotation = go->rotation.FromEulerXYZ(math::DegToRad(go->eulerRotation.x),
+			math::DegToRad(go->eulerRotation.y), math::DegToRad(go->eulerRotation.z));
 
 		ImGui::Text("Scale:");
 		ImGui::Text("X:");
