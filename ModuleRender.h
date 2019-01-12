@@ -62,6 +62,7 @@ public:
 
 	std::vector<ComponentMesh*> meshes;
 
+	int guizmoType = 0;
 private:
 	unsigned GenerateFallback();
 	

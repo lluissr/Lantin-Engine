@@ -10,6 +10,7 @@
 #include "GL/glew.h"
 #include "SDL.h"
 #include "MathGeoLib.h"
+#include "ImGuizmo.h"
 
 ModuleCamera::ModuleCamera()
 {
@@ -106,9 +107,8 @@ update_status ModuleCamera::PreUpdate()
 		Orbit();
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && App->editor->overEditorViewport)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && App->editor->overEditorViewport && !ImGuizmo::IsOver())
 	{
-
 		PickGameObject();
 	}
 

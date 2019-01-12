@@ -65,5 +65,10 @@ void PanelEditor::Draw()
 			SDL_GL_SetSwapInterval(0);
 		}
 	}
+	ImGui::SameLine();
+	const char* items[] = { "Translate", "Rotate", "Scale" };
+	ImGui::PushItemWidth(120);
+	ImGui::Combo("Guizmo", &App->renderer->guizmoType, items, IM_ARRAYSIZE(items));
+	ImGui::PopItemWidth();
 	ImGui::End();
 }

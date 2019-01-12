@@ -367,9 +367,6 @@ void ModuleRender::DrawImGuizmo(float width, float height)
 	ImGuizmo::SetRect(pos.x, pos.y, width, height);
 	ImGuizmo::SetDrawlist();
 
-	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
-
 	GameObject* selectedGO = App->scene->selectedGO;
 
 	if (selectedGO != nullptr)
@@ -385,7 +382,7 @@ void ModuleRender::DrawImGuizmo(float width, float height)
 		model.Transpose();
 		view.Transpose();
 		projection.Transpose();
-		ImGuizmo::Manipulate((float*)&view, (float*)&projection, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
+		ImGuizmo::Manipulate((float*)&view, (float*)&projection, guizmoType == 0 ? ImGuizmo::TRANSLATE : guizmoType == 1 ? ImGuizmo::ROTATE : ImGuizmo::SCALE, ImGuizmo::WORLD, (float*)&model, NULL, NULL, NULL, NULL);
 
 		if (ImGuizmo::IsUsing())
 		{
