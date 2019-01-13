@@ -23,19 +23,19 @@ void PanelScene::Draw()
 	ImGui::Text("X:");
 	ImGui::SameLine();
 	ImGui::PushID("1");
-	ImGui::InputFloat("", &App->scene->lightPosition.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::DragFloat("", &App->scene->lightPosition.x, 10.0f, -100000.0f, 100000.0f);
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("Y:");
 	ImGui::SameLine();
 	ImGui::PushID("2");
-	ImGui::InputFloat("", &App->scene->lightPosition.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::DragFloat("", &App->scene->lightPosition.y, 10.0f, -100000.0f, 100000.0f);
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("Z:");
 	ImGui::SameLine();
 	ImGui::PushID("3");
-	ImGui::InputFloat("", &App->scene->lightPosition.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+	ImGui::DragFloat("", &App->scene->lightPosition.z, 10.0f, -100000.0f, 100000.0f);
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 

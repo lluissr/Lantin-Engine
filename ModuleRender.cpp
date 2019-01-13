@@ -103,11 +103,11 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 	switch (frameBuffer.frameBufferType)
 	{
 	case  FrameBufferType::EDITOR:
-		viewMatrix = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		viewMatrix = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
 		projectionMatrix = App->camera->sceneCamera->frustum.ProjectionMatrix();
 		break;
 	case  FrameBufferType::GAME:
-		viewMatrix = App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up);
+		viewMatrix = App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->cameraPosition, App->scene->gameCamera->componentCamera->cameraFront, App->scene->gameCamera->componentCamera->cameraUp);
 		projectionMatrix = App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix();
 		break;
 	}
@@ -143,7 +143,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 
 	if (frameBuffer.frameBufferType == FrameBufferType::EDITOR && App->scene->gameCamera != nullptr && App->scene->gameCamera->componentCamera != nullptr && App->scene->gameCamera->componentCamera->showFrustum)
 	{
-		dd::frustum((App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix() * App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->frustum.pos, App->scene->gameCamera->componentCamera->frustum.front, App->scene->gameCamera->componentCamera->frustum.up)).Inverted(), dd::colors::LightGreen);
+		dd::frustum((App->scene->gameCamera->componentCamera->frustum.ProjectionMatrix() * App->scene->gameCamera->componentCamera->LookAt(App->scene->gameCamera->componentCamera->cameraPosition, App->scene->gameCamera->componentCamera->cameraFront, App->scene->gameCamera->componentCamera->cameraUp)).Inverted(), dd::colors::LightGreen);
 	}
 
 	UpdateDrawDebug(frameBuffer, viewMatrix, projectionMatrix);
@@ -374,7 +374,7 @@ void ModuleRender::DrawImGuizmo(float width, float height)
 		ImGuizmo::Enable(true);
 
 		math::float4x4 model = selectedGO->globalMatrix;
-		math::float4x4 view = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->frustum.pos, App->camera->sceneCamera->frustum.front, App->camera->sceneCamera->frustum.up);
+		math::float4x4 view = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
 		math::float4x4 projection = App->camera->sceneCamera->frustum.ProjectionMatrix();
 
 		ImGuizmo::SetOrthographic(false);

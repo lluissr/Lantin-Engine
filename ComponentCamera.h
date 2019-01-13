@@ -23,6 +23,10 @@ public:
 	bool showFrustum = true;
 
 	math::Frustum frustum;
+	math::float3 cameraPosition = math::float3(0.0f, 300.0f, 2000.0f);
+	math::float3 cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+
 	int screenWidth = SCREEN_WIDTH;
 	int screenHeight = SCREEN_HEIGHT;
 

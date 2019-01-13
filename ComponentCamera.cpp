@@ -20,19 +20,16 @@ ComponentCamera::~ComponentCamera()
 
 math::float4x4 ComponentCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
 {
-	math::float4x4 matrix;
-
 	cameraFront.Normalize();
-	math::float3 side(cameraFront.Cross(cameraUp));
-	side.Normalize();
-	math::float3 up(side.Cross(cameraFront));
+	math::float3 cameraSide = cameraFront.Cross(cameraUp);
+	cameraSide.Normalize();
+	math::float3 up = cameraSide.Cross(cameraFront);
 
-	matrix[0][0] = side.x; matrix[0][1] = side.y; matrix[0][2] = side.z;
-	matrix[1][0] = up.x; matrix[1][1] = up.y; matrix[1][2] = up.z;
-	matrix[2][0] = -cameraFront.x; matrix[2][1] = -cameraFront.y; matrix[2][2] = -cameraFront.z;
-	matrix[0][3] = -side.Dot(cameraPosition); matrix[1][3] = -up.Dot(cameraPosition); matrix[2][3] = cameraFront.Dot(cameraPosition);
-	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
-	return matrix;
+	frustum.pos = cameraPosition;
+	frustum.front = cameraFront;
+	frustum.up = up;
+
+	return frustum.ViewMatrix();
 }
 
 void ComponentCamera::WindowResized(unsigned width, unsigned height)
