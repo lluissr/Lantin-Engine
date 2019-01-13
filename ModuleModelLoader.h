@@ -85,10 +85,10 @@ public:
 	Material() {}
 	~Material()
 	{
-		App->textures->Unload(diffuseMap);
-		App->textures->Unload(occlusionMap);
-		App->textures->Unload(specularMap);
-		App->textures->Unload(emissiveMap);
+		App->textures->Unload(diffuseMap, diffuseMapName.c_str());
+		App->textures->Unload(occlusionMap, occlusionMapName.c_str());
+		App->textures->Unload(specularMap, specularMapName.c_str());
+		App->textures->Unload(emissiveMap, emissiveMapName.c_str());
 	}
 };
 

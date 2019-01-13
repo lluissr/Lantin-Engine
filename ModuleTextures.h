@@ -9,8 +9,14 @@
 #include "DevIL/include/IL/ilu.h"
 #include "DevIL/include/IL/ilut.h"
 #include <assert.h>
+#include <map>
 
 struct SDL_Texture;
+
+struct TextureInfo
+{
+	unsigned info[3];
+};
 
 class ModuleTextures : public Module
 {
@@ -22,11 +28,16 @@ public:
 	bool CleanUp();
 
 	GLuint Load(const char* path);
-	void Unload(unsigned id) const;
+	void Unload(unsigned id, const char* name);
+	unsigned GetTextureWidth(const char* name);
+	unsigned GetTextureHeight(const char* name);
 
 	bool Import(const char* path);
 
-	ILinfo lastImageInfo;
+private:
+	std::map<std::string, unsigned> texturesLoaded;
+	std::map<std::string, TextureInfo> texturesInfo;
+
 };
 
 #endif

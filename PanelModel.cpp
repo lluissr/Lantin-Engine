@@ -243,7 +243,7 @@ void PanelModel::Draw()
 				{
 					if (go->componentMaterial->material->diffuseMap != 0)
 					{
-						App->textures->Unload(go->componentMaterial->material->diffuseMap);
+						App->textures->Unload(go->componentMaterial->material->diffuseMap, go->componentMaterial->material->diffuseMapName.c_str());
 						go->componentMaterial->material->diffuseMap = 0u;
 						go->componentMaterial->material->diffuseWidth = 0;
 						go->componentMaterial->material->diffuseHeight = 0;
@@ -263,7 +263,7 @@ void PanelModel::Draw()
 				{
 					if (go->componentMaterial->material->occlusionMap != 0)
 					{
-						App->textures->Unload(go->componentMaterial->material->occlusionMap);
+						App->textures->Unload(go->componentMaterial->material->occlusionMap, go->componentMaterial->material->occlusionMapName.c_str());
 						go->componentMaterial->material->occlusionMap = 0u;
 						go->componentMaterial->material->ambientWidth = 0;
 						go->componentMaterial->material->ambientHeight = 0;
@@ -283,7 +283,7 @@ void PanelModel::Draw()
 				{
 					if (go->componentMaterial->material->specularMap != 0)
 					{
-						App->textures->Unload(go->componentMaterial->material->specularMap);
+						App->textures->Unload(go->componentMaterial->material->specularMap, go->componentMaterial->material->specularMapName.c_str());
 						go->componentMaterial->material->specularMap = 0u;
 						go->componentMaterial->material->specularWidth = 0;
 						go->componentMaterial->material->specularHeight = 0;
@@ -304,7 +304,7 @@ void PanelModel::Draw()
 				{
 					if (go->componentMaterial->material->emissiveMap != 0)
 					{
-						App->textures->Unload(go->componentMaterial->material->emissiveMap);
+						App->textures->Unload(go->componentMaterial->material->emissiveMap, go->componentMaterial->material->emissiveMapName.c_str());
 						go->componentMaterial->material->emissiveMap = 0u;
 						go->componentMaterial->material->emissiveWidth = 0;
 						go->componentMaterial->material->emissiveHeight = 0;
@@ -433,31 +433,31 @@ void PanelModel::DrawComboBoxMaterials(MaterialType type)
 					switch (type)
 					{
 					case MaterialType::DIFFUSE:
-						App->textures->Unload(go->componentMaterial->material->diffuseMap);
+						App->textures->Unload(go->componentMaterial->material->diffuseMap, go->componentMaterial->material->diffuseMapName.c_str());
 						go->componentMaterial->material->diffuseMap = App->textures->Load(comboBoxSelected);
-						go->componentMaterial->material->diffuseWidth = App->textures->lastImageInfo.Width;
-						go->componentMaterial->material->diffuseHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->diffuseWidth = App->textures->GetTextureWidth(comboBoxSelected);
+						go->componentMaterial->material->diffuseHeight = App->textures->GetTextureHeight(comboBoxSelected);
 						go->componentMaterial->material->diffuseMapName = comboBoxSelected;
 						break;
 					case MaterialType::OCCLUSION:
-						App->textures->Unload(go->componentMaterial->material->occlusionMap);
+						App->textures->Unload(go->componentMaterial->material->occlusionMap, go->componentMaterial->material->occlusionMapName.c_str());
 						go->componentMaterial->material->occlusionMap = App->textures->Load(comboBoxSelected);
-						go->componentMaterial->material->ambientWidth = App->textures->lastImageInfo.Width;
-						go->componentMaterial->material->ambientHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->ambientWidth = App->textures->GetTextureWidth(comboBoxSelected);
+						go->componentMaterial->material->ambientHeight = App->textures->GetTextureHeight(comboBoxSelected);
 						go->componentMaterial->material->occlusionMapName = comboBoxSelected;
 						break;
 					case MaterialType::SPECULAR:
-						App->textures->Unload(go->componentMaterial->material->specularMap);
+						App->textures->Unload(go->componentMaterial->material->specularMap, go->componentMaterial->material->specularMapName.c_str());
 						go->componentMaterial->material->specularMap = App->textures->Load(comboBoxSelected);
-						go->componentMaterial->material->specularWidth = App->textures->lastImageInfo.Width;
-						go->componentMaterial->material->specularHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->specularWidth = App->textures->GetTextureWidth(comboBoxSelected);
+						go->componentMaterial->material->specularHeight = App->textures->GetTextureHeight(comboBoxSelected);
 						go->componentMaterial->material->specularMapName = comboBoxSelected;
 						break;
 					case MaterialType::EMISSIVE:
-						App->textures->Unload(go->componentMaterial->material->emissiveMap);
+						App->textures->Unload(go->componentMaterial->material->emissiveMap, go->componentMaterial->material->emissiveMapName.c_str());
 						go->componentMaterial->material->emissiveMap = App->textures->Load(comboBoxSelected);
-						go->componentMaterial->material->emissiveWidth = App->textures->lastImageInfo.Width;
-						go->componentMaterial->material->emissiveHeight = App->textures->lastImageInfo.Height;
+						go->componentMaterial->material->emissiveWidth = App->textures->GetTextureWidth(comboBoxSelected);
+						go->componentMaterial->material->emissiveHeight = App->textures->GetTextureHeight(comboBoxSelected);
 						go->componentMaterial->material->emissiveMapName = comboBoxSelected;
 						break;
 					}

@@ -117,32 +117,32 @@ void ComponentMaterial::LoadJSON(Config* config, rapidjson::Value& value)
 	{
 		material->diffuseMapName = std::string(config->GetString("diffuseMapName", value));
 		material->diffuseMap = App->textures->Load(material->diffuseMapName.c_str());
-		material->diffuseWidth = App->textures->lastImageInfo.Width;
-		material->diffuseHeight = App->textures->lastImageInfo.Height;
+		material->diffuseWidth = App->textures->GetTextureWidth(material->diffuseMapName.c_str());
+		material->diffuseHeight = App->textures->GetTextureHeight(material->diffuseMapName.c_str());
 	}
 
 	if (value.HasMember("occlusionMapName"))
 	{
 		material->occlusionMapName = std::string(config->GetString("occlusionMapName", value));
 		material->occlusionMap = App->textures->Load(material->occlusionMapName.c_str());
-		material->ambientWidth = App->textures->lastImageInfo.Width;
-		material->ambientHeight = App->textures->lastImageInfo.Height;
+		material->ambientWidth = App->textures->GetTextureWidth(material->occlusionMapName.c_str());
+		material->ambientHeight = App->textures->GetTextureHeight(material->occlusionMapName.c_str());
 	}
 
 	if (value.HasMember("specularMapName"))
 	{
 		material->specularMapName = std::string(config->GetString("specularMapName", value));
 		material->specularMap = App->textures->Load(material->specularMapName.c_str());
-		material->specularWidth = App->textures->lastImageInfo.Width;
-		material->specularHeight = App->textures->lastImageInfo.Height;
+		material->specularWidth = App->textures->GetTextureWidth(material->specularMapName.c_str());
+		material->specularHeight = App->textures->GetTextureHeight(material->specularMapName.c_str());
 	}
 
 	if (value.HasMember("emissiveMapName"))
 	{
 		material->emissiveMapName = std::string(config->GetString("emissiveMapName", value));
 		material->emissiveMap = App->textures->Load(material->emissiveMapName.c_str());
-		material->emissiveWidth = App->textures->lastImageInfo.Width;
-		material->emissiveHeight = App->textures->lastImageInfo.Height;
+		material->emissiveWidth = App->textures->GetTextureWidth(material->emissiveMapName.c_str());
+		material->emissiveHeight = App->textures->GetTextureHeight(material->emissiveMapName.c_str());
 	}
 
 

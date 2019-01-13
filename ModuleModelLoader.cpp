@@ -239,6 +239,8 @@ bool ModuleModelLoader::Import(const char* path)
 		result = ImportMesh(scene->mMeshes[i], meshName.c_str());
 	}
 
+	RELEASE_ARRAY(buffer);
+
 	return result;
 }
 

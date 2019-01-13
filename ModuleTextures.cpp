@@ -35,6 +35,12 @@ GLuint ModuleTextures::Load(const char* path)
 {
 	assert(path != NULL);
 
+	if (texturesLoaded.count(path) > 0)
+	{
+		++texturesLoaded[path];
+		return texturesInfo[path].info[0];
+	}
+
 	GLuint texture = 0;
 
 	ILuint image;
@@ -49,7 +55,7 @@ GLuint ModuleTextures::Load(const char* path)
 	char* fileBuffer;
 	unsigned lenghtBuffer = App->fileSystem->ReadFile(path, &fileBuffer);
 	success = ilLoadL(IL_DDS, fileBuffer, lenghtBuffer);
-	
+
 	if (!success)
 	{
 		LOG("Fail at loading texture");
@@ -79,6 +85,7 @@ GLuint ModuleTextures::Load(const char* path)
 	if (success)
 	{
 		LOG("Texture loaded correctly \n");
+		ILinfo lastImageInfo;
 		iluGetImageInfo(&lastImageInfo);
 		if (lastImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
@@ -89,24 +96,26 @@ GLuint ModuleTextures::Load(const char* path)
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		// Set texture clamping method
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-		// Set texture interpolation method to use linear interpolation (no MIPMAPS)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 
-		glTexImage2D(GL_TEXTURE_2D, 				// Type of texture
-			0,				// Pyramid level (for mip-mapping) - 0 is the top level
-			ilGetInteger(IL_IMAGE_FORMAT),	// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
-			ilGetInteger(IL_IMAGE_WIDTH),	// Image width
-			ilGetInteger(IL_IMAGE_HEIGHT),	// Image height
-			0,				// Border width in pixels (can either be 1 or 0)
-			ilGetInteger(IL_IMAGE_FORMAT),	// Format of image pixel data
-			GL_UNSIGNED_BYTE,		// Image data type
-			ilGetData());			// The actual image data itself
+		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH),
+					ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());			
+
+		if (texturesLoaded.count(path) > 0)
+		{
+			++texturesLoaded[path];
+		}
+		else
+		{
+			texturesLoaded[path] = 1;
+			TextureInfo info = { texture, lastImageInfo.Width, lastImageInfo.Height };
+			texturesInfo.insert(std::pair<std::string, TextureInfo>(path, info));
+		}
 	}
 	else
 	{
@@ -114,16 +123,41 @@ GLuint ModuleTextures::Load(const char* path)
 	}
 
 	ilDeleteImage(image);
+	RELEASE_ARRAY(fileBuffer);
 
 	return texture;
 }
 
-void ModuleTextures::Unload(unsigned id) const
+void ModuleTextures::Unload(unsigned id, const char* name)
 {
-	if (id != 0)
+	if (texturesLoaded.count(name) > 0)
 	{
-		glDeleteTextures(1, &id);
+		if (texturesLoaded[name] == 1)
+		{
+			if (id != 0)
+			{
+				glDeleteTextures(1, &id);
+				texturesLoaded.erase(name);
+				texturesInfo.erase(name);
+			}
+		}
+		else
+		{
+			--texturesLoaded[name];
+		}
 	}
+}
+
+unsigned ModuleTextures::GetTextureWidth(const char* name)
+{
+	assert(name != NULL);
+	return texturesInfo[name].info[1];
+}
+
+unsigned ModuleTextures::GetTextureHeight(const char* name)
+{
+	assert(name != NULL);
+	return texturesInfo[name].info[2];
 }
 
 
