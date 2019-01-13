@@ -88,12 +88,12 @@ update_status ModuleCamera::PreUpdate()
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
 	{
-		selectedCamera->fovX -= 1;
+		//selectedCamera->fovX -= 1;
 		//SetHorizontalFOV(selectedCamera->fovX);
 	}
 	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
 	{
-		selectedCamera->fovX += 1;
+		//selectedCamera->fovX += 1;
 		//SetHorizontalFOV(selectedCamera->fovX);
 	}
 

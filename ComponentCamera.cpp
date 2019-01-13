@@ -90,6 +90,9 @@ void ComponentCamera::SaveJSON(Config * config)
 	config->AddFloat("yaw", yaw);
 	config->AddFloat("rSpeed", rSpeed);
 	config->AddFloat("mSpeed", mSpeed);
+	config->AddFloat3("cameraPosition", cameraPosition);
+	config->AddFloat3("cameraFront", cameraFront);
+	config->AddFloat3("cameraUp", cameraUp);
 
 	config->EndObject();
 }
@@ -108,5 +111,8 @@ void ComponentCamera::LoadJSON(Config* config, rapidjson::Value& value)
 	yaw = config->GetFloat("yaw", value);
 	rSpeed = config->GetFloat("rSpeed", value);
 	mSpeed = config->GetFloat("mSpeed", value);
+	cameraPosition = config->GetFloat3("cameraPosition", value);
+	cameraFront = config->GetFloat3("cameraFront", value);
+	cameraUp = config->GetFloat3("cameraUp", value);
 }
 
