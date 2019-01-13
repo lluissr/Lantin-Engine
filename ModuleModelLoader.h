@@ -46,9 +46,9 @@ public:
 		RELEASE_ARRAY(indices);
 		RELEASE_ARRAY(vertices);
 		RELEASE_ARRAY(texCoords);
-		glDeleteVertexArrays(1, &vao);
+		/*glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ibo);
+		glDeleteBuffers(1, &ibo);*/
 	}
 };
 

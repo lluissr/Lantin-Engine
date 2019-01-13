@@ -39,6 +39,22 @@ void ComponentMesh::CopyFromComponentMesh(const ComponentMesh& componentMesh)
 	mesh->localBoundingBox = componentMesh.mesh->localBoundingBox;
 	mesh->globalBoundingBox = componentMesh.mesh->globalBoundingBox;
 	mesh->meshName = componentMesh.mesh->meshName;
+
+	unsigned bytes = sizeof(float)*mesh->numVertices * 3;
+	mesh->vertices = new float[mesh->numVertices * 3];
+	memcpy(mesh->vertices, componentMesh.mesh->vertices, bytes);
+
+	bytes = sizeof(unsigned)*mesh->numIndices;
+	mesh->indices = new unsigned[mesh->numIndices];
+	memcpy(mesh->indices, componentMesh.mesh->indices, bytes);
+	
+	bytes = sizeof(float)*mesh->normalsOffset * 3;
+	mesh->normals = new float[mesh->normalsOffset * 3];
+	memcpy(mesh->normals, componentMesh.mesh->normals, bytes);
+
+	bytes = sizeof(float)*mesh->texturesOffset * 2;
+	mesh->texCoords = new float[mesh->texturesOffset * 2];
+	memcpy(mesh->texCoords, componentMesh.mesh->texCoords, bytes);
 }
 
 void ComponentMesh::SaveJSON(Config * config)

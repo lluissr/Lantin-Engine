@@ -40,16 +40,17 @@ Application::Application()
 
 Application::~Application()
 {
+	RELEASE(libraryThread);
+
 	for(std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
     {
         delete *it;
     }
 
 	if (debugTimer != nullptr)
+	{
 		delete debugTimer;
-
-	delete libraryThread;
-	
+	}
 }
 
 bool Application::Init()
