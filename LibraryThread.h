@@ -90,6 +90,7 @@ public:
 	~LibraryThread()
 	{
 		run = false;
+		Sleep(1000);
 	}
 
 	void Start()
