@@ -42,6 +42,7 @@ public:
 
 	float fovY = 45.0f;
 	float fovX = 45.0f;
+	float zoom = 0.0f;
 };
 
 #endif;

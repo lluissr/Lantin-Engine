@@ -27,6 +27,7 @@ public:
 
 	bool            Init();
 	update_status   PreUpdate();
+	void Zoom();
 	void PickGameObject();
 	update_status   Update();
 	bool            CleanUp();

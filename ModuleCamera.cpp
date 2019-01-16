@@ -77,6 +77,17 @@ update_status ModuleCamera::PreUpdate()
 			selectedCamera->rSpeed = selectedCamera->rSpeed / 2;
 		}
 
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
+		{
+			sceneCamera->fovX -= 10.0;
+			Zoom();
+		}
+		else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
+		{
+			sceneCamera->fovX += 10.0;
+			Zoom();
+		}
+
 		MouseUpdate();
 	}
 
@@ -84,17 +95,6 @@ update_status ModuleCamera::PreUpdate()
 	{
 		if (selectedCamera != nullptr)
 			selectedCamera->firstMouse = true;
-	}
-
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
-	{
-		//selectedCamera->fovX -= 1;
-		//SetHorizontalFOV(selectedCamera->fovX);
-	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
-	{
-		//selectedCamera->fovX += 1;
-		//SetHorizontalFOV(selectedCamera->fovX);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
@@ -115,6 +115,8 @@ update_status ModuleCamera::PreUpdate()
 
 	return UPDATE_CONTINUE;
 }
+
+
 
 
 
@@ -187,38 +189,30 @@ void ModuleCamera::Orbit()
 
 }
 
+void ModuleCamera::Zoom()
+{
+	sceneCamera->fovX = math::Clamp(sceneCamera->fovX, 0.0f, 1000.0f);
+	sceneCamera->zoom = 45.0f / sceneCamera->fovX;
+	sceneCamera->SetHorizontalFOV(sceneCamera->fovX);
+}
+
 void ModuleCamera::Focus()
 {
-	if (selectedCamera == sceneCamera)
+	if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr && App->scene->selectedGO->componentMesh->mesh != nullptr)
 	{
-		math::float3 center = math::float3(0.0f, 1.0f, 10.0f);
-		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
-		{
-			center = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
-		}
-
-		//Reset all variables (position, front, up, fov, pitch, yaw, firstmouse)
-		selectedCamera->cameraPosition = center;
-		selectedCamera->cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-		selectedCamera->cameraUp = math::float3(0.0f, 1.0f, 0.0f);
-		/*selectedCamera->frustum.verticalFov = math::pi / 4.0f;
-		selectedCamera->frustum.horizontalFov = 2.f * atanf(tanf(selectedCamera->frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));*/
+		float length = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.HalfSize().Length();
+		math::float3 diagonal = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.Diagonal();
+		math::float3 center = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
+		sceneCamera->cameraPosition.z = (center.z + diagonal.Length());
+		sceneCamera->cameraPosition.y = center.y;
+		sceneCamera->cameraPosition.x = center.x;
+		math::float3 auxFront = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
+		sceneCamera->cameraFront = auxFront.Normalized();
 		selectedCamera->fovY = 45.0f;
 		selectedCamera->fovX = 45.0f;
 		selectedCamera->pitch = 0;
 		selectedCamera->yaw = 0;
 		selectedCamera->firstMouse = true;
-
-		if (App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr)
-		{
-			//Add distance still we can see all the bounding box
-			int count = 0;
-			while (!selectedCamera->frustum.Contains(App->scene->selectedGO->componentMesh->mesh->globalBoundingBox) && count < 100)
-			{
-				selectedCamera->cameraPosition.z += 100;
-				count++;
-			}
-		}
 	}
 }
 
