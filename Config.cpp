@@ -222,18 +222,18 @@ void Config::EndArray() const
 	writer->EndArray();
 }
 
-void Config::WriteToDisk()
+void Config::WriteToDisk(const char* name)
 {
 	writer->EndObject();
-	App->fileSystem->WriteFile("/Library/Scene/scene.json", stringBuffer->GetString(), strlen(stringBuffer->GetString()), false);
+	App->fileSystem->WriteFile(name, stringBuffer->GetString(), strlen(stringBuffer->GetString()), false);
 }
 
-rapidjson::Document Config::LoadFromDisk()
+rapidjson::Document Config::LoadFromDisk(const char* name)
 {
 	rapidjson::Document result = nullptr;
 
 	char* fileBuffer;
-	unsigned lenghBuffer = App->fileSystem->ReadFile("/Library/Scene/scene.json", &fileBuffer);
+	unsigned lenghBuffer = App->fileSystem->ReadFile(name, &fileBuffer);
 
 	if (fileBuffer)
 	{

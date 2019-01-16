@@ -23,7 +23,7 @@ void PanelEditor::Draw()
 	{
 		if (App->time->gameState == State::STOP) 
 		{
-			App->scene->SaveSceneJSON();
+			App->scene->SaveSceneJSON("/Library/Scene/temp_scene.json");
 			App->time->Start();
 		}
 		else 
@@ -31,6 +31,7 @@ void PanelEditor::Draw()
 			App->time->Stop();
 			App->scene->cleanScene = true;
 			App->scene->loadScene = true;
+			App->scene->sceneName = "/Library/Scene/temp_scene.json";
 		}
 	}
 	ImGui::SameLine();

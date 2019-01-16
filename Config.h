@@ -41,8 +41,8 @@ public:
 	void StartArray(const char* name) const;
 	void EndArray() const;
 
-	void WriteToDisk();
-	rapidjson::Document LoadFromDisk();
+	void WriteToDisk(const char* name);
+	rapidjson::Document LoadFromDisk(const char* name);
 
 private:
 	rapidjson::StringBuffer* stringBuffer = nullptr;

@@ -24,7 +24,7 @@ public:
 	void SelectGameObject(GameObject* go);
 	void CalculateGlobalMatrix(GameObject* go);
 	void UseAsGameCamera(GameObject* go);
-	void SaveSceneJSON();
+	void SaveSceneJSON(const char* name);
 	GameObject* GetGameObjectByUUID(GameObject* gameObject, const std::string& uuid);
 
 	GameObject* root = nullptr;
@@ -39,10 +39,12 @@ public:
 
 	bool cleanScene = false;
 	bool loadScene = false;
+	const char* sceneName = nullptr;
+
 private:
 	GameObject* CreateGameObject();
 	void CleanRootGameObjects();
-	void LoadSceneJSON();
+	void LoadSceneJSON(const char* name);
 	void SaveGameObjectsJSON(const Config* config, GameObject* gameObject);
 };
 

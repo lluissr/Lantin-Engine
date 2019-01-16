@@ -188,7 +188,7 @@ bool ModuleEditor::DrawMenu()
 		{
 			if (App->time->gameState == State::STOP)
 			{
-				App->scene->SaveSceneJSON();
+				App->scene->SaveSceneJSON("/Library/Scene/scene.json");
 			}
 			else
 			{
@@ -201,6 +201,7 @@ bool ModuleEditor::DrawMenu()
 			{
 				App->scene->cleanScene = true;
 				App->scene->loadScene = true;
+				App->scene->sceneName = "/Library/Scene/scene.json";
 			}
 			else
 			{

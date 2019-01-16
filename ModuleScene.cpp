@@ -49,14 +49,14 @@ update_status ModuleScene::PreUpdate()
 
 	if (loadScene && !cleanScene)
 	{
-		LoadSceneJSON();
+		LoadSceneJSON(sceneName);
 		CalculateGlobalMatrix(root);
 		root->UpdateBoundingBox();
 		loadScene = false;
 	}
 
 	root->RemoveChild();
-	
+
 	if (selectedGO != nullptr && selectedGO->toDelete)
 	{
 		if (gameCamera != nullptr && selectedGO->uuid == gameCamera->uuid)
@@ -98,7 +98,7 @@ update_status ModuleScene::Update()
 bool ModuleScene::CleanUp()
 {
 	selectedGO = nullptr;
-	RELEASE(root)
+	RELEASE(root);
 
 	return true;
 }
@@ -203,7 +203,7 @@ GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, const std::
 	return result;
 }
 
-void ModuleScene::SaveSceneJSON()
+void ModuleScene::SaveSceneJSON(const char* name)
 {
 	LOG("Starting saving scene");
 	Config* config = new Config();
@@ -222,8 +222,8 @@ void ModuleScene::SaveSceneJSON()
 	config->EndArray();
 	config->EndObject();
 
-	config->WriteToDisk();
-	LOG("Scene saved succesfully: Library/Scene/scene.json");
+	config->WriteToDisk(name);
+	LOG("Scene saved succesfully: %s", name);
 	RELEASE(config)
 }
 
@@ -240,11 +240,11 @@ void ModuleScene::SaveGameObjectsJSON(const Config* config, GameObject* gameObje
 	}
 }
 
-void ModuleScene::LoadSceneJSON()
+void ModuleScene::LoadSceneJSON(const char* name)
 {
-	LOG("Starting scene loading: Library/Scene/scene.json");
+	LOG("Starting scene loading: %s", name);
 	Config* config = new Config();
-	rapidjson::Document document = config->LoadFromDisk();
+	rapidjson::Document document = config->LoadFromDisk(name);
 
 	if (!document.HasParseError())
 	{
