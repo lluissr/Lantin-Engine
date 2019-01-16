@@ -118,38 +118,42 @@ void PanelScene::DrawTreeNode(GameObject* go)
 	}
 	if (ImGui::IsItemClicked(1))
 	{
+		App->scene->SelectGameObject(go);
 		ImGui::OpenPopup("TreePopup");
 	}
-	if (ImGui::BeginPopup("TreePopup"))
+	if (go->isSelected)
 	{
-		if (go->componentCamera != nullptr)
+		if (ImGui::BeginPopup("TreePopup"))
 		{
-			if (ImGui::Button("Use as game camera"))
+			if (go->componentCamera != nullptr)
 			{
-				App->scene->UseAsGameCamera(go);
+				if (ImGui::Button("Use as game camera"))
+				{
+					App->scene->UseAsGameCamera(go);
+				}
 			}
-		}
-		if (ImGui::Button("Add game object children"))
-		{
-			GameObject* newGo = new GameObject();
-			newGo->name = "New GameObject";
-			newGo->parent = go;
-			go->childrens.push_back(newGo);
-		}
-		if (ImGui::Button("Duplicar"))
-		{
-			GameObject* newGameObject = new GameObject(*go);
-			go->parent->childrens.push_back(newGameObject);
-			if (newGameObject->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
+			if (ImGui::Button("Add game object children"))
 			{
-				App->scene->quadTree.InsertGameObject(newGameObject);
+				GameObject* newGo = new GameObject();
+				newGo->name = "New GameObject";
+				newGo->parent = go;
+				go->childrens.push_back(newGo);
 			}
+			if (ImGui::Button("Duplicar"))
+			{
+				GameObject* newGameObject = new GameObject(*go);
+				go->parent->childrens.push_back(newGameObject);
+				if (newGameObject->isStatic && go->componentMesh != nullptr && go->componentMesh->mesh != nullptr)
+				{
+					App->scene->quadTree.InsertGameObject(newGameObject);
+				}
+			}
+			if (ImGui::Button("Eliminar"))
+			{
+				go->MarkToDelete();
+			}
+			ImGui::EndPopup();
 		}
-		if (ImGui::Button("Eliminar"))
-		{
-			go->MarkToDelete();
-		}
-		ImGui::EndPopup();
 	}
 
 	DragAndDrop(go);

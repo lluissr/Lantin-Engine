@@ -88,7 +88,14 @@ update_status ModuleCamera::PreUpdate()
 			Zoom();
 		}
 
-		MouseUpdate();
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->scene->selectedGO != nullptr && App->scene->selectedGO->componentMesh != nullptr && App->scene->selectedGO->componentMesh->mesh != nullptr)
+		{
+			Orbit();
+		}
+		else
+		{
+			MouseUpdate();
+		}
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
@@ -100,11 +107,6 @@ update_status ModuleCamera::PreUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
 		Focus();
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
-	{
-		Orbit();
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && App->editor->overEditorViewport && !ImGuizmo::IsOver())
@@ -186,7 +188,12 @@ void ModuleCamera::PickGameObject()
 
 void ModuleCamera::Orbit()
 {
-
+	math::float3 position;
+	math::Quat rotation;
+	math::float3 scale;
+	App->scene->selectedGO->globalMatrix.Decompose(position, rotation, scale);
+	math::float3 auxFront = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
+	sceneCamera->cameraFront = auxFront.Normalized();
 }
 
 void ModuleCamera::Zoom()

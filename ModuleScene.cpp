@@ -19,13 +19,11 @@ bool ModuleScene::Init()
 	root = new GameObject();
 	root->name = "Scene Root";
 
-	//gameCamera = CreateCamera();
-
 	quadTree.InitQuadTree(math::AABB(math::float3(-5000, -1000, -5000), math::float3(5000, 5000, 5000)));
 
-	LoadSceneJSON();
+	/*LoadSceneJSON();
 	CalculateGlobalMatrix(root);
-	root->UpdateBoundingBox();
+	root->UpdateBoundingBox();*/
 
 	return true;
 }
@@ -117,7 +115,9 @@ GameObject* ModuleScene::CreateGameObject()
 void ModuleScene::CleanRootGameObjects()
 {
 	for (std::list<GameObject*>::iterator it = root->childrens.begin(); it != root->childrens.end(); ++it)
+	{
 		delete *it;
+	}
 
 	root->childrens.clear();
 }
@@ -127,11 +127,15 @@ void ModuleScene::SelectGameObject(GameObject* go)
 	assert(go != NULL);
 
 	if (selectedGO != nullptr)
+	{
 		selectedGO->SetIsSelected(false);
+	}
 
 	selectedGO = go;
 	if (go != nullptr)
+	{
 		go->SetIsSelected(true);
+	}
 }
 
 void ModuleScene::CalculateGlobalMatrix(GameObject* go)
