@@ -22,6 +22,11 @@ Github [Lantin Engine](https://github.com/lluissr/Lantin-Engine/)
 * [ImGui](https://github.com/ocornut/imgui)
 * [MathGeoLib](https://github.com/juj/MathGeoLib)
 * [mmgr](http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml)
+* [PhysFS](https://icculus.org/physfs/)
+* [RapidJson](https://github.com/Tencent/rapidjson)
+* [Brofiler](https://github.com/bombomby/brofiler)
+* [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)
+* [CrossGuid](https://github.com/graeme-hill/crossguid)
 
 ## Author
 
