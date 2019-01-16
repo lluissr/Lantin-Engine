@@ -46,9 +46,9 @@ public:
 		RELEASE_ARRAY(indices);
 		RELEASE_ARRAY(vertices);
 		RELEASE_ARRAY(texCoords);
-		/*glDeleteVertexArrays(1, &vao);
+		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ibo);*/
+		glDeleteBuffers(1, &ibo);
 	}
 };
 
@@ -109,8 +109,13 @@ public:
 	bool ImportMesh(const aiMesh* aiMesh, const char* name);
 	bool SaveMesh(Mesh* mesh, std::string& newpath);
 	Mesh* Load(const char* path);
+	void Unload(const char* name);
 	void GenerateVBO(Mesh& mesh);
 	void GenerateVAO(Mesh& mesh);
+
+private:
+	std::map<std::string, unsigned> meshesLoaded;
+	std::map<std::string, Mesh*> meshes;
 };
 
 #endif

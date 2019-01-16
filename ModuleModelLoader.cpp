@@ -367,6 +367,13 @@ bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
 
 Mesh* ModuleModelLoader::Load(const char* path)
 {
+
+	if (meshesLoaded.count(path) > 0)
+	{
+		++meshesLoaded[path];
+		return meshes[path];
+	}
+
 	Mesh* mesh = new Mesh;
 	mesh->meshName = std::string(path);
 	std::string pathName = "Library/Meshes/";
@@ -424,7 +431,37 @@ Mesh* ModuleModelLoader::Load(const char* path)
 	mesh->localBoundingBox.SetNegativeInfinity();
 	mesh->localBoundingBox.Enclose((float3*)mesh->vertices, mesh->numVertices);
 
+	if (meshesLoaded.count(path) > 0)
+	{
+		++meshesLoaded[path];
+	}
+	else
+	{
+		meshesLoaded[path] = 1;
+		meshes.insert(std::pair<std::string, Mesh*>(path, mesh));
+	}
+
 	return mesh;
+}
+
+
+void ModuleModelLoader::Unload(const char* name)
+{
+	if (meshesLoaded.count(name) > 0)
+	{
+		if (meshesLoaded[name] == 1)
+		{
+			LOG("Unloading mesh %s", name);
+			meshesLoaded.erase(name);
+			Mesh* mesh = meshes[name];
+			meshes.erase(name);
+			RELEASE(mesh);
+		}
+		else
+		{
+			--meshesLoaded[name];
+		}
+	}
 }
 
 void ModuleModelLoader::GenerateVBO(Mesh& mesh) 

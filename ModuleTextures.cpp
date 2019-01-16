@@ -104,7 +104,7 @@ GLuint ModuleTextures::Load(const char* path)
 
 
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH),
-					ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());			
+			ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 
 		if (texturesLoaded.count(path) > 0)
 		{
@@ -136,6 +136,7 @@ void ModuleTextures::Unload(unsigned id, const char* name)
 		{
 			if (id != 0)
 			{
+				LOG("Unloading image %s", name);
 				glDeleteTextures(1, &id);
 				texturesLoaded.erase(name);
 				texturesInfo.erase(name);

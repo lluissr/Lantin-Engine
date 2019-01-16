@@ -18,41 +18,44 @@ void ComponentMaterial::CopyFromComponentMaterial(const ComponentMaterial& compo
 {
 	active = componentMaterial.active;
 	material = new Material();
-	material->diffuseMapName = componentMaterial.material->diffuseMapName;
-	if (!material->diffuseMapName.empty())
+	if (componentMaterial.material != nullptr)
 	{
-		material->diffuseMap = App->textures->Load(material->diffuseMapName.c_str());
+		material->diffuseMapName = componentMaterial.material->diffuseMapName;
+		if (!material->diffuseMapName.empty())
+		{
+			material->diffuseMap = App->textures->Load(material->diffuseMapName.c_str());
+		}
+		material->diffuseColor = componentMaterial.material->diffuseColor;
+		material->k_diffuse = componentMaterial.material->k_diffuse;
+		material->diffuseWidth = componentMaterial.material->diffuseWidth;
+		material->diffuseHeight = componentMaterial.material->diffuseHeight;
+		material->occlusionMapName = componentMaterial.material->occlusionMapName;
+		if (!material->occlusionMapName.empty())
+		{
+			material->occlusionMap = App->textures->Load(material->occlusionMapName.c_str());
+		}
+		material->k_ambient = componentMaterial.material->k_ambient;
+		material->ambientWidth = componentMaterial.material->ambientWidth;
+		material->ambientHeight = componentMaterial.material->ambientHeight;
+		material->specularMapName = componentMaterial.material->specularMapName;
+		if (!material->specularMapName.empty())
+		{
+			material->specularMap = App->textures->Load(material->specularMapName.c_str());
+		}
+		material->specularColor = componentMaterial.material->specularColor;
+		material->k_specular = componentMaterial.material->k_specular;
+		material->shininess = componentMaterial.material->shininess;
+		material->specularWidth = componentMaterial.material->specularWidth;
+		material->specularHeight = componentMaterial.material->specularHeight;
+		material->emissiveMapName = componentMaterial.material->emissiveMapName;
+		if (!material->emissiveMapName.empty())
+		{
+			material->emissiveMap = App->textures->Load(material->emissiveMapName.c_str());
+		}
+		material->emissiveColor = componentMaterial.material->emissiveColor;
+		material->emissiveWidth = componentMaterial.material->emissiveWidth;
+		material->emissiveHeight = componentMaterial.material->emissiveHeight;
 	}
-	material->diffuseColor = componentMaterial.material->diffuseColor;
-	material->k_diffuse = componentMaterial.material->k_diffuse;
-	material->diffuseWidth = componentMaterial.material->diffuseWidth;
-	material->diffuseHeight = componentMaterial.material->diffuseHeight;
-	material->occlusionMapName = componentMaterial.material->occlusionMapName;
-	if (!material->occlusionMapName.empty())
-	{
-		material->occlusionMap = App->textures->Load(material->occlusionMapName.c_str());
-	}
-	material->k_ambient = componentMaterial.material->k_ambient;
-	material->ambientWidth = componentMaterial.material->ambientWidth;
-	material->ambientHeight = componentMaterial.material->ambientHeight;
-	material->specularMapName = componentMaterial.material->specularMapName;
-	if (!material->specularMapName.empty())
-	{
-		material->specularMap = App->textures->Load(material->specularMapName.c_str());
-	}
-	material->specularColor = componentMaterial.material->specularColor;
-	material->k_specular = componentMaterial.material->k_specular;
-	material->shininess = componentMaterial.material->shininess;
-	material->specularWidth = componentMaterial.material->specularWidth;
-	material->specularHeight = componentMaterial.material->specularHeight;
-	material->emissiveMapName = componentMaterial.material->emissiveMapName;
-	if (!material->emissiveMapName.empty())
-	{
-		material->emissiveMap = App->textures->Load(material->emissiveMapName.c_str());
-	}
-	material->emissiveColor = componentMaterial.material->emissiveColor;
-	material->emissiveWidth = componentMaterial.material->emissiveWidth;
-	material->emissiveHeight = componentMaterial.material->emissiveHeight;
 }
 
 void ComponentMaterial::SaveJSON(Config * config)

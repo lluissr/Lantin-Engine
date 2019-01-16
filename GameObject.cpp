@@ -67,14 +67,15 @@ GameObject::~GameObject()
 
 	for (std::list<Component*>::iterator it = components.begin(); it != components.end(); ++it)
 	{
-
 		delete *it;
 	}
 
 	components.clear();
 
 	for (std::list<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); ++it)
+	{
 		delete *it;
+	}
 
 	childrens.clear();
 }

@@ -213,7 +213,8 @@ void PanelModel::Draw()
 			{
 				if (go->componentMesh->mesh != nullptr)
 				{
-					RELEASE(go->componentMesh->mesh)
+					App->modelLoader->Unload(go->componentMesh->mesh->meshName.c_str());
+					go->componentMesh->mesh = nullptr;
 				}
 			}
 			if (go->componentMesh->mesh != nullptr)
@@ -493,7 +494,8 @@ void PanelModel::DrawComboBoxMeshes()
 					{
 						if (go->componentMesh->mesh != nullptr)
 						{
-							RELEASE(go->componentMesh->mesh)
+							App->modelLoader->Unload(go->componentMesh->mesh->meshName.c_str());
+							go->componentMesh->mesh = nullptr;
 						}
 						go->componentMesh->mesh = mesh;
 						if (go->componentMaterial == nullptr)

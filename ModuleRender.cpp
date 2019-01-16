@@ -287,9 +287,19 @@ bool ModuleRender::CleanUp()
 	LOG("Destroying renderer");
 
 	glDeleteFramebuffers(1, &frameBufferScene.fbo);
+	glDeleteFramebuffers(1, &frameBufferScene.fboDepth);
+	glDeleteFramebuffers(1, &frameBufferScene.msfbo);
+	glDeleteFramebuffers(1, &frameBufferScene.msfboColor);
+	glDeleteFramebuffers(1, &frameBufferScene.msfbDepth);
 	glDeleteRenderbuffers(1, &frameBufferScene.rbo);
 	glDeleteFramebuffers(1, &frameBufferGame.fbo);
+	glDeleteFramebuffers(1, &frameBufferGame.fboDepth);
+	glDeleteFramebuffers(1, &frameBufferGame.msfbo);
+	glDeleteFramebuffers(1, &frameBufferGame.msfboColor);
+	glDeleteFramebuffers(1, &frameBufferGame.msfbDepth);
 	glDeleteRenderbuffers(1, &frameBufferGame.rbo);
+
+	meshes.clear();
 
 	return true;
 }
@@ -382,7 +392,7 @@ void ModuleRender::DrawImGuizmo(float width, float height)
 		model.Transpose();
 		view.Transpose();
 		projection.Transpose();
-		ImGuizmo::Manipulate((float*)&view, (float*)&projection, guizmoType == 0 ? ImGuizmo::TRANSLATE : guizmoType == 1 ? ImGuizmo::ROTATE : ImGuizmo::SCALE, ImGuizmo::WORLD, (float*)&model, NULL, NULL, NULL, NULL);
+		ImGuizmo::Manipulate((float*)&view, (float*)&projection, guizmoType == 0 ? ImGuizmo::TRANSLATE : guizmoType == 1 ? ImGuizmo::ROTATE : ImGuizmo::SCALE, guizmoType == 2 ? ImGuizmo::LOCAL : ImGuizmo::WORLD, (float*)&model, NULL, NULL, NULL, NULL);
 
 		if (ImGuizmo::IsUsing())
 		{

@@ -10,7 +10,11 @@ ComponentMesh::ComponentMesh(GameObject* parent, ComponentType type) : Component
 
 ComponentMesh::~ComponentMesh()
 {
-	RELEASE(mesh)
+	if (mesh != nullptr)
+	{
+		App->modelLoader->Unload(mesh->meshName.c_str());
+		mesh = nullptr;
+	}
 	std::vector<ComponentMesh*>::iterator it = std::find(App->renderer->meshes.begin(), App->renderer->meshes.end(), this);
 	if (it != App->renderer->meshes.end())
 	{
@@ -26,35 +30,12 @@ void ComponentMesh::Update()
 void ComponentMesh::CopyFromComponentMesh(const ComponentMesh& componentMesh)
 {
 	active = componentMesh.active;
-	mesh = new Mesh();
-	mesh->vbo = componentMesh.mesh->vbo;
-	mesh->ibo = componentMesh.mesh->ibo;
-	mesh->material = componentMesh.mesh->material;
-	mesh->numVertices = componentMesh.mesh->numVertices;
-	mesh->numIndices = componentMesh.mesh->numIndices;
-	mesh->normalsOffset = componentMesh.mesh->normalsOffset;
-	mesh->vertexSize = componentMesh.mesh->vertexSize;
-	mesh->vao = componentMesh.mesh->vao;
-	mesh->texturesOffset = componentMesh.mesh->texturesOffset;
-	mesh->localBoundingBox = componentMesh.mesh->localBoundingBox;
-	mesh->globalBoundingBox = componentMesh.mesh->globalBoundingBox;
-	mesh->meshName = componentMesh.mesh->meshName;
-
-	unsigned bytes = sizeof(float)*mesh->numVertices * 3;
-	mesh->vertices = new float[mesh->numVertices * 3];
-	memcpy(mesh->vertices, componentMesh.mesh->vertices, bytes);
-
-	bytes = sizeof(unsigned)*mesh->numIndices;
-	mesh->indices = new unsigned[mesh->numIndices];
-	memcpy(mesh->indices, componentMesh.mesh->indices, bytes);
-	
-	bytes = sizeof(float)*mesh->normalsOffset * 3;
-	mesh->normals = new float[mesh->normalsOffset * 3];
-	memcpy(mesh->normals, componentMesh.mesh->normals, bytes);
-
-	bytes = sizeof(float)*mesh->texturesOffset * 2;
-	mesh->texCoords = new float[mesh->texturesOffset * 2];
-	memcpy(mesh->texCoords, componentMesh.mesh->texCoords, bytes);
+	if (componentMesh.mesh != nullptr)
+	{
+		mesh = App->modelLoader->Load(componentMesh.mesh->meshName.c_str());
+		mesh->localBoundingBox = componentMesh.mesh->localBoundingBox;
+		mesh->globalBoundingBox = componentMesh.mesh->globalBoundingBox;
+	}
 }
 
 void ComponentMesh::SaveJSON(Config * config)

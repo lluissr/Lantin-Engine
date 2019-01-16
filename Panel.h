@@ -8,6 +8,9 @@
 class Panel
 {
 public:
+	virtual ~Panel()
+	{
+	};
 	virtual void Draw() = 0;
 	bool show = false;
 };
