@@ -243,5 +243,7 @@ rapidjson::Document Config::LoadFromDisk()
 		}
 	}
 
+	RELEASE_ARRAY(fileBuffer);
+
 	return result;
 }

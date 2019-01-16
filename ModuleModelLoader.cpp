@@ -31,7 +31,8 @@ ModuleModelLoader::ModuleModelLoader()
 // Destructor
 ModuleModelLoader::~ModuleModelLoader()
 {
-
+	meshes.clear();
+	meshesLoaded.clear();
 }
 
 bool ModuleModelLoader::Init()

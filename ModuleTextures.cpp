@@ -15,6 +15,8 @@ ModuleTextures::ModuleTextures()
 
 ModuleTextures::~ModuleTextures()
 {
+	texturesInfo.clear();
+	texturesLoaded.clear();
 }
 
 bool ModuleTextures::Init()
