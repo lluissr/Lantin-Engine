@@ -52,6 +52,26 @@ void PanelAbout::Draw()
 	{
 		ShellExecute(NULL, "open", "http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml", NULL, NULL, SW_SHOWNORMAL);
 	}
+	if (ImGui::MenuItem("PhysFS"))
+	{
+		ShellExecute(NULL, "open", "https://icculus.org/physfs/", NULL, NULL, SW_SHOWNORMAL);
+	}
+	if (ImGui::MenuItem("rapidJson"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/Tencent/rapidjson", NULL, NULL, SW_SHOWNORMAL);
+	}
+	if (ImGui::MenuItem("Brofiler"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/bombomby/brofiler", NULL, NULL, SW_SHOWNORMAL);
+	}
+	if (ImGui::MenuItem("ImGuizmo"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/CedricGuillemet/ImGuizmo", NULL, NULL, SW_SHOWNORMAL);
+	}
+	if (ImGui::MenuItem("guid"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/graeme-hill/crossguid", NULL, NULL, SW_SHOWNORMAL);
+	}
 
 	ImGui::Separator();
 	if (ImGui::MenuItem("MIT License"))
