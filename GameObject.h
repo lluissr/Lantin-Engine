@@ -27,8 +27,8 @@ public:
 	void UpdateBoundingBox();
 	bool CheckIfIsDecendent(const GameObject& children);
 
-	void SaveJSON(Config* config);
-	void LoadJSON(Config* config, rapidjson::Value& value);
+	void SaveJSON(const Config* config);
+	void LoadJSON(const Config* config, rapidjson::Value& value);
 
 
 	std::string name = "";

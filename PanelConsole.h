@@ -11,10 +11,13 @@ public:
 	void Draw() override;
 
 	void AddLog(const char* fmt, ...);
-	void Clear();
 
 	ImGuiTextBuffer Buf;
 	bool ScrollToBottom;
+
+private:
+	void Clear();
+
 };
 
 #endif

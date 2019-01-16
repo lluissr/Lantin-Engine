@@ -21,8 +21,8 @@ public:
 
 	void CopyFromComponentMaterial(const ComponentMaterial& componentMaterial);
 
-	void SaveJSON(Config* config) override;
-	void LoadJSON(Config* config, rapidjson::Value& value) override;
+	void SaveJSON(const Config* config) override;
+	void LoadJSON(const Config* config, rapidjson::Value& value) override;
 
 	void Update();
 

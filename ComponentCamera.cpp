@@ -68,7 +68,7 @@ void ComponentCamera::CopyFromComponentCamera(const ComponentCamera& componentCa
 	fovX = componentCamera.fovX;
 }
 
-void ComponentCamera::SaveJSON(Config * config)
+void ComponentCamera::SaveJSON(const Config * config)
 {
 	config->StartObject();
 
@@ -97,7 +97,7 @@ void ComponentCamera::SaveJSON(Config * config)
 	config->EndObject();
 }
 
-void ComponentCamera::LoadJSON(Config* config, rapidjson::Value& value)
+void ComponentCamera::LoadJSON(const Config* config, rapidjson::Value& value)
 {
 	uuid = std::string(config->GetString("uuid", value));
 	active = config->GetBool("isActive", value);

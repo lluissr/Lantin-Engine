@@ -103,17 +103,19 @@ public:
 
 	bool LoadSphere(const char* name, float size, unsigned slices, unsigned stacks, const math::float4& color);
 	bool LoadTorus(const char* name, float innerRadius, float outerRadius, unsigned slices, unsigned stacks, const math::float4& color);
-	Mesh* CreateMeshFromParShapes(par_shapes_mesh_s* mesh);
 
 	bool Import(const char* path);
-	bool ImportMesh(const aiMesh* aiMesh, const char* name);
-	bool SaveMesh(Mesh* mesh, std::string& newpath);
 	Mesh* Load(const char* path);
 	void Unload(const char* name);
+
+private:
+	bool ImportMesh(const aiMesh* aiMesh, const char* name);
+	bool SaveMesh(const Mesh* mesh, std::string& newpath);
 	void GenerateVBO(Mesh& mesh);
 	void GenerateVAO(Mesh& mesh);
 
-private:
+	Mesh* CreateMeshFromParShapes(const par_shapes_mesh_s* mesh);
+
 	std::map<std::string, unsigned> meshesLoaded;
 	std::map<std::string, Mesh*> meshes;
 };

@@ -38,7 +38,7 @@ void ComponentMesh::CopyFromComponentMesh(const ComponentMesh& componentMesh)
 	}
 }
 
-void ComponentMesh::SaveJSON(Config * config)
+void ComponentMesh::SaveJSON(const Config * config)
 {
 	config->StartObject();
 
@@ -63,7 +63,7 @@ void ComponentMesh::SaveJSON(Config * config)
 	config->EndObject();
 }
 
-void ComponentMesh::LoadJSON(Config* config, rapidjson::Value& value)
+void ComponentMesh::LoadJSON(const Config* config, rapidjson::Value& value)
 {
 	uuid = std::string(config->GetString("uuid", value));
 	active = config->GetBool("isActive", value);

@@ -17,8 +17,8 @@ public:
 	void SetHorizontalFOV(float fovX);
 	void CopyFromComponentCamera(const ComponentCamera& componentCamera);
 
-	void SaveJSON(Config* config) override;
-	void LoadJSON(Config* config, rapidjson::Value& value) override;
+	void SaveJSON(const Config* config) override;
+	void LoadJSON(const Config* config, rapidjson::Value& value) override;
 
 	bool showFrustum = true;
 

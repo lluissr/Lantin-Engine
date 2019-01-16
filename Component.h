@@ -34,7 +34,7 @@ public:
 		active = false;
 	};
 
-	virtual void SaveJSON(Config* config) {};
-	virtual void LoadJSON(Config* config, rapidjson::Value& value) {};
+	virtual void SaveJSON(const Config* config) {};
+	virtual void LoadJSON(const Config* config, rapidjson::Value& value) {};
 };
 #endif

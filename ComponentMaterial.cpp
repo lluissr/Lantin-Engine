@@ -58,7 +58,7 @@ void ComponentMaterial::CopyFromComponentMaterial(const ComponentMaterial& compo
 	}
 }
 
-void ComponentMaterial::SaveJSON(Config * config)
+void ComponentMaterial::SaveJSON(const Config * config)
 {
 	config->StartObject();
 
@@ -101,7 +101,7 @@ void ComponentMaterial::SaveJSON(Config * config)
 	config->EndObject();
 }
 
-void ComponentMaterial::LoadJSON(Config* config, rapidjson::Value& value)
+void ComponentMaterial::LoadJSON(const Config* config, rapidjson::Value& value)
 {
 	uuid = std::string(config->GetString("uuid", value));
 	active = config->GetBool("isActive", value);

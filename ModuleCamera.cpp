@@ -192,8 +192,8 @@ void ModuleCamera::Orbit()
 	math::Quat rotation;
 	math::float3 scale;
 	App->scene->selectedGO->globalMatrix.Decompose(position, rotation, scale);
-	math::float3 auxFront = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
-	sceneCamera->cameraFront = auxFront.Normalized();
+	math::float3 front = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
+	sceneCamera->cameraFront = front.Normalized();
 }
 
 void ModuleCamera::Zoom()
@@ -209,12 +209,12 @@ void ModuleCamera::Focus()
 	{
 		float length = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.HalfSize().Length();
 		math::float3 diagonal = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.Diagonal();
-		math::float3 center = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
-		sceneCamera->cameraPosition.z = (center.z + diagonal.Length());
-		sceneCamera->cameraPosition.y = center.y;
-		sceneCamera->cameraPosition.x = center.x;
-		math::float3 auxFront = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
-		sceneCamera->cameraFront = auxFront.Normalized();
+		math::float3 centerPoint = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint();
+		sceneCamera->cameraPosition.z = (centerPoint.z + diagonal.Length());
+		sceneCamera->cameraPosition.y = centerPoint.y;
+		sceneCamera->cameraPosition.x = centerPoint.x;
+		math::float3 front = App->scene->selectedGO->componentMesh->mesh->globalBoundingBox.CenterPoint() - sceneCamera->cameraPosition;
+		sceneCamera->cameraFront = front.Normalized();
 		selectedCamera->fovY = 45.0f;
 		selectedCamera->fovX = 45.0f;
 		selectedCamera->pitch = 0;

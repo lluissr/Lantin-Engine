@@ -27,12 +27,8 @@ public:
 
 	bool            Init();
 	update_status   PreUpdate();
-	void Zoom();
-	void PickGameObject();
 	update_status   Update();
 	bool            CleanUp();
-
-	void Focus();
 
 	ComponentCamera* sceneCamera = nullptr;
 	ComponentCamera* selectedCamera = nullptr;
@@ -46,6 +42,9 @@ private:
 	void MouseUpdate();
 	void Orbit();
 	void SetPlaneDistances(float nearDist, float farDist);
+	void Focus();
+	void Zoom();
+	void PickGameObject();
 
 	std::vector<GameObject*> objectsPossiblePick;
 };

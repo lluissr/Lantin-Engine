@@ -226,7 +226,7 @@ bool GameObject::CheckIfIsDecendent(const GameObject& children)
 	return result;
 }
 
-void GameObject::SaveJSON(Config* config)
+void GameObject::SaveJSON(const Config* config)
 {
 	config->StartObject();
 
@@ -256,7 +256,7 @@ void GameObject::SaveJSON(Config* config)
 	config->EndObject();
 }
 
-void GameObject::LoadJSON(Config* config, rapidjson::Value& value)
+void GameObject::LoadJSON(const Config* config, rapidjson::Value& value)
 {
 	uuid = std::string(config->GetString("uuid", value));
 	name = std::string(config->GetString("name", value));

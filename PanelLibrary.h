@@ -11,10 +11,11 @@ public:
 	~PanelLibrary();
 
 	void Draw() override;
-	void DrawTreeNode(const char* name, bool isLeaf);
-	void PopupMenu(const char * name);
 
 private:
+	void PopupMenu(const char * name);
+	void DrawTreeNode(const char* name, bool isLeaf);
+	
 	bool updateList = false;
 };
 

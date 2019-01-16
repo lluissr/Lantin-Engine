@@ -114,7 +114,7 @@ void PanelConfiguration::addMemory(float memory)
 	memory_log[MEMORY_LOG_SIZE - 1] = memory;
 }
 
-void PanelConfiguration::DrawQuadtree(QuadtreeNode* node)
+void PanelConfiguration::DrawQuadtree(const QuadtreeNode* node)
 {
 	unsigned flags = ImGuiTreeNodeFlags_None;
 

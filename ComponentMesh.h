@@ -14,8 +14,8 @@ public:
 	void Update();
 	void CopyFromComponentMesh(const ComponentMesh& componentMesh);
 
-	void SaveJSON(Config* config) override;
-	void LoadJSON(Config* config, rapidjson::Value& value) override;
+	void SaveJSON(const Config* config) override;
+	void LoadJSON(const Config* config, rapidjson::Value& value) override;
 
 	Mesh* mesh = nullptr;
 };

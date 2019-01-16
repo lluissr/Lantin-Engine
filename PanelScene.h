@@ -10,6 +10,8 @@ public:
 	~PanelScene();
 
 	void Draw() override;
+
+private:
 	void DrawTreeNode(GameObject* go);
 	void DragAndDrop(GameObject* go);
 };

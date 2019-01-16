@@ -37,12 +37,7 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	//LoadSphere("Sphere1", 1.0f, 30, 30, float4(1.0f, 0.0f, 0.0f, 1.0f));
-	//LoadTorus("Torus1", 0.5f, 0.67f, 30, 30, float4(0.0f, 1.0f, 0.0f, 1.0f));
-
-	//App->scene->CalculateGlobalMatrix(App->scene->root);
-
-	return true;
+		return true;
 }
 
 bool ModuleModelLoader::CleanUp()
@@ -127,7 +122,7 @@ bool ModuleModelLoader::LoadTorus(const char* name, float innerRadius, float out
 	return false;
 }
 
-Mesh* ModuleModelLoader::CreateMeshFromParShapes(par_shapes_mesh_s* parMesh)
+Mesh* ModuleModelLoader::CreateMeshFromParShapes(const par_shapes_mesh_s* parMesh)
 {
 	assert(parMesh != NULL);
 
@@ -321,7 +316,7 @@ bool ModuleModelLoader::ImportMesh(const aiMesh* mesh, const char* name)
 }
 
 
-bool ModuleModelLoader::SaveMesh(Mesh* mesh, std::string& path)
+bool ModuleModelLoader::SaveMesh(const Mesh* mesh, std::string& path)
 {
 	bool ret = true;
 

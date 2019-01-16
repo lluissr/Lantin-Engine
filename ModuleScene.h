@@ -21,14 +21,10 @@ public:
 	bool CleanUp() override;
 
 	GameObject* CreateCamera();
-	GameObject* CreateGameObject();
-	void CleanRootGameObjects();
 	void SelectGameObject(GameObject* go);
 	void CalculateGlobalMatrix(GameObject* go);
 	void UseAsGameCamera(GameObject* go);
 	void SaveSceneJSON();
-	void SaveGameObjectsJSON(Config* config, GameObject* gameObject);
-	void LoadSceneJSON();
 	GameObject* GetGameObjectByUUID(GameObject* gameObject, const std::string& uuid);
 
 	GameObject* root = nullptr;
@@ -43,6 +39,11 @@ public:
 
 	bool cleanScene = false;
 	bool loadScene = false;
+private:
+	GameObject* CreateGameObject();
+	void CleanRootGameObjects();
+	void LoadSceneJSON();
+	void SaveGameObjectsJSON(const Config* config, GameObject* gameObject);
 };
 
 #endif

@@ -17,10 +17,12 @@ public:
 	void Draw() override;
 
 	void addMemory(float memory);
-	void DrawQuadtree(QuadtreeNode * node);
 
 	std::vector<float> fps_log;
 	std::vector<float> memory_log;
+
+private:
+	void DrawQuadtree(const QuadtreeNode* node);
 };
 
 #endif

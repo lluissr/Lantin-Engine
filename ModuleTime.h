@@ -38,6 +38,7 @@ public:
 	Uint32 framecount;
 	float fps;
 
+private:
 	void FPSInit();
 	void FPSCalculation();
 

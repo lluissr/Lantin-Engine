@@ -160,7 +160,7 @@ void ModuleRender::DrawInFrameBuffer(FrameBuffer& frameBuffer)
 }
 
 
-void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
+void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4& viewMatrix, math::float4x4& projectionMatrix)
 {
 	if (frameBuffer.frameBufferType == FrameBufferType::EDITOR && App->scene->drawQuadTree)
 	{
@@ -184,7 +184,7 @@ void ModuleRender::UpdateDrawDebug(FrameBuffer& frameBuffer, math::float4x4 view
 	App->debugDraw->Draw(frameBuffer.fbo, App->camera->screenWidth, App->camera->screenHeight, viewMatrix, projectionMatrix);
 }
 
-void ModuleRender::DrawQuadTreeNode(QuadtreeNode* node)
+void ModuleRender::DrawQuadTreeNode(const QuadtreeNode* node)
 {
 	dd::aabb(node->aabb.minPoint, node->aabb.maxPoint, dd::colors::Red);
 
@@ -197,14 +197,14 @@ void ModuleRender::DrawQuadTreeNode(QuadtreeNode* node)
 	}
 }
 
-void  ModuleRender::RenderGameObject(GameObject* gameObject, math::float4x4 viewMatrix, math::float4x4 projectionMatrix)
+void  ModuleRender::RenderGameObject(const GameObject* gameObject, math::float4x4& viewMatrix, math::float4x4& projectionMatrix)
 {
 	if (gameObject->isActive && gameObject->componentMesh->active && gameObject->componentMesh->mesh != nullptr && gameObject->componentMaterial != nullptr) {
 		RenderMesh(*gameObject->componentMesh->mesh, *gameObject->componentMaterial->material, gameObject->globalMatrix, viewMatrix, projectionMatrix, gameObject->componentMaterial->active);
 	}
 }
 
-void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4 viewMatrix, math::float4x4 projectionMatrix, bool active)
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material, math::float4x4 modelMatrix, math::float4x4& viewMatrix, math::float4x4& projectionMatrix, bool active)
 {
 	if (mesh.useWireframe)
 	{
@@ -354,7 +354,7 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBuffer& frameBuff
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 }
 
-unsigned ModuleRender::GenerateFallback()
+unsigned ModuleRender::GenerateFallback() const
 {
 	char fallbackImage[3] = { GLubyte(255), GLubyte(255), GLubyte(255) };
 	unsigned imageName = 0;

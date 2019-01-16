@@ -12,6 +12,8 @@ public:
 	~PanelModel();
 
 	void Draw() override;
+
+private:
 	void DrawComboBoxMaterials(MaterialType type);
 	void DrawComboBoxMeshes();
 
