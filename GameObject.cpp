@@ -46,6 +46,7 @@ GameObject::GameObject(const GameObject& go)
 	{
 		GameObject* childCopy = new GameObject(*gameObject);
 		childrens.push_back(childCopy);
+		childCopy->parent = this;
 	}
 }
 
